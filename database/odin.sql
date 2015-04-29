@@ -19,7 +19,24 @@ create table users (
         usr_email varchar(128)
         );
 create unique index uni_users_usern on users(usr_usern);
-insert into users (usr_id,usr_usern,usr_pwd,usr_email)values(0,'admin','','');
+
+-- 'User' stored procedures
+--
+-- add_user
+create or replace function add_user(
+    username varchar(45), 
+    password varchar(100), 
+    firstname varchar(45), 
+    lastname varchar(45), 
+    email varchar(128) )
+returns void as $$
+begin
+    insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, password, firstname, lastname, email );
+end;
+$$ language plpgsql;
+
+--insert into users (usr_id,usr_usern,usr_pwd,usr_email)values(0,'admin','','');
+select add_user( 'admin', '', '', '', '' );
 
 create sequence sq_networks_id maxvalue 32700 start with 1;
 create table networks (
@@ -30,7 +47,7 @@ create table networks (
 
 create table hosts (
         hostid varchar(36) primary key, -- ip?
-        usr_id smallint not null references users default 0,
+        usr_id smallint not null references users default 1,
         nw_id smallint not null references networks,
         host_name varchar(255),
         host_data varchar(45),
@@ -40,6 +57,26 @@ create table hosts (
         host_last_seen timestamp null,
         host_last_scanned timestamp null
         );
+
+-- 'Network' stored procedures
+--
+-- add_network
+create or replace function add_network(
+   network_base varchar(45),
+   cidr numeric(2),
+   hosts varchar[] )
+returns void as $$
+declare
+    new_nw_id smallint;
+    admin_id smallint;
+begin
+    insert into networks( nw_base, nw_cidr ) values( network_base, cidr );
+    select into new_nw_id currval('sq_networks_id');  
+    select usr_id from users where usr_usern = 'admin' into admin_id;
+    insert into hosts( hostid, nw_id, usr_id ) SELECT *, new_nw_id, admin_id FROM unnest(hosts);
+
+end;
+$$ language plpgsql;
 
 grant all privileges on all tables in schema public to dbaodin;
 grant usage, select on sequence sq_networks_id to dbaodin;

@@ -12,17 +12,13 @@ class UserManagement
 
     public function addUser( $username, $password, $firstname, $lastname, $email )
     {
-        $sth = $this->dbcon->prepare( "SELECT usr_id,usr_usern,usr_lastn,usr_firstn,usr_email FROM users WHERE usr_usern = ? AND usr_pwd = ?" );
-        $sth->execute( array( $username, $password ) ) or die ("Error during execute\n");
-        $result = $sth->fetch();
-        if ( isset( $result[ 'usr_id' ] ) ) {
-            echo "user logged in: " . $this->user_data[ 'usr_id' ] . "\n";
-        }
+        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $username, $lastname, $firstname, $password, $email ) ) or die ("Error during execute\n") or die ( "Error during execute\n" );
     }
 
     public function removeUser( $user_id )
     {
-
+    
     }
 
     public function updateUser( $user_id, $username, $password, $firstname, $lastname, $email )

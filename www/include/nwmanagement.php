@@ -13,30 +13,9 @@ class NetworkManagement
     public function addNetwork( $network, $cidr )
     {
         $base = $this->findBaseInNetwork( $network, $cidr );
-        
-        /* add the base network first into networks */
-        $sth = $this->dbcon->prepare( "INSERT INTO networks( nw_base, nw_cidr ) VALUES( ?, ? )" );
-        $sth->execute( array( $network, $cidr ) ) or die ( "Error during execute\n" );
-
-        /* get our network id for the insert just done */
-        $sth = $this->dbcon->prepare( "SELECT nw_id FROM networks WHERE nw_base = ? AND nw_cidr = ?" );
-        $sth->execute( array( $network, $cidr ) ) or die ("Error during execute\n" );
-        $nw_id = $sth->fetch();
-
-        /* then add all hosts based on this network */
-        $sth = $this->dbcon->prepare( "INSERT INTO hosts( hostid, nw_id ) VALUES ( ?, ? )" );
-        $base = ip2long( $base );
-        for( $i = 0; $i < $this->nHostsInNetwork( $cidr ); $i++ ) {
-            # we only want hosts, not base networks or broadcasts
-            $last_octet = end( explode( ".", long2ip( $base ) ) );
-            if ( $last_octet != 255 && $last_octet != 0 ) {
-                # insert our host to the hosts table
-                $sth->execute( array( $base, $nw_id[ 0 ] ) ) or die ("Error during execute\n") or die ( "Error during execute\n" );
-            }
-            $base++;
-        }
-
-
+        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ? )" );
+        $hosts = $this->getHostsInNetwork( $base, $cidr );
+        $sth->execute( array( $base, $cidr, "{" . implode( ', ', $hosts ) . "}" ) );
     }
 
     public function removeNetwork()
@@ -57,6 +36,22 @@ class NetworkManagement
     private function nHostsInNetwork( $cidr )
     {
         return pow( 2, ( 32 - $cidr ) );
+    }
+
+    private function getHostsInNetwork( $network, $cidr )
+    {
+        $retval = array();
+        $base = ip2long( $this->findBaseInNetwork( $network, $cidr ) );
+        for( $i = 0; $i < $this->nHostsInNetwork( $cidr ); $i++ ) {
+            # we only want hosts, not base networks or broadcasts
+            $last_octet = end( explode( ".", long2ip( $base ) ) );
+            if ( $last_octet != 255 && $last_octet != 0 ) {
+                # insert our host to the return array
+                array_push( $retval, long2ip( $base ) ); 
+            }
+            $base++;
+        }
+        return $retval;
     }
 
     private function findBaseInNetwork( $network, $cidr )
