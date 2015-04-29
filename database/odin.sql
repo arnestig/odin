@@ -16,7 +16,9 @@ create table users (
         usr_lastn varchar(45) null,
         usr_firstn varchar(45) null,
         usr_pwd varchar(100) not null,
-        usr_email varchar(128)
+        usr_email varchar(128)),
+        usr_session_key varchar(255),
+        usr_last_touch timestamp
         );
 create unique index uni_users_usern on users(usr_usern);
 
