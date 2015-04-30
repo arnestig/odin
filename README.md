@@ -9,4 +9,4 @@ run requests via curl for example:
 curl http://127.0.0.1:8080
 
 purge the database and re-populate:
-sudo -u postgres psql -f database/odin.sql
+for sql in $(ls database/*.sql); do sudo -u postgres psql -f $sql; done
