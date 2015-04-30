@@ -35,7 +35,6 @@ begin
 end;
 $$ language plpgsql;
 
---insert into users (usr_id,usr_usern,usr_pwd,usr_email)values(0,'admin','','');
 select add_user( 'admin', '', '', '', '' );
 
 create sequence sq_networks_id maxvalue 32700 start with 1;
