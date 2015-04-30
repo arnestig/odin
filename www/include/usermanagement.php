@@ -13,7 +13,7 @@ class UserManagement
     public function addUser( $username, $password, $firstname, $lastname, $email )
     {
         $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $username, $lastname, $firstname, $password, $email ) ) or die ("Error during execute\n") or die ( "Error during execute\n" );
+        $sth->execute( array( $username, $password, $firstname, $lastname, $email ) );
     }
 
     public function removeUser( $user_id )

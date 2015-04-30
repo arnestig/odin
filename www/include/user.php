@@ -19,6 +19,8 @@ class User
         if ( $result[ 'authenticate' ] == true ) {
             $_SESSION['active'] = true;
             echo "user logged in\n";
+        } else {
+            echo "login failed for $username\n";
         }
     }
 
