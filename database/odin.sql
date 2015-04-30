@@ -35,7 +35,18 @@ create or replace function add_user(
     email varchar(128) )
 returns void as $$
 begin
-    insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, password, firstname, lastname, email );
+    insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), firstname, lastname, email );
+end;
+$$ language plpgsql;
+
+-- authenticate
+create or replace function authenticate(
+    username varchar(45),
+    password varchar(100) )
+returns boolean as $$
+begin
+    perform usr_id from users WHERE usr_usern = username and usr_pwd = crypt( password, usr_pwd );
+    return found;
 end;
 $$ language plpgsql;
 
