@@ -9,6 +9,8 @@ create database odin owner dbaodin;
 
 \c odin;
 
+create extension pgcrypto;
+
 create sequence sq_users_id maxvalue 32700 start with 1;
 create table users (
         usr_id smallint primary key default nextval('sq_users_id'),
@@ -16,7 +18,7 @@ create table users (
         usr_lastn varchar(45) null,
         usr_firstn varchar(45) null,
         usr_pwd varchar(100) not null,
-        usr_email varchar(128)),
+        usr_email varchar(128),
         usr_session_key varchar(255),
         usr_last_touch timestamp
         );
