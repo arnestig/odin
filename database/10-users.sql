@@ -30,6 +30,19 @@ begin
 end;
 $$ language plpgsql;
 
+-- get_users
+create or replace function get_users()
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+   SELECT usr_id, usr_usern, usr_lastn, usr_firstn, usr_email FROM users; 
+return next ref1;
+end;
+$$ language plpgsql;
+    
+
 -- authenticate
 create or replace function authenticate(
     username varchar(45),
