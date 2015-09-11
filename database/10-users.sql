@@ -42,17 +42,5 @@ return next ref1;
 end;
 $$ language plpgsql;
     
-
--- authenticate
-create or replace function authenticate(
-    username varchar(45),
-    password varchar(100) )
-returns boolean as $$
-begin
-    perform usr_id from users WHERE usr_usern = username and usr_pwd = crypt( password, usr_pwd );
-    return found;
-end;
-$$ language plpgsql;
-
 -- Create our administrator
 select add_user( 'admin', '', '', '', '' );
