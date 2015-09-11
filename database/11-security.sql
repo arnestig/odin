@@ -16,13 +16,10 @@ begin
            set usr_session_key = skey,
                usr_last_touch = now()
          where usr_usern = username;
-        --commit;
         return skey;
     end if;
 end;
 $$ language plpgsql;
-        --usr_session_key varchar(255),
-        --usr_last_touch timestamp
 
 -- isSessionValid
 create or replace function isSessionValid (
@@ -49,4 +46,3 @@ begin
     end if;
 end;
 $$ language plpgsql;
-
