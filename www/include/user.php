@@ -18,9 +18,10 @@ class User
         $result = $sth->fetch();
         if ( $result[ 'authenticate' ] == true ) {
             $_SESSION['active'] = true;
-            echo "user logged in\n";
+            setcookie(CUKY_NAME, $result[ 'authenticate' ]);
+            return true;
         } else {
-            echo "login failed for $username\n";
+            return false;
         }
     }
 
