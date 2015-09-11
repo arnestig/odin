@@ -24,6 +24,7 @@ $$ language plpgsql;
         --usr_session_key varchar(255),
         --usr_last_touch timestamp
 
+-- isSessionValid
 create or replace function isSessionValid (
     username varchar(45),
     session varchar(74))
@@ -39,6 +40,11 @@ begin
             and usr_session_key is not null
             and usr_last_touch > now() - '30 minutes'::interval;
             --TODO: Change harcoded interval
+        if found then
+            update users
+               set usr_last_touch = now()
+             where usr_usern = username;
+        end if;
         return found;
     end if;
 end;
