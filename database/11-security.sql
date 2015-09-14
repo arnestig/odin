@@ -20,20 +20,19 @@ begin
     end if;
 end;
 $$ language plpgsql;
+alter function authenticate(varchar,varchar) owner to dbaodin;
 
 -- isSessionValid
 create or replace function isSessionValid (
-    username varchar(45),
-    session varchar(74))
+    ticket varchar(74))
 returns boolean as $$
 begin
-    if session is null or username is null then
+    if ticket is null then
         return false;
     else
         perform usr_id
            from users
-          where usr_usern = username
-            and usr_session_key = session
+          where usr_session_key = ticket
             and usr_session_key is not null
             and usr_last_touch > now() - '30 minutes'::interval;
             --TODO: Change harcoded interval
@@ -46,3 +45,21 @@ begin
     end if;
 end;
 $$ language plpgsql;
+alter function isSessionValid(varchar) owner to dbaodin;
+
+-- Logout
+create or replace function logOut (
+    ticket varchar(74))
+returns boolean as $$
+begin
+    if ticket is null then
+        return false;
+    else
+        update users
+           set usr_session_key = null
+         where usr_session_key = ticket;
+        return found;
+    end if;
+end;
+$$ language plpgsql;
+alter function logOut(varchar) owner to dbaodin;

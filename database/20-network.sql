@@ -1,11 +1,14 @@
 \c odin;
 
 create sequence sq_networks_id maxvalue 32700 start with 1;
+alter sequence sq_networks_id owner to dbaodin;
+
 create table networks (
         nw_id smallint primary key default nextval('sq_networks_id'),
         nw_base varchar(45) not null,
         nw_cidr numeric(2) not null
         );
+alter table networks owner to dbaodin;
 
 create table hosts (
         hostid varchar(36) primary key, -- ip?
@@ -19,6 +22,7 @@ create table hosts (
         host_last_seen timestamp null,
         host_last_scanned timestamp null
         );
+alter table hosts owner to dbaodin;
 
 -- 'Network' stored procedures
 --
@@ -39,3 +43,4 @@ begin
 
 end;
 $$ language plpgsql;
+alter function add_network(varchar,numeric,varchar[]) owner to dbaodin;
