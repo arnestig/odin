@@ -31,16 +31,14 @@ class UserManagement
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT get_users()" );
         $sth->execute();
-        $cursors = $sth->fetchAll();
+        $cursors = $sth->fetch();
         $sth->closeCursor();
 
         // get each result set
         $results = array();
-        foreach($cursors as $k=>$v){
-            $sth = $this->dbcon->query('FETCH ALL IN "'. $v[0] .'";');
-            $results[$k] = $sth->fetchAll();
-            $sth->closeCursor();
-        }
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_users'] .'";');
+        $results = $sth->fetchAll();
+        $sth->closeCursor();
         $this->dbcon->commit();
         unset($sth);
 
