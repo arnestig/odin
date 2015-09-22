@@ -4,7 +4,7 @@ create or replace function authenticate (
     password varchar(100) )
 returns varchar as $$
 declare
-    skey users.usr_session_key%type;
+    skey varchar(74);
 begin
     perform usr_id from users WHERE usr_usern = username and usr_pwd = crypt( password, usr_pwd );
     if not found then
