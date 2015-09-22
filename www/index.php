@@ -12,7 +12,10 @@ $nwmanagement->addNetwork( "192.168.0.2", 23 );
 
 $usermanagement = new UserManagement();
 $usermanagement->addUser( "testuser", "testpassword", "Testfirstname", "Testlastname", "email@test.com" );
-$usermanagement->getUsers();
+$users = $usermanagement->getUsers();
+foreach ( $users as $userdata ) {
+    echo $userdata[ 'usr_usern' ]."\n";
+}
 
 $newuser = new User();
 $user->login( "testuser", "testpassword" );

@@ -42,9 +42,7 @@ class UserManagement
         $this->dbcon->commit();
         unset($sth);
 
-        echo '<pre>';
-        print_r($results);echo "\n"; // all record sets
-        echo '</pre>';
+        return $results;
     }
 }
 
