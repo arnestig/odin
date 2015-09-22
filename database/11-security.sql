@@ -1,3 +1,7 @@
+\c odin;
+
+create extension "uuid-ossp";
+
 -- authenticate
 create or replace function authenticate (
     username varchar(45),
@@ -11,7 +15,7 @@ begin
         -- failed login must not delete usr_session_key, i.e. valid session stays valid
         return null;
     else
-        skey := cast(gen_random_uuid() as varchar) || '-' || cast(gen_random_uuid() as varchar);
+        skey := cast(uuid_generate_v4() as varchar) || '-' || cast(uuid_generate_v4() as varchar);
         update users
            set usr_session_key = skey,
                usr_last_touch = now()
