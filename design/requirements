@@ -1,26 +1,35 @@
 Odin shall be able to represent differen network ranges, (192.168.0.0/28, 192.168.25.0/24, 192.168.98.0/22, etc).
 It shall be possible to add and remove ranges.
+
 Odin shall present each different IP-address found in the ranges specified.
 Each IP-address will have the following fields describing it:
-IP - which IP the host has
-Status - current status of the host
-Name - Name of the host (hostname lookup or own specification?)
-Description - Description of host
-Responsible - Which user is responsible
-Lease time - Until which date the host is reserved
-Last seen - Last time the host was seen alive
+    IP - which IP the host has
+    Status - current status of the host
+    Name - Name of the host (hostname lookup or own specification?)
+    Description - Description of host
+    Responsible - Which user is responsible
+    Lease time - Until which date the host is reserved
+    Last seen - Last time the host was seen alive
+
 Addresses shall have one of these statuses:
-Free (green) - Address is not used and can be reserved
-Taken (red) - Address is used and been seen in the last X days (configurable setting, default 7 days?)
-Free but taken (yellow) - Address is free but has been seen in the last X days.
-Taken but not seen (blue) - Address is reserved but has not been seen in the last X days.
+    Free (green) - Address is not used and can be reserved
+    Taken (red) - Address is used and been seen in the last X days (configurable setting, default 7 days?)
+    Free but taken (yellow) - Address is free but has been seen in the last X days.
+    Taken but not seen (blue) - Address is reserved but has not been seen in the last X days.
+
 Browsing through addresses shall be done using filters such as "Reserved by", "Only free addresses", "Only taken addresses", "Lease time", etc...
+
 Addresses that are Free (or Free but taken?) are reserve-able. A user can reserve a free address for a maximum of X days (configurable setting, default 365 days).
+
 When the lease time is nearing the expiry date emails shall be sent to the user to allow for a extension in the lease.
+
 Information for reserved addresses can change.
-When changing information the owners shall be notified.
-When changing owner both the old and the new owner be notified.
-Removal of reservation shall notify the owner.
+    When changing information the owners shall be notified.
+    When changing owner both the old and the new owner be notified.
+    Removal of reservation shall notify the owner.
+
 Changes to hosts such as reserving address, extending the lease period, etc. shall be able to do on a serie instead of just one host.
+
 Shall be available via web-interface compatible with Internet Explorer 8 or later, Firefox 23 or later and Chrome 29 or later.
+
 Trigger time for when a host shall be scanned shall be configurable in the system.
