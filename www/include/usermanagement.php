@@ -18,13 +18,33 @@ class UserManagement
 
     public function removeUser( $user_id )
     {
-    
     }
 
     public function updateUser( $user_id, $username, $password, $firstname, $lastname, $email )
     {
-
+        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $user_id, $username, $password, $firstname, $lastname, $email ) );
     }
+    
+    public function getUserInfo( $user_id )
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_users( ? )" );
+        $sth->execute( array( $user_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_users'] .'";');
+        $results = $sth->fetch();
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
 
     public function getUsers()
     {

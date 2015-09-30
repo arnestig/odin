@@ -36,17 +36,33 @@ $$ language plpgsql;
 alter function add_user(varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
 
 -- get_users
-create or replace function get_users()
+create or replace function get_users(
+    get_usr_id smallint DEFAULT NULL )
 returns SETOF refcursor AS $$
 declare
 ref1 refcursor;
 begin
 open ref1 for
-   SELECT usr_id, usr_usern, usr_lastn, usr_firstn, usr_email FROM users; 
+    SELECT usr_id, usr_usern, usr_lastn, usr_firstn, usr_email FROM users WHERE (get_usr_id IS NULL or usr_id = get_usr_id); 
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_users() owner to dbaodin;
+alter function get_users(smallint) owner to dbaodin;
     
+-- update_user
+create or replace function update_user(
+    userid smallint,
+    username varchar(45),
+    password varchar(100),
+    firstname varchar(45),
+    lastname varchar(45),
+    email varchar(128) )
+returns void as $$
+begin
+    UPDATE users SET usr_usern = username, usr_pwd = crypt( password, gen_salt( 'md5' ) ), usr_firstn = firstname, usr_lastn = lastname, usr_email = email WHERE usr_id = userid;
+end;
+$$ language plpgsql;
+alter function update_user(smallint,varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
+
 -- Create our administrator
 select add_user( 'admin', '', '', '', '' );
