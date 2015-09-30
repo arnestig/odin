@@ -1,6 +1,7 @@
 <?php
 
 include_once( "include/usermanagement.php" );
+include_once( "include/tablegenerator.php" );
 
 function displayUsers() {
     echo '<table class="sortable">
@@ -27,6 +28,11 @@ function displayUsers() {
     }
 
     echo '</table>';
+
+    $tableGenerator = new TableGenerator( array( 'user id', 'username', 'first name', 'last name', 'email', '', '' ) );
+    $tableGenerator->setData( $users );
+    echo $tableGenerator->generateHTML();
+
 }
 
 function editUserPage( $user_id ) {
