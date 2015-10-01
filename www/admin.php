@@ -4,32 +4,16 @@ include_once( "include/usermanagement.php" );
 include_once( "include/tablegenerator.php" );
 
 function displayUsers() {
-    echo '<table class="sortable">
-        <tr>
-        <th>user id</th>
-        <th>user name</th>
-        <th>name</th>
-        <th>email</th>
-        <th></th>
-        <th></th>
-        </tr>';
-
     $usermanagement = new UserManagement();
     $users = $usermanagement->getUsers();
-    foreach ( $users as $userdata ) {
-        echo '<tr>
-            <td>'.$userdata[ 'usr_id' ].'</td>
-            <td>'.$userdata[ 'usr_usern' ].'</td>
-            <td>'.$userdata[ 'usr_firstn' ].' '.$userdata[ 'usr_lastn' ].'</td>
-            <td>'.$userdata[ 'usr_email' ].'</td>
-            <td><a href="admin.php?edit_user='.$userdata[ 'usr_id' ].'">edit</a></td>
-            <td><a href="admin.php?remove_user='.$userdata[ 'usr_id' ].'">remove</a></td>
-            </tr>';
-    }
 
-    echo '</table>';
-
-    $tableGenerator = new TableGenerator( array( 'user id', 'username', 'first name', 'last name', 'email', '', '' ) );
+    $tableGenerator = new TableGenerator(); 
+    $tableGenerator->addColumn( 'user id', '%d', array( 'usr_id' ) );
+    $tableGenerator->addColumn( 'username', '%s', array( 'usr_usern' ) );
+    $tableGenerator->addColumn( 'name', '%s %s', array( 'usr_firstn','usr_lastn' ) );
+    $tableGenerator->addColumn( 'email', '%s', array( 'usr_email' ) );
+    $tableGenerator->addColumn( '', '<a href="admin.php?edit_user=%s">edit</a>', array( 'usr_id' ) );
+    $tableGenerator->addColumn( '', '<a href="admin.php?remove_user=%s">remove</a>', array( 'usr_id' ) );
     $tableGenerator->setData( $users );
     echo $tableGenerator->generateHTML();
 
