@@ -31,13 +31,13 @@ class UserManagement
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT get_users( ? )" );
         $sth->execute( array( $user_id ) );
-        $cursors = $sth->fetch( PDO::FETCH_ASSOC );
+        $cursors = $sth->fetch();
         $sth->closeCursor();
 
         // get each result set
         $results = array();
         $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_users'] .'";');
-        $results = $sth->fetch();
+        $results = $sth->fetch( PDO::FETCH_ASSOC );
         $sth->closeCursor();
         $this->dbcon->commit();
         unset($sth);

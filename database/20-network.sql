@@ -44,3 +44,32 @@ begin
 end;
 $$ language plpgsql;
 alter function add_network(varchar,numeric,varchar[]) owner to dbaodin;
+
+-- get_networks
+create or replace function get_networks(
+    get_nw_id smallint DEFAULT NULL )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT nw_id, nw_base, nw_cidr FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_networks(smallint) owner to dbaodin;
+
+-- get_hosts
+create or replace function get_hosts(
+    get_host_id varchar(36) DEFAULT NULL )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT hostid, usr_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned FROM hosts WHERE (get_host_id IS NULL or hostid = get_host_id); 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_hosts(varchar) owner to dbaodin;
+

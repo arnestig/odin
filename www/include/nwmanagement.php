@@ -28,9 +28,80 @@ class NetworkManagement
 
     }
 
+    public function getNetworkInfo()
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_networks( ? )" );
+        $sth->execute( array( $user_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_networks'] .'";');
+        $results = $sth->fetch( PDO::FETCH_ASSOC );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
     public function getNetworks()
     {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_networks()" );
+        $sth->execute();
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
 
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_networks'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
+    public function getHostInfo()
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_hosts( ? )" );
+        $sth->execute( array( $user_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_hosts'] .'";');
+        $results = $sth->fetch( PDO::FETCH_ASSOC );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
+    public function getHosts()
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_hosts()" );
+        $sth->execute();
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_hosts'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
     }
 
     private function nHostsInNetwork( $cidr )

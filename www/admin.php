@@ -16,7 +16,6 @@ function displayUsers() {
     $tableGenerator->addColumn( '', '<a href="admin.php?remove_user=%s">remove</a>', array( 'usr_id' ) );
     $tableGenerator->setData( $users );
     echo $tableGenerator->generateHTML();
-
 }
 
 function editUserPage( $user_id ) {
@@ -56,6 +55,8 @@ echo '<html>
 
 /* Handle our different GET's on this page */
 if ($_SERVER[ 'REQUEST_METHOD' ] === 'GET') {
+
+    /* Edit User Page form */
     if ( isset( $_REQUEST[ 'edit_user' ] ) ) {
         $user_id = $_REQUEST[ 'edit_user' ];
         editUserPage( $user_id );
@@ -64,7 +65,8 @@ if ($_SERVER[ 'REQUEST_METHOD' ] === 'GET') {
 
 /* Handle our different POST's on this page */
 if ( $_SERVER[ 'REQUEST_METHOD'] === 'POST' ) {
-    /* Edit User Page form */
+
+    /* Submit received from edit user page */
     if ( isset( $_POST[ 'eupSubmit' ] ) ) {
         if ( $_POST[ 'eupSubmit' ] === 'Save' ) {
             $usermanagement = new UserManagement();
