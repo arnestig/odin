@@ -19,6 +19,9 @@ create unique index uni_users_usern on users(usr_usern);
 create unique index uni_usr_session_key on users(usr_session_key);
 alter table users owner to dbaodin;
 
+-- add the user nobody (owner of available hosts)
+insert into users (usr_id,usr_usern,usr_pwd)values(0,'nobody','null');
+
 -- 'User' stored procedures
 --
 -- add_user
