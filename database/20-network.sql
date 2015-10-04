@@ -12,7 +12,7 @@ alter table networks owner to dbaodin;
 
 create table hosts (
         host_ip varchar(36) primary key,
-        usr_id smallint not null references users default NULL,
+        usr_id smallint not null references users default 0,
         nw_id smallint not null references networks,
         host_name varchar(255),
         host_data varchar(45),
