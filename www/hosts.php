@@ -19,7 +19,7 @@ function displayHosts() {
     $hosts = $networkmanagement->getHosts();
 
     $tableGenerator = new TableGenerator(); 
-    $tableGenerator->addColumn( 'host id', '%s', array( 'hostid' ) );
+    $tableGenerator->addColumn( 'host ip', '%s', array( 'host_ip' ) );
     $tableGenerator->addColumn( 'host name', '%s', array( 'host_name' ) );
     $tableGenerator->addColumn( 'data', '%s', array( 'host_data' ) );
     $tableGenerator->addColumn( 'description', '%s', array( 'host_description' ) );
