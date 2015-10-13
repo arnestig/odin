@@ -67,5 +67,15 @@ end;
 $$ language plpgsql;
 alter function update_user(smallint,varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
 
+-- remove_user
+create or replace function remove_user(
+    userid smallint )
+returns void as $$
+begin
+    DELETE FROM users WHERE usr_id = userid;
+end;
+$$ language plpgsql;
+alter function remove_user(smallint) owner to dbaodin;
+
 -- Create our administrator
 select add_user( 'admin', '', '', '', '' );

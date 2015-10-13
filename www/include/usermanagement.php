@@ -18,6 +18,8 @@ class UserManagement
 
     public function removeUser( $user_id )
     {
+        $sth = $this->dbcon->prepare( "SELECT remove_user( ? )" );
+        $sth->execute( array( $user_id ) );
     }
 
     public function updateUser( $user_id, $username, $password, $firstname, $lastname, $email )
