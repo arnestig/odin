@@ -43,6 +43,17 @@ end;
 $$ language plpgsql;
 alter function add_network(varchar,numeric,varchar[]) owner to dbaodin;
 
+-- remove_network
+create or replace function remove_network(
+   remove_nw_id smallint )
+returns void as $$
+begin
+    delete from hosts where nw_id = remove_nw_id;
+    delete from networks where nw_id = remove_nw_id;
+end;
+$$ language plpgsql;
+alter function remove_network(smallint) owner to dbaodin;
+
 -- get_networks
 create or replace function get_networks(
     get_nw_id smallint DEFAULT NULL )

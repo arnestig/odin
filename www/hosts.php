@@ -3,17 +3,6 @@
 include_once( "include/nwmanagement.php" );
 include_once( "include/tablegenerator.php" );
 
-function displayNetworks() {
-    $networkmanagement = new NetworkManagement();
-    $networks = $networkmanagement->getNetworks();
-
-    $tableGenerator = new TableGenerator(); 
-    $tableGenerator->addColumn( 'network id', '%d', array( 'nw_id' ) );
-    $tableGenerator->addColumn( 'scope', '%s/%d', array( 'nw_base','nw_cidr' ) );
-    $tableGenerator->setData( $networks );
-    echo $tableGenerator->generateHTML();
-}
-
 function displayHosts() {
     $networkmanagement = new NetworkManagement();
     $hosts = $networkmanagement->getHosts();
@@ -45,8 +34,7 @@ if ($_SERVER[ 'REQUEST_METHOD' ] === 'GET') {
 if ( $_SERVER[ 'REQUEST_METHOD'] === 'POST' ) {
 }
 
-/* Display a list of our users */
-displayNetworks();
+/* Display a list of our hosts */
 displayHosts();
 
 echo '</html>';

@@ -18,21 +18,17 @@ class NetworkManagement
         $sth->execute( array( $base, $cidr, "{" . implode( ', ', $hosts ) . "}" ) );
     }
 
-    public function removeNetwork()
+    public function removeNetwork( $network_id )
     {
-
+        $sth = $this->dbcon->prepare( "SELECT remove_network( ? )" );
+        $sth->execute( array( $network_id ) );
     }
 
-    public function updateNetwork()
-    {
-
-    }
-
-    public function getNetworkInfo()
+    public function getNetworkInfo( $network_id )
     {
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT get_networks( ? )" );
-        $sth->execute( array( $user_id ) );
+        $sth->execute( array( $network_id ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -104,16 +100,16 @@ class NetworkManagement
         return $results;
     }
 
-    private function nHostsInNetwork( $cidr )
+    public function nHostsInNetwork( $cidr )
     {
-        return pow( 2, ( 32 - $cidr ) );
+        return pow( 2, ( 32 - $cidr ) ) - 2;
     }
 
     private function getHostsInNetwork( $network, $cidr )
     {
         $retval = array();
         $base = ip2long( $this->findBaseInNetwork( $network, $cidr ) );
-        for( $i = 0; $i < $this->nHostsInNetwork( $cidr ); $i++ ) {
+        for( $i = 0; $i < $this->nHostsInNetwork( $cidr ) + 2; $i++ ) {
             # we only want hosts, not base networks or broadcasts
             $last_octet = end( explode( ".", long2ip( $base ) ) );
             if ( $last_octet != 255 && $last_octet != 0 ) {

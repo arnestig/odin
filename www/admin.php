@@ -1,7 +1,50 @@
 <?php
 
+include_once( "include/nwmanagement.php" );
 include_once( "include/usermanagement.php" );
 include_once( "include/tablegenerator.php" );
+
+function displayNetworks() {
+    $networkmanagement = new NetworkManagement();
+    $networks = $networkmanagement->getNetworks();
+
+    $tableGenerator = new TableGenerator(); 
+    $tableGenerator->addColumn( 'network id', '%d', array( 'nw_id' ) );
+    $tableGenerator->addColumn( 'scope', '%s/%d', array( 'nw_base','nw_cidr' ) );
+    $tableGenerator->addColumn( '', '<a href="admin.php?manage_networks=removenetwork&network_id=%s">remove</a>', array( 'nw_id' ) );
+    $tableGenerator->setData( $networks );
+    echo $tableGenerator->generateHTML();
+}
+
+function removeNetworkPage( $network_id ) {
+    $networkmanagement = new NetworkManagement();
+    $networkdata = $networkmanagement->getNetworkInfo( $network_id );
+    $network_base = $networkdata[ 'nw_base' ];
+    $network_cidr = $networkdata[ 'nw_cidr' ];
+    $hosts_in_network = $networkmanagement->nHostsInNetwork( $network_cidr );
+    echo '<FORM method="post" action="admin.php?manage_networks">
+        <INPUT type="hidden" name="rnpNetworkID" value="'.$network_id.'">
+        <center><b>Are you sure you want to remove the network '.$networkdata[ 'nw_base' ].'/'.$networkdata[ 'nw_cidr' ].'?<br>'.$hosts_in_network.' hosts will be removed and all their associated information will be lost!<br>
+        <BUTTON type="submit" name="rnpSubmit" value="Yes">Yes</BUTTON>
+        <BUTTON type="submit" name="rnpSubmit" value="No">No</BUTTON></td></tr>
+        </FORM>';
+}
+
+function addNetworkPage() {
+    echo '<FORM method="post" action="admin.php?manage_networks">
+        <table>
+        <tr><td>
+            Network:</td><td><INPUT type="text" name="anpNetworkBase">
+        </td></tr>
+        <tr><td>
+            CIDR:</td><td><INPUT type="text" name="anpNetworkCIDR">
+        </td></tr>
+        <tr><td align="right" colspan=2>
+            <BUTTON type="submit" name="anpSubmit" value="Save">Save</BUTTON>
+            <BUTTON type="submit" name="anpSubmit" value="Cancel">Cancel</BUTTON>
+        </td></tr>
+        </table></FORM>';
+}
 
 function displayUsers() {
     $usermanagement = new UserManagement();
@@ -116,11 +159,47 @@ if ( isset( $_POST[ 'eupSubmit' ] ) ) {
 
     }
 }
+
+/* submit received from add network page */
+if ( isset( $_POST[ 'anpSubmit' ] ) ) {
+    if ( $_POST[ 'anpSubmit' ] === 'Save' ) {
+        $networkmanagement = new NetworkManagement();
+        $networkmanagement->addNetwork( $_POST[ 'anpNetworkBase' ], $_POST[ 'anpNetworkCIDR' ] );
+    }
+}
+
+
+/* submit received from remove network page */
+if ( isset( $_POST[ 'rnpSubmit' ] ) ) {
+    if ( $_POST[ 'rnpSubmit' ] === 'Yes' ) {
+        $networkmanagement = new NetworkManagement();
+        $networkmanagement->removeNetwork( $_POST[ 'rnpNetworkID' ] );
+    }
+}
+
 /* submit received from remove user page */
-if ( isset ( $_POST[ 'rupSubmit' ] ) ) {
+if ( isset( $_POST[ 'rupSubmit' ] ) ) {
     if ( $_POST[ 'rupSubmit' ] === 'Yes' ) {
         $usermanagement = new UserManagement();
         $usermanagement->removeUser( $_POST[ 'rupUserID' ] );
+    }
+}
+
+
+if ( isset( $_REQUEST[ 'manage_networks' ] ) ) {
+    if ( empty( $_REQUEST[ 'manage_networks' ] ) ) {
+        /* Display a list of our networks */
+        displayNetworks();
+        echo '<br><a href="admin.php?manage_networks=addnetwork">Add network</a>';
+    }
+
+    if ( $_REQUEST[ 'manage_networks' ] === 'addnetwork' ) {
+        addNetworkPage();
+    }
+
+    if ( $_REQUEST[ 'manage_networks' ] === 'removenetwork' ) {
+        $network_id = $_REQUEST[ 'network_id' ];
+        removeNetworkPage( $network_id );
     }
 }
 
