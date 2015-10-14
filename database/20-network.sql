@@ -19,7 +19,8 @@ create table hosts (
         host_description varchar(128),
         host_lease_expiry timestamp null,
         host_last_seen timestamp null,
-        host_last_scanned timestamp null
+        host_last_scanned timestamp null,
+        host_last_notified timestamp null
         );
 alter table hosts owner to dbaodin;
 
