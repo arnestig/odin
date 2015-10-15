@@ -1,8 +1,30 @@
 <?php
 
+include_once( "include/settings.php" );
 include_once( "include/nwmanagement.php" );
 include_once( "include/usermanagement.php" );
 include_once( "include/tablegenerator.php" );
+
+function displaySettings() {
+    $settings = new Settings();
+    $allsettings = $settings->getSettings();
+
+    echo '<table><FORM method="post" action="admin.php?settings">';
+    $settingid = 0;
+    foreach ( $allsettings as $cursetting ) {
+        echo '<tr data-toggle="tooltip" title="'.$cursetting[ 's_description' ].'">
+            <td>'.$cursetting[ 's_fullname' ].'</td>
+            <td><INPUT type="text" name="dsValue'.$settingid.'" value="'.$cursetting[ 's_value' ].'">
+            <INPUT type="hidden" name="dsName'.$settingid.'" value="'.$cursetting[ 's_name' ].'">
+        </td></tr>';
+        $settingid++;
+    }
+    echo '<tr><td align="right" colspan=2>
+        <BUTTON type="submit" name="dsSubmit" value="Save">Save</BUTTON>
+        <BUTTON type="submit" name="dsSubmit" value="Cancel">Cancel</BUTTON>
+        <INPUT type="hidden" name="dsSettingsIdMax" value="'.$settingid.'">
+    </table></FORM>';
+}
 
 function displayNetworks() {
     $networkmanagement = new NetworkManagement();
@@ -26,7 +48,7 @@ function removeNetworkPage( $network_id ) {
         <INPUT type="hidden" name="rnpNetworkID" value="'.$network_id.'">
         <center><b>Are you sure you want to remove the network '.$networkdata[ 'nw_base' ].'/'.$networkdata[ 'nw_cidr' ].'?<br>'.$hosts_in_network.' hosts will be removed and all their associated information will be lost!<br>
         <BUTTON type="submit" name="rnpSubmit" value="Yes">Yes</BUTTON>
-        <BUTTON type="submit" name="rnpSubmit" value="No">No</BUTTON></td></tr>
+        <BUTTON type="submit" name="rnpSubmit" value="No">No</BUTTON>
         </FORM>';
 }
 
@@ -128,7 +150,7 @@ echo '<html>
             <script type="text/javascript" src="include/sorttable.js"></script>
         </head>';
 
-echo '<a href="admin.php?manage_users">Manage users</a> <a href="admin.php?manage_networks">Manage networks</a><br><hr>';
+echo '<a href="admin.php?manage_users">Manage users</a> <a href="admin.php?manage_networks">Manage networks</a> <a href="admin.php?settings">Settings</a><br><hr>';
 
 
 /* Submit received from edit user page */
@@ -168,7 +190,6 @@ if ( isset( $_POST[ 'anpSubmit' ] ) ) {
     }
 }
 
-
 /* submit received from remove network page */
 if ( isset( $_POST[ 'rnpSubmit' ] ) ) {
     if ( $_POST[ 'rnpSubmit' ] === 'Yes' ) {
@@ -185,6 +206,16 @@ if ( isset( $_POST[ 'rupSubmit' ] ) ) {
     }
 }
 
+/* submit received from settings page */
+if ( isset( $_POST[ 'dsSubmit' ] ) ) {
+    if ( $_POST[ 'dsSubmit' ] === 'Save' ) {
+        $settings = new Settings();
+        $settingsmax = $_POST[ 'dsSettingsIdMax' ];
+        for ( $i = 0; $i < $settingsmax; $i++ ) {
+            $settings->changeSetting( $_POST[ 'dsName'.$i ], $_POST[ 'dsValue'.$i ] );
+        }
+    }
+}
 
 if ( isset( $_REQUEST[ 'manage_networks' ] ) ) {
     if ( empty( $_REQUEST[ 'manage_networks' ] ) ) {
@@ -223,6 +254,10 @@ if ( isset( $_REQUEST[ 'manage_users' ] ) ) {
         $user_id = $_REQUEST[ 'user_id' ];
         removeUserPage( $user_id );
     }
+}
+
+if ( isset( $_REQUEST[ 'settings'] ) ) {
+    displaySettings();
 }
 
 echo '</html>';

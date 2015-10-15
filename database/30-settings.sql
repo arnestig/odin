@@ -14,7 +14,9 @@
 
 create table settings (
         s_name varchar not null primary key,
-        s_value varchar not null
+        s_value varchar not null,
+        s_fullname varchar not null,
+        s_description varchar not null
         );
 alter table settings owner to dbaodin;
 
@@ -53,14 +55,15 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT s_name, s_value FROM settings;
+    SELECT s_name, s_value, s_fullname, s_description FROM settings;
 return next ref1;
 end;
 $$ language plpgsql;
 alter function get_settings() owner to dbaodin;
 
 -- add all odin settings here
-insert into settings( s_name, s_value ) values( 'email_notification', '1' );
-insert into settings( s_name, s_value ) values( 'email_notification_type', 'smtp' );
-insert into settings( s_name, s_value ) values( 'email_hostname', '' );
-insert into settings( s_name, s_value ) values( 'email_port', '25' );
+insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification', '1', 'Enable notification mails', '' );
+insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification_type', 'smtp', 'Mail server type', 'Only SMTP supported for now' );
+insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_hostname', '', 'Mail server hostname', 'Hostname or IP-address' );
+insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_port', '25', 'Mail server port', '' );
+
