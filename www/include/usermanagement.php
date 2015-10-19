@@ -1,19 +1,15 @@
 <?php
 
 include_once( "config.php" );
+include_once( "odin.php" );
 
-class UserManagement
+class UserManagement extends Odin
 {
-    private $dbcon;
-    public function __construct()
-    {
-        $this->dbcon = new PDO( "pgsql:host=" . DB_SERVER . ";dbname=" . DB_DATABASE . ";user=" . DB_USER . ";password=" . DB_PASSWORD . ";port=" . DB_PORT ) or die ("Could not connect to server\n"); 
-    }
 
     public function addUser( $username, $password, $firstname, $lastname, $email )
     {
-        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $username, $password, $firstname, $lastname, $email ) );
+        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $username, $password, $firstname, $lastname, $email ) );
     }
 
     public function removeUser( $user_id )
@@ -66,6 +62,17 @@ class UserManagement
 
         return $results;
     }
+
+#    private function getTicket()
+#    {
+#
+#        if (isset($_COOKIE[CUKY_NAME])) {
+#            $cuky = $_COOKIE[CUKY_NAME];
+#        } else {
+#            $cuky = '';
+#        }
+#        return $cuky;
+#    }
 }
 
 ?>
