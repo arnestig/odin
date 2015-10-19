@@ -32,7 +32,7 @@ create or replace function isSessionValid (
 returns boolean as $$
 begin
     if ticket is null then
-        return false;
+        RAISE 'Ticket not valid' USING ERRCODE = '28000';
     else
         perform usr_id
            from users
@@ -43,7 +43,9 @@ begin
         if found then
             update users
                set usr_last_touch = now()
-             where usr_usern = username;
+             where usr_session_key = ticket;
+        else
+            RAISE 'Ticket not valid' USING ERRCODE = '28000';
         end if;
         return found;
     end if;
