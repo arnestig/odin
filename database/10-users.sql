@@ -26,6 +26,7 @@ insert into users (usr_id,usr_usern,usr_pwd)values(0,'nobody','null');
 --
 -- add_user
 create or replace function add_user(
+    ticket varchar(255), 
     username varchar(45), 
     password varchar(100), 
     firstname varchar(45), 
@@ -33,6 +34,7 @@ create or replace function add_user(
     email varchar(128) )
 returns void as $$
 begin
+    perform isSessionValid(ticket);
     insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), firstname, lastname, email );
 end;
 $$ language plpgsql;
@@ -78,4 +80,4 @@ $$ language plpgsql;
 alter function remove_user(smallint) owner to dbaodin;
 
 -- Create our administrator
-select add_user( 'admin', '', '', '', '' );
+insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( 'admin', crypt( '', gen_salt('md5') ), '', '', '' );
