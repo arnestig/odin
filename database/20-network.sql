@@ -28,9 +28,10 @@ alter table hosts owner to dbaodin;
 --
 -- add_network
 create or replace function add_network(
-   network_base varchar(45),
-   cidr numeric(2),
-   hosts varchar[] )
+    ticket varchar(255),
+    network_base varchar(45),
+    cidr numeric(2),
+    hosts varchar[] )
 returns void as $$
 declare
     new_nw_id smallint;
@@ -42,21 +43,23 @@ begin
     insert into hosts( host_ip, nw_id, usr_id ) SELECT *, new_nw_id, admin_id FROM unnest(hosts);
 end;
 $$ language plpgsql;
-alter function add_network(varchar,numeric,varchar[]) owner to dbaodin;
+alter function add_network(varchar,varchar,numeric,varchar[]) owner to dbaodin;
 
 -- remove_network
 create or replace function remove_network(
-   remove_nw_id smallint )
+    ticket varchar(255),
+    remove_nw_id smallint )
 returns void as $$
 begin
     delete from hosts where nw_id = remove_nw_id;
     delete from networks where nw_id = remove_nw_id;
 end;
 $$ language plpgsql;
-alter function remove_network(smallint) owner to dbaodin;
+alter function remove_network(varchar,smallint) owner to dbaodin;
 
 -- get_networks
 create or replace function get_networks(
+    ticket varchar(255),
     get_nw_id smallint DEFAULT NULL )
 returns SETOF refcursor AS $$
 declare
@@ -67,10 +70,11 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_networks(smallint) owner to dbaodin;
+alter function get_networks(varchar,smallint) owner to dbaodin;
 
 -- get_hosts
 create or replace function get_hosts(
+    ticket varchar(255),
     get_host_ip varchar(36) DEFAULT NULL )
 returns SETOF refcursor AS $$
 declare
@@ -81,4 +85,4 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_hosts(varchar) owner to dbaodin;
+alter function get_hosts(varchar,varchar) owner to dbaodin;

@@ -24,18 +24,20 @@ alter table settings owner to dbaodin;
 --
 -- update_setting
 create or replace function update_setting(
-   setting_name varchar(45),
-   setting_value varchar)
+    ticket varchar(255),
+    setting_name varchar(45),
+    setting_value varchar)
 returns void as $$
 declare
 begin
     update settings SET s_value = setting_value WHERE s_name = setting_name;
 end;
 $$ language plpgsql;
-alter function update_setting(varchar,varchar) owner to dbaodin;
+alter function update_setting(varchar,varchar,varchar) owner to dbaodin;
 
 -- get_setting_value
 create or replace function get_setting_value(
+    ticket varchar(255),
     setting_name varchar(45) )
 returns SETOF refcursor AS $$
 declare
@@ -46,10 +48,11 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_setting_value(varchar) owner to dbaodin;
+alter function get_setting_value(varchar,varchar) owner to dbaodin;
 
 -- get_settings
-create or replace function get_settings()
+create or replace function get_settings(
+    ticket varchar(255))
 returns SETOF refcursor AS $$
 declare
 ref1 refcursor;
@@ -59,7 +62,7 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_settings() owner to dbaodin;
+alter function get_settings(varchar) owner to dbaodin;
 
 -- add all odin settings here
 insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification', '1', 'Enable notification mails', '' );

@@ -12,15 +12,15 @@ class Settings
 
     public function changeSetting( $name, $value )
     {
-        $sth = $this->dbcon->prepare( "SELECT update_setting( ?, ? )" );
-        $sth->execute( array( $name, $value ) );
+        $sth = $this->dbcon->prepare( "SELECT update_setting( ?, ?, ? )" );
+        $sth->execute( array( '', $name, $value ) );
     }
     
     public function getSettings()
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_settings()" );
-        $sth->execute();
+        $sth = $this->dbcon->prepare( "SELECT get_settings( ? )" );
+        $sth->execute( array( '') );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 

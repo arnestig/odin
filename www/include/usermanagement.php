@@ -14,21 +14,21 @@ class UserManagement extends Odin
 
     public function removeUser( $user_id )
     {
-        $sth = $this->dbcon->prepare( "SELECT remove_user( ? )" );
-        $sth->execute( array( $user_id ) );
+        $sth = $this->dbcon->prepare( "SELECT remove_user( ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id ) );
     }
 
     public function updateUser( $user_id, $username, $password, $firstname, $lastname, $email )
     {
-        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $user_id, $username, $password, $firstname, $lastname, $email ) );
+        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id, $username, $password, $firstname, $lastname, $email ) );
     }
     
     public function getUserInfo( $user_id )
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_users( ? )" );
-        $sth->execute( array( $user_id ) );
+        $sth = $this->dbcon->prepare( "SELECT get_users( ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -43,12 +43,11 @@ class UserManagement extends Odin
         return $results;
     }
 
-
     public function getUsers()
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_users()" );
-        $sth->execute();
+        $sth = $this->dbcon->prepare( "SELECT get_users( ? )" );
+        $sth->execute( array( $this->getTicket() ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -62,17 +61,5 @@ class UserManagement extends Odin
 
         return $results;
     }
-
-#    private function getTicket()
-#    {
-#
-#        if (isset($_COOKIE[CUKY_NAME])) {
-#            $cuky = $_COOKIE[CUKY_NAME];
-#        } else {
-#            $cuky = '';
-#        }
-#        return $cuky;
-#    }
 }
-
 ?>

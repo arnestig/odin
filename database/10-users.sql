@@ -38,10 +38,11 @@ begin
     insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), firstname, lastname, email );
 end;
 $$ language plpgsql;
-alter function add_user(varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
+alter function add_user(varchar,varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
 
 -- get_users
 create or replace function get_users(
+    ticket varchar(255), 
     get_usr_id smallint DEFAULT NULL )
 returns SETOF refcursor AS $$
 declare
@@ -52,10 +53,11 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_users(smallint) owner to dbaodin;
+alter function get_users(varchar,smallint) owner to dbaodin;
     
 -- update_user
 create or replace function update_user(
+    ticket varchar(255), 
     userid smallint,
     username varchar(45),
     password varchar(100),
@@ -67,17 +69,18 @@ begin
     UPDATE users SET usr_usern = username, usr_pwd = crypt( password, gen_salt( 'md5' ) ), usr_firstn = firstname, usr_lastn = lastname, usr_email = email WHERE usr_id = userid;
 end;
 $$ language plpgsql;
-alter function update_user(smallint,varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
+alter function update_user(varchar,smallint,varchar,varchar,varchar,varchar,varchar) owner to dbaodin;
 
 -- remove_user
 create or replace function remove_user(
+    ticket varchar(255), 
     userid smallint )
 returns void as $$
 begin
     DELETE FROM users WHERE usr_id = userid;
 end;
 $$ language plpgsql;
-alter function remove_user(smallint) owner to dbaodin;
+alter function remove_user(varchar,smallint) owner to dbaodin;
 
 -- Create our administrator
 insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( 'admin', crypt( '', gen_salt('md5') ), '', '', '' );

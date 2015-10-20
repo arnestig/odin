@@ -13,22 +13,22 @@ class NetworkManagement
     public function addNetwork( $network, $cidr )
     {
         $base = $this->findBaseInNetwork( $network, $cidr );
-        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ? )" );
+        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ?, ? )" );
         $hosts = $this->getHostsInNetwork( $base, $cidr );
-        $sth->execute( array( $base, $cidr, "{" . implode( ', ', $hosts ) . "}" ) );
+        $sth->execute( array( '', $base, $cidr, "{" . implode( ', ', $hosts ) . "}" ) );
     }
 
     public function removeNetwork( $network_id )
     {
-        $sth = $this->dbcon->prepare( "SELECT remove_network( ? )" );
-        $sth->execute( array( $network_id ) );
+        $sth = $this->dbcon->prepare( "SELECT remove_network( ?, ? )" );
+        $sth->execute( array( '', $network_id ) );
     }
 
     public function getNetworkInfo( $network_id )
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_networks( ? )" );
-        $sth->execute( array( $network_id ) );
+        $sth = $this->dbcon->prepare( "SELECT get_networks( ?, ? )" );
+        $sth->execute( array( '', $network_id ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -46,8 +46,8 @@ class NetworkManagement
     public function getNetworks()
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_networks()" );
-        $sth->execute();
+        $sth = $this->dbcon->prepare( "SELECT get_networks( ? )" );
+        $sth->execute( array( '' ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -65,8 +65,8 @@ class NetworkManagement
     public function getHostInfo()
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_hosts( ? )" );
-        $sth->execute( array( $user_id ) );
+        $sth = $this->dbcon->prepare( "SELECT get_hosts( ?, ? )" );
+        $sth->execute( array( '', $user_id ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
@@ -84,8 +84,8 @@ class NetworkManagement
     public function getHosts()
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_hosts()" );
-        $sth->execute();
+        $sth = $this->dbcon->prepare( "SELECT get_hosts( ? )" );
+        $sth->execute( array( '' ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
