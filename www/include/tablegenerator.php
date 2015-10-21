@@ -24,7 +24,7 @@ class TableGenerator
         foreach ( $this->columns as $column ) {
             $retval .= '<th>'.$column[ 'name' ].'</th>';
         }
-        $retval .= '</tr><tr>';
+        $retval .= '</tr>';
         for ( $item_id = 0; $item_id < count( $this->tableitems ); $item_id++ ) {
             $retval .= '<tr>';
             foreach ( $this->columns as $column ) {
