@@ -1,7 +1,5 @@
 \c odin;
 
-create extension pgcrypto;
-
 create sequence sq_users_id maxvalue 32700 start with 1;
 alter sequence sq_users_id owner to dbaodin;
 
