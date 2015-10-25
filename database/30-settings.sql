@@ -1,20 +1,16 @@
 \c odin;
 
--- To be done:
--- add a variable data type so that we can add different data values for different settings
--- For example:
--- email_notification should be a boolean (true/false)
--- email_notification_type could be an enum of a different selected types (SMTP,IMAP)
--- email_hostname should be a varchar
--- email_port should be an int
--- 
--- also, settings could be added to groups...
---
--- perhaps this is not needed, investigation pending
+CREATE TYPE setting_type AS ENUM ('text', 'bool', 'choice');
+
+create sequence sq_settings_id maxvalue 32700 start with 1;
+alter sequence sq_settings_id owner to dbaodin;
 
 create table settings (
         s_name varchar not null primary key,
+        s_id smallint default nextval('sq_settings_id'),
+        s_group varchar not null,
         s_value varchar not null,
+        s_type setting_type not null,
         s_fullname varchar not null,
         s_description varchar not null
         );
@@ -58,15 +54,31 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT s_name, s_value, s_fullname, s_description FROM settings;
+    SELECT s_group, s_name, s_type, s_value, s_fullname, s_description FROM settings ORDER BY s_id;
 return next ref1;
 end;
 $$ language plpgsql;
 alter function get_settings(varchar) owner to dbaodin;
 
 -- add all odin settings here
-insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification', '1', 'Enable notification mails', '' );
-insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification_type', 'smtp', 'Mail server type', 'Only SMTP supported for now' );
-insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_hostname', '', 'Mail server hostname', 'Hostname or IP-address' );
-insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_port', '25', 'Mail server port', '' );
+--- Notification settings
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Notifications', 'email_notification', 'bool', '1', 'Enable notification mails', '' );
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Notifications', 'email_notification_type', 'text', 'smtp', 'Mail server type', 'Only SMTP supported for now' );
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Notifications', 'email_hostname', 'text', '', 'Mail server hostname', 'Hostname or IP-address' );
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Notifications', 'email_port', 'text', '25', 'Mail server port', '' );
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Notifications', 'email_sender', 'text', 'no-reply@odin.valhalla', 'Sender email address', 'Most servers will atleast require the domain to be valid' );
 
+--- User signup
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'User registration', 'allow_user_registration', 'bool', '1', 'Allow user registration', 'Allows users to register on the Odin login page. If disabled only administrators will be able to add new users.' );
+
+--- Hosts leasing
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Hosts', 'host_max_lease_time', 'text', '365', 'Host maximum lease time (days)', 'Number of days a user can lease a host without having to renew the lease.' );
+insert into settings( s_group, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'Hosts', 'host_expiry_warning_time', 'text', '30', 'Host expiry warning time (days)', 'Defines when the expiration email is sent to a user.' );

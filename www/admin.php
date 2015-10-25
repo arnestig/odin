@@ -11,19 +11,30 @@ function displaySettings() {
 
     echo '<table><FORM method="post" action="admin.php?settings">';
     $settingid = 0;
-    foreach ( $allsettings as $cursetting ) {
-        echo '<tr data-toggle="tooltip" title="'.$cursetting[ 's_description' ].'">
-            <td>'.$cursetting[ 's_fullname' ].'</td>
-            <td><INPUT type="text" name="dsValue'.$settingid.'" value="'.$cursetting[ 's_value' ].'">
-            <INPUT type="hidden" name="dsName'.$settingid.'" value="'.$cursetting[ 's_name' ].'">
-        </td></tr>';
-        $settingid++;
+    foreach ( $allsettings as $name => $settingsarray ) {
+        echo '<tr><td colspan="2" align="center">--- '.$name.' ---</td></tr>';
+        foreach ( $settingsarray as $cursetting ) {
+            echo '<tr data-toggle="tooltip" title="'.$cursetting[ 's_description' ].'">
+                <td>'.$cursetting[ 's_fullname' ].'</td>';
+            if ( $cursetting[ 's_type' ] === 'text' ) {
+                echo '<td><INPUT type="text" name="dsValue'.$settingid.'" value="'.$cursetting[ 's_value' ].'">';
+            } elseif( $cursetting[ 's_type' ] === 'bool' ) {
+                echo '<td><INPUT type="checkbox" name="dsValue'.$settingid.'"';
+                if ( $cursetting[ 's_value' ] === '1' ) {
+                    echo ' checked';
+                }
+                echo '>';
+            }
+            echo '<INPUT type="hidden" name="dsName'.$settingid.'" value="'.$cursetting[ 's_name' ].'">';
+            echo '<INPUT type="hidden" name="dsType'.$settingid.'" value="'.$cursetting[ 's_type' ].'"></td></tr>';
+            $settingid++;
+        }
     }
     echo '<tr><td align="right" colspan=2>
         <BUTTON type="submit" name="dsSubmit" value="Save">Save</BUTTON>
         <BUTTON type="submit" name="dsSubmit" value="Cancel">Cancel</BUTTON>
         <INPUT type="hidden" name="dsSettingsIdMax" value="'.$settingid.'">
-    </table></FORM>';
+        </table></FORM>';
 }
 
 function displayNetworks() {
@@ -212,7 +223,18 @@ if ( isset( $_POST[ 'dsSubmit' ] ) ) {
         $settings = new Settings();
         $settingsmax = $_POST[ 'dsSettingsIdMax' ];
         for ( $i = 0; $i < $settingsmax; $i++ ) {
-            $settings->changeSetting( $_POST[ 'dsName'.$i ], $_POST[ 'dsValue'.$i ] );
+            $updateName = $_POST[ 'dsName'.$i ];
+            $updateValue = $_POST[ 'dsValue'.$i ];
+            $updateType = $_POST[ 'dsType'.$i ];
+            if ( $updateType === 'bool' ) {
+                if ( $updateValue === 'on' ) {
+                    $updateValue = 1;
+                } else {
+                    $updateValue = 0;
+                }
+            }
+             
+            $settings->changeSetting( $updateName, $updateValue );
         }
     }
 }
