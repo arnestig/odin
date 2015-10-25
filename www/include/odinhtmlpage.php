@@ -4,6 +4,7 @@ include_once( "odinhtml.php" );
 include_once( "include/DOMtablegenerator.php" );
 include_once( "include/DOMformgenerator.php" );
 include_once( "include/usermanagement.php" );
+include_once( "include/nwmanagement.php" );
 include_once( "include/settings.php" );
 
 class OdinHTMLPage extends OdinHTML
@@ -25,6 +26,12 @@ class OdinHTMLPage extends OdinHTML
         if ($this->POST) {
             if ( isset( $_POST[ 'eupSubmit' ] ) ) {
             } elseif ( isset( $_POST[ 'anpSubmit' ] ) ) {
+                /* submit received from add network page */
+                if ( $_POST[ 'anpSubmit' ] === 'Save' ) {
+                    $networkmanagement = new NetworkManagement();
+                    $networkmanagement->addNetwork( $_POST[ 'anpNetworkBase' ], $_POST[ 'anpNetworkCIDR' ] );
+                }
+                $this->displayNetworks();
             } elseif ( isset( $_POST[ 'rnpSubmit' ] ) ) {
             } elseif ( isset( $_POST[ 'rupSubmit' ] ) ) {
             } elseif ( isset( $_POST[ 'dsSubmit' ] ) ) {
@@ -42,6 +49,20 @@ class OdinHTMLPage extends OdinHTML
             if ( isset( $_REQUEST[ 'manage_users' ] ) ) {
                 $this->manageUsers();
             } elseif ( isset( $_REQUEST[ 'manage_networks' ] ) ) {
+                if ( empty( $_REQUEST[ 'manage_networks' ] ) ) {
+                    /* Display a list of our networks */
+                    $this->displayNetworks();
+                    echo '<br><a href="admin.php?manage_networks=addnetwork">Add network</a>';
+                }
+
+                if ( $_REQUEST[ 'manage_networks' ] === 'addnetwork' ) {
+                    $this->addNetworkPage();
+                }
+
+                if ( $_REQUEST[ 'manage_networks' ] === 'removenetwork' ) {
+                    $network_id = $_REQUEST[ 'network_id' ];
+                    $this->removeNetworkPage( $network_id );
+                }
             } elseif ( isset( $_REQUEST[ 'settings'] ) ) {
                 $this->displaySettings();
             } else {
@@ -72,15 +93,46 @@ class OdinHTMLPage extends OdinHTML
         
         $formGenerator = new FormGenerator(
                             $this,
+                            'dynamic', # data type
                             'post', # method
                             'index.php?settings' ); #action
-        $formGenerator->setData( $allsettings );
+        $formGenerator->setDynamicData( $allsettings );
         $formGenerator->setColumnNames( array( 'Setting', 'Value' ) );
         $formGenerator->setCounterName( 'dsSettingsIdMax' );
         $formGenerator->addInput( 'dsName', 'hidden', '', 's_name' );
         $formGenerator->addInput( 'dsValue', 'text', 's_fullname', 's_value' );
         $formGenerator->addSubmit( 'dsSubmit', 'Save', 'Save' );
-        $formGenerator->addSubmit( 'dsSubmit', 'Cancel', 'Save' );
+        $formGenerator->addSubmit( 'dsSubmit', 'Cancel', 'Cancel' );
+        $form = $formGenerator->generateHTML();
+        $this->getElementById( 'd_content' )->appendChild( $form );
+    }
+
+    private function displayNetworks() {
+        $networkmanagement = new NetworkManagement();
+        $networks = $networkmanagement->getNetworks();
+
+        $tableGenerator = new TableGenerator( $this ); 
+        $tableGenerator->addColumn( 'network id', '%d', array( 'nw_id' ) );
+        $tableGenerator->addColumn( 'scope', '%s/%d', array( 'nw_base','nw_cidr' ) );
+        $tableGenerator->addColumn( '', '<a href="index.php?manage_networks=removenetwork&network_id=%s">remove</a>', array( 'nw_id' ) );
+        $tableGenerator->setData( $networks );
+        $table = $tableGenerator->generateHTML();
+        $this->getElementById( 'd_content' )->appendChild( $table );
+        $addNetworkNode = $this->createLink('index.php?manage_networks=addnetwork', 'Add network' );
+        $this->getElementById( 'd_content' )->appendChild( $addNetworkNode );
+    }
+
+    private function addNetworkPage() {
+        $formGenerator = new FormGenerator(
+                            $this,
+                            'static', # data type
+                            'post', # method
+                            'index.php?manage_networks' ); #action
+        $formGenerator->addStaticData( 'Network', 'text', 'anpNetworkBase' );
+        $formGenerator->addStaticData( 'CIDR', 'text', 'anpNetworkCIDR' );
+        $formGenerator->setColumnNames( array( '','' ) );
+        $formGenerator->addSubmit( 'anpSubmit', 'Save', 'Save' );
+        $formGenerator->addSubmit( 'anpSubmit', 'Cancel', 'Cancel' );
         $form = $formGenerator->generateHTML();
         $this->getElementById( 'd_content' )->appendChild( $form );
     }

@@ -24,6 +24,14 @@ class OdinHTML extends DOMDocument
         return($newNode);
     }
 
+    public function createLink($href, $name ) {
+        $newNode = $this->createElement( 'a' );
+        $newNode->setAttribute( 'href', $href );
+        $linkName = $this->createTextNode( $name );
+        $newNode->appendChild( $linkName );
+        return($newNode);
+    }
+
     private function createOdinElement($tag,$id,$name,$class,$content) {
         $newNode = $this->createElement($tag, $content);
         if ($id) {$newNode->setAttribute('id',$id);}

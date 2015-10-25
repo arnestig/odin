@@ -5,39 +5,6 @@ include_once( "include/nwmanagement.php" );
 include_once( "include/usermanagement.php" );
 include_once( "include/tablegenerator.php" );
 
-function displaySettings() {
-    $settings = new Settings();
-    $allsettings = $settings->getSettings();
-
-    echo '<table><FORM method="post" action="admin.php?settings">';
-    $settingid = 0;
-    foreach ( $allsettings as $cursetting ) {
-        echo '<tr data-toggle="tooltip" title="'.$cursetting[ 's_description' ].'">
-            <td>'.$cursetting[ 's_fullname' ].'</td>
-            <td><INPUT type="text" name="dsValue'.$settingid.'" value="'.$cursetting[ 's_value' ].'">
-            <INPUT type="hidden" name="dsName'.$settingid.'" value="'.$cursetting[ 's_name' ].'">
-        </td></tr>';
-        $settingid++;
-    }
-    echo '<tr><td align="right" colspan=2>
-        <BUTTON type="submit" name="dsSubmit" value="Save">Save</BUTTON>
-        <BUTTON type="submit" name="dsSubmit" value="Cancel">Cancel</BUTTON>
-        <INPUT type="hidden" name="dsSettingsIdMax" value="'.$settingid.'">
-    </table></FORM>';
-}
-
-function displayNetworks() {
-    $networkmanagement = new NetworkManagement();
-    $networks = $networkmanagement->getNetworks();
-
-    $tableGenerator = new TableGenerator(); 
-    $tableGenerator->addColumn( 'network id', '%d', array( 'nw_id' ) );
-    $tableGenerator->addColumn( 'scope', '%s/%d', array( 'nw_base','nw_cidr' ) );
-    $tableGenerator->addColumn( '', '<a href="admin.php?manage_networks=removenetwork&network_id=%s">remove</a>', array( 'nw_id' ) );
-    $tableGenerator->setData( $networks );
-    echo $tableGenerator->generateHTML();
-}
-
 function removeNetworkPage( $network_id ) {
     $networkmanagement = new NetworkManagement();
     $networkdata = $networkmanagement->getNetworkInfo( $network_id );
@@ -50,22 +17,6 @@ function removeNetworkPage( $network_id ) {
         <BUTTON type="submit" name="rnpSubmit" value="Yes">Yes</BUTTON>
         <BUTTON type="submit" name="rnpSubmit" value="No">No</BUTTON>
         </FORM>';
-}
-
-function addNetworkPage() {
-    echo '<FORM method="post" action="admin.php?manage_networks">
-        <table>
-        <tr><td>
-            Network:</td><td><INPUT type="text" name="anpNetworkBase">
-        </td></tr>
-        <tr><td>
-            CIDR:</td><td><INPUT type="text" name="anpNetworkCIDR">
-        </td></tr>
-        <tr><td align="right" colspan=2>
-            <BUTTON type="submit" name="anpSubmit" value="Save">Save</BUTTON>
-            <BUTTON type="submit" name="anpSubmit" value="Cancel">Cancel</BUTTON>
-        </td></tr>
-        </table></FORM>';
 }
 
 function displayUsers() {
@@ -182,14 +133,6 @@ if ( isset( $_POST[ 'eupSubmit' ] ) ) {
     }
 }
 
-/* submit received from add network page */
-if ( isset( $_POST[ 'anpSubmit' ] ) ) {
-    if ( $_POST[ 'anpSubmit' ] === 'Save' ) {
-        $networkmanagement = new NetworkManagement();
-        $networkmanagement->addNetwork( $_POST[ 'anpNetworkBase' ], $_POST[ 'anpNetworkCIDR' ] );
-    }
-}
-
 /* submit received from remove network page */
 if ( isset( $_POST[ 'rnpSubmit' ] ) ) {
     if ( $_POST[ 'rnpSubmit' ] === 'Yes' ) {
@@ -222,10 +165,6 @@ if ( isset( $_REQUEST[ 'manage_networks' ] ) ) {
         /* Display a list of our networks */
         displayNetworks();
         echo '<br><a href="admin.php?manage_networks=addnetwork">Add network</a>';
-    }
-
-    if ( $_REQUEST[ 'manage_networks' ] === 'addnetwork' ) {
-        addNetworkPage();
     }
 
     if ( $_REQUEST[ 'manage_networks' ] === 'removenetwork' ) {
