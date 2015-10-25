@@ -20,7 +20,7 @@ create table hosts (
         host_lease_expiry timestamp null,
         host_last_seen timestamp null,
         host_last_scanned timestamp null,
-        host_last_notified timestamp null
+        host_last_notified_unseen timestamp null
         );
 alter table hosts owner to dbaodin;
 
@@ -86,3 +86,4 @@ return next ref1;
 end;
 $$ language plpgsql;
 alter function get_hosts(varchar,varchar) owner to dbaodin;
+

@@ -69,4 +69,5 @@ insert into settings( s_name, s_value, s_fullname, s_description ) values( 'emai
 insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_notification_type', 'smtp', 'Mail server type', 'Only SMTP supported for now' );
 insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_hostname', '', 'Mail server hostname', 'Hostname or IP-address' );
 insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_port', '25', 'Mail server port', '' );
+insert into settings( s_name, s_value, s_fullname, s_description ) values( 'email_sender', 'no-reply@odin.valhalla', 'Sender email address', 'Most servers will atleast require the domain to be valid' );
 

@@ -33,3 +33,17 @@ begin
 end;
 $$ language plpgsql;
 alter function update_host_status(varchar,boolean,timestamp) owner to dbaodin;
+
+-- get_setting_value
+create or replace function get_setting_value_nt(
+    setting_name varchar(45) )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT s_value FROM settings WHERE s_name = setting_name; 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_setting_value_nt(varchar) owner to dbaodin;
