@@ -34,7 +34,7 @@ create or replace function add_user(
     email varchar(128) )
 returns void as $$
 begin
-    perform isSessionValid(ticket);
+    --perform isSessionValid(ticket);
     insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), firstname, lastname, email );
 end;
 $$ language plpgsql;

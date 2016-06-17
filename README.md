@@ -1,6 +1,19 @@
 # odin
 IP plan management and tracker
 
+# Prerequisites
+For running and developing Odin you will need the following packages:
+ - php
+ - postgresql
+ - perl
+
+Installing on a Debian-based system you can:
+apt-get install php5 perl postgresql postgresql-contrib-9.4
+
+Update the file /etc/postgresql/9.4/main/pg_hba.conf and change 'peer' to 'md5' on the following line:
+"local   all             all                                peer"
+Restart the service via /etc/init.d/postgresql restart
+
 # Development
 start a tiny php server for development:
 php -S 127.0.0.1:8080 -t www/
