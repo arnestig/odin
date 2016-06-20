@@ -1,0 +1,45 @@
+body { padding-bottom: 40px; }
+
+.navbar-default { color: #fff; }
+
+.login { padding-top: 70px; }
+
+.hiddenNwDiv { border-width: 0px 1px 1px 1px; border-color: #ddd; border-style: solid; background-color: #fff; padding-left: 10px; }
+
+.strongRow td { font-weight: bold; }
+
+.fixed-right { margin-top: 40px;}
+
+.bookAddrBtn { text-align: center; padding: 5px; }
+
+.glyphicon { padding-right: 5px; }
+
+.filter-row { background-color: #eee; padding-top: 8px; }
+
+/* to prevent showing the element after page load */
+#choosenAddrDiv { display: none; }
+
+/* Address colors */
+.address-info { width: 35px; height: 15px; border: solid 1px gray; margin: 10px 10px 0px 0px; display: inline-block; }
+.free { background-color: white; }
+.taken { background-color: #fcf8e3; }
+.free-but-seen { background-color: #f2dede; }
+.taken-not-seen { background-color: #d9edf7; }
+
+/* Dropdown button hover colors (long syntax needed for specificity) */
+.nw-table tr td.accordion-toggle { cursor: pointer; }
+.table-condensed > tbody > tr.warning > td.accordion-toggle:hover { background-color: #f0ad4e; color: #fff; }
+.table-condensed > tbody > tr > td.accordion-toggle:hover { background-color: #ddd; color: #fff; }
+.table-condensed > tbody > tr.info > td.accordion-toggle:hover { background-color: #5bc0de; color: #fff; }
+.table-condensed > tbody > tr.danger > td.accordion-toggle:hover { background-color: #d9534f; color: #fff; }
+
+.spacer-row { padding: 8px; }
+.text-head-gutter { padding: 7px; }
+
+/* Ratios for td's in overview: 5 + 17 + 17 + 34 + 14 + 13 = 100 */
+.nw-table tr td:nth-child(1) { width: 5%; }
+.nw-table tr td:nth-child(2) { width: 17%; }
+.nw-table tr td:nth-child(3) { width: 17%; }
+.nw-table tr td:nth-child(4) { width: 34%; }
+.nw-table tr td:nth-child(5) { width: 14%; }
+.nw-table tr td:nth-child(6) { width: 13%; }
