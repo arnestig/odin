@@ -81,7 +81,7 @@ class NetworkManagement
         return $results;
     }
 
-    public function getHosts()
+    public function getHosts($network_id)
     {
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT get_hosts( ? )" );
@@ -99,6 +99,45 @@ class NetworkManagement
 
         return $results;
     }
+
+
+    /* fippel o båg
+    public function getNwHosts($network_id)
+    {
+        // inspiration 
+        //$sth = $this->dbcon->prepare( "SELECT get_networks( ?, ? )" );
+        //$sth->execute( array( '', $network_id ) );
+        //$cursors = $sth->fetch();
+        //$sth->closeCursor();
+
+        // get each result set
+        //$results = array();
+        //$sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_networks'] .'";');
+        //$results = $sth->fetch( PDO::FETCH_ASSOC );
+        //$sth->closeCursor();
+        //$this->dbcon->commit();
+        //unset($sth);
+
+        //return $results;
+
+
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_hosts( ?, ? )" );
+        $sth->execute( array( '', $network_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_hosts'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+    */
 
     public function nHostsInNetwork( $cidr )
     {

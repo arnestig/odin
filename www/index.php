@@ -16,8 +16,8 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 function userRegistration() {
   $settings = new Settings();
   $allsettings = $settings->getSettings();
-  foreach ( $allsettings as $name => $settingsarray ) {
-    foreach ( $settingsarray as $cursetting ) {
+  foreach ( $allsettings as $name ) {
+    foreach ( $name as $cursetting ) {
       if ($cursetting[ 's_name' ] === 'allow_user_registration' && $cursetting[ 's_value' ] === '1') {
         echo '
         <div class="row">

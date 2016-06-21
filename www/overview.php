@@ -1,25 +1,57 @@
 <?php
 
-include('include/html_frame.php');
+
+include_once('include/nwmanagement.php');
+include_once('include/html_frame.php');
+
+//Default range-view
+$cur_range = "192.168.0.0";
+if ( isset( $_REQUEST[ 'nw_id' ] ) ) {
+  $cur_range = $_REQUEST[ 'nw_id' ];
+}
+
+function network_ranges($view_range) {
+  $networks = new NetworkManagement();
+  $nw_array = $networks->getNetworks();
+  foreach ($nw_array as $range) {
+    echo '
+                <li role="presentation"';
+    if ($view_range === $range["nw_base"]) {
+      echo ' class="active"';
+    }
+    echo '
+                ><a href="overview.php?nw_id='.$range["nw_base"].'">'.$range["nw_base"].'/'.$range["nw_cidr"].'</a></li>
+      ';
+  }
+}
+
+//le grand master funktzione
+function tbody_content($view_range) {
+  $networks = new NetworkManagement();
+  $hosts_array = $networks->getHosts(1);
+  foreach ($hosts_array as $host_info) {
+    //echo $host_info['host_ip'];
+  }
+}
+
+$frame = new HTMLframe();
+$frame->doc_start("Hosts");
+$frame->doc_nav("Overview");
 
 
-HTMLframe::doc_start("Hosts");
-HTMLframe::doc_nav("overview");
+
 
 //Range selection (with desc.) and info/filter panel below
 echo '
     <div class="container">
       <div class="row">
-
-      <!-- FORM START FOR CHECKBOX BUTTONS -->
-      <form>
         <div class="col-lg-offset-1 col-lg-8">
           <div class="row">
             <div class="col-lg-12">
-              <ul class="nav nav-tabs">
-                <li role="presentation" class="active"><a href="networks.html">192.168.0.0/24</a></li>
-                <li role="presentation"><a href="#">192.172.0.0/16</a></li>
-                <li role="presentation"><a href="#">192.176.0.0/32</a></li>
+              <ul class="nav nav-tabs"> 
+';
+network_ranges($cur_range);
+echo '
               </ul>
             </div>
           </div>
@@ -87,7 +119,7 @@ echo '
           <div class="row">
             <div class="col-lg-12">
 ';
-
+tbody_content($cur_range);
 // Host table
 // GENERATE
 echo '
@@ -103,6 +135,8 @@ echo '
                   </tr>
                 </thead>
                 <tbody>
+
+
                   <tr class="warning">
                     <td data-toggle="collapse" data-target="#demo1" class="accordion-toggle" id="192.168.0.1"><i class="glyphicon glyphicon-triangle-right"></i></td>
                     <td>192.168.0.1</td>
@@ -137,7 +171,9 @@ echo '
                         <div class="row spacer-row"></div>
                       </div>
                     </td>
-                  </tr>                        
+                  </tr>
+
+
                 </tbody>
               </table>
 ';
@@ -152,7 +188,8 @@ echo '
 echo '
         </div>
 
-    <!-- FIXED RIGHT PANEL - START -->
+    <!-- FIXED RIGHT PANEL AND CHECKBOX FORM - START -->
+        <form>
         <div class="col-lg-3">
           <div class="affix fixed-right" id="choosenAddrDiv">
             <div class="panel panel-default">
@@ -168,7 +205,7 @@ echo '
             </div>
           </div>
         </div>
-      </form>
+        </form>
     <!-- FIXED RIGHT PANEL AND FORM - END -->
 
       </div>

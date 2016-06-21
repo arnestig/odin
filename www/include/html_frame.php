@@ -1,6 +1,17 @@
 <?php
+/*
+* class intended for scaffolding the sites main theme
+*/
 
 class HTMLframe {
+  private $user_nav;
+  private $admin_nav;
+
+  public function __construct() {
+    $this->admin_nav = [ ["manage_networks.php","glyphicon-signal","Networks"], ["manage_users.php","glyphicon-user","Users"], ["settings.php","glyphicon-cog","Settings"] ];
+    $this->user_nav = [ ["logout.php","glyphicon-off","Log out"],["userIPs.php","glyphicon-th-list","View your addresses"] ];
+  }
+
 	public function doc_start( $page_title ) {
 		echo '
 <!DOCTYPE html>
@@ -26,6 +37,7 @@ class HTMLframe {
   <body>';
 	}
 
+  /* TODO: Implement current page highlight, restrict admin functionality, load company logo */
   public function doc_nav( $active ) {
     echo '
     <nav class="navbar navbar-default navbar-static-top">
@@ -38,26 +50,43 @@ class HTMLframe {
             <span class="icon-bar"></span>
           </button>  
         </div>
-        <a class="navbar-brand" href="admin_networks.html"><img src="images/Kapsch-logo.png" alt="Kapsch - Logo"></a>
+        <a class="navbar-brand" href="overview.php"><img src="images/Kapsch-logo.png" alt="Kapsch - Logo"></a>
           
         <ul class="nav navbar-nav">
           <li class="active">
-            <a href="admin_networks.html"><i class="glyphicon glyphicon-eye-open"></i>Overview</a>  
+            <a href="overview.php"><i class="glyphicon glyphicon-eye-open"></i>Overview</a>  
           </li>
 
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Manage</strong><span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="manage_networks.html"><i class="glyphicon glyphicon-signal"></i>Networks</a></li>
-              <li><a href="manage_users.html"><i class="glyphicon glyphicon-user"></i>Users</a></li>
-              <li><a href="settings.html"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
+            ';
+    foreach ($this->admin_nav as $item) {
+      echo '
+              <li';
+      if ($active === $item[2]) {
+        echo ' class="active"';
+      }
+      echo '><a href="'.$item[0].'"><i class="glyphicon '.$item[1].'"></i>'.$item[2].'</a></li>
+      ';
+    }
+    echo '
             </ul>
           </li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Admin</strong><span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="index.html"><i class="glyphicon glyphicon-off"></i>Log out</a></li>
-              <li><a href="userIPs.html"><i class="glyphicon glyphicon-th-list"></i>View Your Addresses</a></li>
+            ';
+    foreach ($this->user_nav as $item) {
+      echo '
+              <li';
+      if ($active === $item[2]) {
+        echo ' class="active"';
+      }
+      echo '><a href="'.$item[0].'"><i class="glyphicon '.$item[1].'"></i>'.$item[2].'</a></li>
+      ';
+    }
+    echo '
             </ul>
           </li>
         </ul>

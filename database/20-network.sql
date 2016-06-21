@@ -75,14 +75,14 @@ alter function get_networks(varchar,smallint) owner to dbaodin;
 -- get_hosts
 create or replace function get_hosts(
     ticket varchar(255),
-    get_host_ip varchar(36) DEFAULT NULL )
+    get_nw_id smallint DEFAULT NULL )
 returns SETOF refcursor AS $$
 declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT host_ip, usr_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned FROM hosts WHERE (get_host_ip IS NULL or host_ip = get_host_ip); 
+    SELECT host_ip, usr_id, nw_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned FROM hosts WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_hosts(varchar,varchar) owner to dbaodin;
+alter function get_hosts(varchar,smallint) owner to dbaodin;
