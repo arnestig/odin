@@ -9,7 +9,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
   $name = $_POST['email'];
   $pwd = $_POST['password'];
   if ($user->login($name,$pwd)) {
-    header('Location: hosts.php');  
+    header('Location: overview.php');  
   }
 }
 
