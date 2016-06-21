@@ -1,14 +1,38 @@
 <?php
 
 include_once( "include/user.php" );
+include_once( "include/settings.php" );
 include( "include/html_frame.php" );
 
-?>
+if (!empty($_POST['email']) && !empty($_POST['password'])) {
+  $user = new User();
+  $name = $_POST['email'];
+  $pwd = $_POST['password'];
+  if ($user->login($name,$pwd)) {
+    header('Location: hosts.php');  
+  }
+}
 
-<?php
-HTMLframe::doc_start("Log in"); 
-?>
+function userRegistration() {
+  $settings = new Settings();
+  $allsettings = $settings->getSettings();
+  foreach ( $allsettings as $name => $settingsarray ) {
+    foreach ( $settingsarray as $cursetting ) {
+      if ($cursetting[ 's_name' ] === 'allow_user_registration' && $cursetting[ 's_value' ] === '1') {
+        echo '
+        <div class="row">
+          <div class="col-lg-offset-4 col-lg-4">
+            <p class="text-center">or...</p>
+            <p class="text-center"><a href="new_user.html">Register here</a></p>
+          </div>
+        </div>';
+      }
+    }
+  }
+}
 
+HTMLframe::doc_start("Log in");
+echo '
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4 login text-center">
@@ -22,35 +46,26 @@ HTMLframe::doc_start("Log in");
       </div>
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4">
-          <form>
+          <form id="login" name="login_form" action="" method="post">
             <div class="form-group">
-              <label for="exampleInputEmail1">Email address</label>
-              <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" autocomplete="on">
+              <label for="email">Email address</label>
+              <input type="text" class="form-control" id="email" name="email" placeholder="Email" autocomplete="on">
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Password">
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox">Remember me
+                <input type="checkbox" id="login-chkbx" name="login-chkbx">Remember me
               </label>
             </div>
-            <a class="btn btn-default" href="networks.html" role="button">Log in</a>
-            <!-- Real btn
-            <button type="submit" class="btn btn-default">Log in</button>
-            -->
+            <button type="submit" name="submit" value="Submit" class="btn btn-default" id="login-btn">Log in</button>
           </form>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-offset-4 col-lg-4">
-          <p class="text-center">or...</p>
-          <p class="text-center"><a href="new_user.html">Create new user</a></p>
-        </div>
-      </div>
-    </div>
-
-<?php;
-HTMLframe::doc_end(); 
+      </div>';
+userRegistration();
+echo '
+    </div>';
+HTMLframe::doc_end();
 ?>

@@ -18,6 +18,10 @@ class TableGenerator
         array_push( $this->columns, $add_column );
     }
 
+
+    /* 
+    * Generic tablegenerator 
+    */
     public function generateHTML()
     {
         $retval = '<table class="sortable"><tr>';
@@ -40,6 +44,35 @@ class TableGenerator
         $retval .= '</table>';
         return $retval;
     }
+
+    /* 
+    * Host table generator for overview-page
+    * TODO: rm class sortable?
+    */
+    public function generateHostHTML()
+    {
+        $retval = '<table class="table table-condensed nw-table sortable"><tr>';
+        foreach ( $this->columns as $column ) {
+            $retval .= '<th>'.$column[ 'name' ].'</th>';
+        }
+        $retval .= '</tr><tr>';
+        for ( $item_id = 0; $item_id < count( $this->tableitems ); $item_id++ ) {
+            $retval .= '<tr>';
+            foreach ( $this->columns as $column ) {
+                $extracted_data = array();
+                foreach ( $column[ 'data_mapping' ] as $reference ) {
+                    $raw_data = $this->tableitems[ $item_id ][ $reference ];
+                    array_push( $extracted_data, $raw_data );
+                }
+                $retval .= '<td>'.vsprintf( $column[ 'formatting' ], $extracted_data ).'</td>'; 
+            }
+            $retval .= '</tr>';
+        }
+        $retval .= '</table>';
+        return $retval;
+    }
+
+
 
     public function setData( $multidimensional_array )
     {
