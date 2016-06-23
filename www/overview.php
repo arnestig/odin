@@ -10,6 +10,21 @@ if ( isset( $_REQUEST[ 'nw_id' ] ) ) {
   $cur_range = $_REQUEST[ 'nw_id' ];
 }
 
+// Tag defaults to just 'show_all' for initial page req AND if it's req'ed by client.
+// If same tag exists twice in 'filter_tags' both are removed
+$active_filter_tags = ['show_all'];
+if ( isset( $_REQUEST[ 'filter_tags' ] ) ) {
+  foreach ($_REQUEST[ 'filter_tags' ] as $set_tag) {
+    if ($set_tag === 'show_all') {
+      $_REQUEST['filter_tags'] = [];
+    }
+  }
+  if (count($_REQUEST) > 0) {
+    
+    $active_filter_tags = $_REQUEST['filter_tags'];
+  }
+}
+
 function network_ranges($view_range) {
   $networks = new NetworkManagement();
   $nw_array = $networks->getNetworks();
@@ -25,7 +40,18 @@ function network_ranges($view_range) {
   }
 }
 
-//le grand master funktzione
+// TODO - Keeping track of active filtertags via get-reqs
+function active_filter($filter_tags) {
+  echo '
+                <td><div class="toggle active">Show all</div></td>
+                <td><div class="toggle"><div class="address-info free"></div>Free</div></td>
+                <td><div class="toggle"><div class="address-info free-but-seen"></div>Free (but seen)</div></td>
+                <td><div class="toggle"><div class="address-info taken"></div>Taken</div></td>
+                <td><div class="toggle"><div class="address-info taken-not-seen"></div>Taken (not seen)</div></td> 
+  ';
+}
+
+// TODO - le grand master funktzione
 function tbody_content($view_range) {
   $networks = new NetworkManagement();
   $hosts_array = $networks->getHosts(1);
@@ -69,11 +95,9 @@ echo '
           <table class="table filter small">
             <tbody>
               <tr>
-                <td><div class="toggle active">Show all</div></td>
-                <td><div class="toggle"><div class="address-info free"></div>Free</div></td>
-                <td><div class="toggle"><div class="address-info free-but-seen"></div>Free (but seen)</div></td>
-                <td><div class="toggle"><div class="address-info taken"></div>Taken</div></td>
-                <td><div class="toggle"><div class="address-info taken-not-seen"></div>Taken (not seen)</div></td>
+';
+active_filter($active_filter_tags);
+echo '
                 <td>&nbsp</td>
                 <td>&nbsp</td>
               </tr>
