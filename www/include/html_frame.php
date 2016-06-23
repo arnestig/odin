@@ -25,7 +25,7 @@ class HTMLframe {
 
     <!-- Bootstrap -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/kapsch.css">
+    <link rel="stylesheet" href="css/odin.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesnt work if you view the page via file:// -->
@@ -50,7 +50,7 @@ class HTMLframe {
             <span class="icon-bar"></span>
           </button>  
         </div>
-        <a class="navbar-brand" href="overview.php"><img src="images/Kapsch-logo.png" alt="Kapsch - Logo"></a>
+        <a class="navbar-brand" href="overview.php"><img src="images/ODIN.png" alt="Odin - Logo"></a>
           
         <ul class="nav navbar-nav">
           <li class="active">

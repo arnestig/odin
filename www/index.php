@@ -36,7 +36,7 @@ echo '
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4 login text-center">
-          <img src="images/Kapsch-logo-big.png" alt="Kapsch logo">
+          <img src="images/ODIN-big.png" alt="Odin logo">
         </div>
       </div>
       <div class="row">

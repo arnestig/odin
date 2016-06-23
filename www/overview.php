@@ -62,55 +62,54 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <p>This IP-range is intended for use of the R&D-section of Kapsch. For other uses, please contact <a mailto="#">IPmasta</a> before taking water over your head.</p>
+              <p>This IP-range is intended for use of the R&D-section of ACME. For other uses, please contact <a mailto="#">IPmasta</a> before taking water over your head.</p>
             </div>
           </div>
           <!-- START - Filter and color-info row -->
-          <div class="row filter-row">
-            <div class="col-lg-2">
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="address-info free"></div>Free
-                </div>
-                <div class="col-lg-12">
-                  <div class="address-info taken"></div>Taken
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="address-info free-but-seen"></div>Free - but seen
-                </div>
-                <div class="col-lg-12">
-                  <div class="address-info taken-not-seen"></div>Taken - but not seen
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <form class="form">
-                <div class="row">
-                  <div class="form-group col-lg-12">
-                    <input type="text" class="form-control input-sm" id="keywordSearch" placeholder="Enter keywords">
+          <table class="table filter small">
+            <tbody>
+              <tr>
+                <td><div class="toggle active">Show all</div></td>
+                <td><div class="toggle"><div class="address-info free"></div>Free</div></td>
+                <td><div class="toggle"><div class="address-info free-but-seen"></div>Free (but seen)</div></td>
+                <td><div class="toggle"><div class="address-info taken"></div>Taken</div></td>
+                <td><div class="toggle"><div class="address-info taken-not-seen"></div>Taken (not seen)</div></td>
+                <td>&nbsp</td>
+                <td>&nbsp</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="filter-bottom"><div class="filter-result"><em>234 567 addresses in result</em></div></td>
+                <td colspan="2" class="filter-bottom">
+                  <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="Enter keywords">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">Filter result</button>
+                    </span>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-lg-6">
-                    <select class="form-control input-sm" id="sel1">
-                      <option>Show all</option>
-                      <option>Free</option>
-                      <option>Taken</option>
-                      <option>Free - but seen</option>
-                      <option>Taken - but not seen</option>
-                    </select>
+                </td>
+                <td class="filter-bottom" colspan="2">
+                  <table class="table filter">
+                    <tbody style="background-color:#eeeeee;">
+                      <tr>
+                        <td>&nbsp</td>
+                        <td><div class="filter-bottom page">Page</div></td>
+                        <td><input type="text" class="form-control input-sm" placeholder="1" style="width:85%;margin-top:2px;"></td>
+                        <td><div class="filter-bottom page">of 254</div></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td class="filter-bottom">
+                  <div class="input-group input-group-sm">
+                    <div class="input-group-btn" style="padding-right:5px;">
+                      <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                      <button class="btn btn-default" type="button"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                    </div>
                   </div>
-                  <div class="form-group col-lg-6">
-                    <button class="btn btn-sm btn-default">Search</button>
-                  </div>
-                </div>  
-              </form>
-            </div>
-          </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
           <!-- END - Filter and color-info row -->
 ';
 

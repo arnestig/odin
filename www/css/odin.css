@@ -1,0 +1,67 @@
+body { padding-bottom: 40px; }
+
+.navbar-default { color: #fff; }
+.login { padding-top: 70px; }
+.hiddenNwDiv { border-width: 0px 1px 1px 1px; border-color: #ddd; border-style: solid; background-color: #fff; padding-left: 10px; }
+.strongRow td { font-weight: bold; }
+.glyphicon { padding-right: 5px; }
+
+
+/* Toggleble filter-table no borders */
+.table.filter { border-bottom:0px !important; }
+.table.filter td { border: 1px !important; padding: 0px !important; }
+.fixed-table-container.filter { border: 0px !important; }
+.toggle { padding: 7px; margin-right: 4px; background-color: #f8f8f8; border-top: solid 1px #eeeeee;}
+.toggle:hover { background-color: #cccccc; }
+.toggle.active { background-color: #eeeeee; font-weight: bold; }
+.filter tr td:nth-child(1) { width: 14%; }
+.filter tr td:nth-child(2) { width: 14%; }
+.filter tr td:nth-child(3) { width: 16%; }
+.filter tr td:nth-child(4) { width: 14%; }
+.filter tr td:nth-child(5) { width: 20%; }
+.filter tr td:nth-child(6) { width: 11%; }
+.filter tr td:nth-child(7) { width: 11%; }
+.filter tr.filter-bottom { padding: 8px; }
+.filter-bottom { background-color: #eeeeee; }
+.page { padding-top: 9px; }
+.filter-result { padding: 10px 0px 10px 7px; }
+.input-group-sm { margin-top: 3px;}
+
+/* Toggleble filter row */
+.filter-row.bottom { background-color: #eee; }
+.filter-row.top > div.active { background-color: #eee; }
+.filter-row.top > .toggle { height: 100%; }
+.filter-row.top > .toggle p { display: inline; padding-bottom: 2px; }
+/* Address colors */
+.address-info { width: 11px; height: 11px; border: solid 1px gray; margin-right: 5px; background-color: #f8f8f8; display: inline-block; }
+.free { background-color: white; }
+.taken { background-color: #fcf8e3; }
+.free-but-seen { background-color: #f2dede; }
+.taken-not-seen { background-color: #d9edf7; }
+
+
+
+
+/* Dropdown button hover colors (long syntax needed for specificity) */
+.nw-table tr td.accordion-toggle { cursor: pointer; }
+.table-condensed > tbody > tr.warning > td.accordion-toggle:hover { background-color: #f0ad4e; color: #fff; }
+.table-condensed > tbody > tr > td.accordion-toggle:hover { background-color: #ddd; color: #fff; }
+.table-condensed > tbody > tr.info > td.accordion-toggle:hover { background-color: #5bc0de; color: #fff; }
+.table-condensed > tbody > tr.danger > td.accordion-toggle:hover { background-color: #d9534f; color: #fff; }
+
+.spacer-row { padding: 8px; }
+.text-head-gutter { padding: 7px; }
+
+/* Ratios for td's in overview: 5 + 17 + 17 + 34 + 14 + 13 = 100% */
+.nw-table tr td:nth-child(1) { width: 5%; }
+.nw-table tr td:nth-child(2) { width: 17%; }
+.nw-table tr td:nth-child(3) { width: 17%; }
+.nw-table tr td:nth-child(4) { width: 34%; }
+.nw-table tr td:nth-child(5) { width: 14%; }
+.nw-table tr td:nth-child(6) { width: 13%; }
+
+/* Right fixed book address panel*/
+.fixed-right { margin-top: 40px;}
+.bookAddrBtn { text-align: center; padding: 5px; }
+/* To prevent showing the right affixed element after page load */
+#choosenAddrDiv { display: none; }
