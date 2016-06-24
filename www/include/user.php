@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include_once( "config.php" );
 
@@ -19,6 +20,7 @@ class User
         if ( $result[ 'authenticate' ] == true ) {
             $_SESSION['active'] = true;
             setcookie(CUKY_NAME, $result[ 'authenticate' ]);
+            $this->setSessionDefaults();
             return true;
         } else {
             return false;
@@ -34,6 +36,16 @@ class User
     public function getSession()
     {
         return $_SESSION['active'];
+    }
+
+    //TODO: no hardcoding of nw ranges and other schtuff...
+    private function setSessionDefaults() {
+        $_SESSION['cur_network_range'] = "192.168.0.0";
+        $_SESSION['show_all'] = true;
+        $_SESSION['active_filter_tags'] = array();
+        $_SESSION['filter_search'] = "";
+        $_SESSION['max_pages'] = "";
+        $_SESSION['current_page'] = "1";
     }
 }
 

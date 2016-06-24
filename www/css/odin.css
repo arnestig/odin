@@ -13,6 +13,8 @@ body { padding-bottom: 40px; }
 .fixed-table-container.filter { border: 0px !important; }
 .toggle { padding: 7px; margin-right: 4px; background-color: #f8f8f8; border-top: solid 1px #eeeeee;}
 .toggle:hover { background-color: #cccccc; }
+a.filter-link { color: black; }
+a.filter-link:hover { text-decoration: none; }
 .toggle.active { background-color: #eeeeee; font-weight: bold; }
 .filter tr td:nth-child(1) { width: 14%; }
 .filter tr td:nth-child(2) { width: 14%; }

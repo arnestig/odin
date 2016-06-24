@@ -22,6 +22,14 @@ $(document).ready(function() {
         }
     });
 
+    //Submit page number when hitting enter
+    $('.result-page-field').keydown(function(event) {
+        if (event.keyCode == 13) {
+            this.form.submit();
+            return false;
+         }
+    });
+
     $('.accordion-toggle').click(function() {
 
         console.log($('td#' + this.id + ' i'));
@@ -32,7 +40,8 @@ $(document).ready(function() {
         }
 
 
-/*
+/*      TODO: Make the right-arrow a down-arrow when expanding host in overview.php
+
         var parentGlyphElement = document.getElementById(this.id);
         glyphElement = $(":first-child", parentGlyphElement);
         console.log(glyphElement);
