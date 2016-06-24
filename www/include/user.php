@@ -20,7 +20,7 @@ class User
         if ( $result[ 'authenticate' ] == true ) {
             $_SESSION['active'] = true;
             setcookie(CUKY_NAME, $result[ 'authenticate' ]);
-            $this->setSessionDefaults();
+            $this->setSessionDefaults($username);
             return true;
         } else {
             return false;
@@ -39,13 +39,17 @@ class User
     }
 
     //TODO: no hardcoding of nw ranges and other schtuff...
-    private function setSessionDefaults() {
-        $_SESSION['cur_network_range'] = "192.168.0.0";
-        $_SESSION['show_all'] = true;
-        $_SESSION['active_filter_tags'] = array();
-        $_SESSION['filter_search'] = "";
-        $_SESSION['max_pages'] = "";
-        $_SESSION['current_page'] = "1";
+    private function setSessionDefaults($username) {
+        $_SESSION[ 'username' ] = $username;
+        $_SESSION[ 'cur_network_id' ] = '1';
+        $_SESSION[ 'show_all' ] = true;
+        $_SESSION[ 'active_filter_tags' ] = array();
+        $_SESSION[ 'host_rows' ] = '';
+        $_SESSION[ 'filter_search' ] = '';
+        $_SESSION[ 'max_pages' ] = 0;
+        $_SESSION[ 'current_page' ] = 1;
+        $_SESSION[ 'result_set' ] = null;
+        $_SESSION[ 'networks' ] = null;
     }
 }
 

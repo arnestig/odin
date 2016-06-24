@@ -1,25 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Kapsch - Odin - Manage Users</title>
+<?php
+session_start();
 
-    <!-- Bootstrap -->
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/kapsch.css">
+include_once('include/html_frame.php');
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
+$frame = new HTMLframe();
+$frame->doc_start("Manage Users");
 
+echo '
 <!-- Modal ADD USER code start -->
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
@@ -142,48 +129,11 @@
       </div>
     </div>
 <!-- Modal DELETE USER code end -->
+';
 
-    <nav class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          
-        </div>
-        <a class="navbar-brand" href="index.html"><img src="images/Kapsch-logo.png" alt="Kapsch - Logo"></a>
-        <div id="navbar" class="collapse navbar-collapse navbar-right">
-          
-          <ul class="nav navbar-nav">
-            <li><a href="admin_networks.html"><i class="glyphicon glyphicon-eye-open"></i>Overview</a></li>
+$frame->doc_nav("Users", $_SESSION[ 'username' ] );
 
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Manage</strong><span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="manage_networks.html"><i class="glyphicon glyphicon-signal"></i>Networks</a></li>
-              <li class="active"><a href="manage_users.html"><i class="glyphicon glyphicon-user"></i>Users</a></li>
-              <li><a href="settings.html"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
-              </ul>
-            </li>
-
-
-            <p class="navbar-text">Signed in as:</p>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Admin</strong><span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="index.html"><i class="glyphicon glyphicon-off"></i>Log out</a></li>
-                <li><a href="userIPs.html"><i class="glyphicon glyphicon-th-list"></i>View Your IP's</a></li>
-              </ul>
-            </li>
-
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
+echo '
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-1 col-lg-8">
@@ -386,9 +336,8 @@
       </div>
 
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  </body>
-</html>
+';
+
+$frame->doc_end();
+
+?>

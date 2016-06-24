@@ -1,3 +1,4 @@
+html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
 .navbar-default { color: #fff; }
@@ -6,6 +7,11 @@ body { padding-bottom: 40px; }
 .strongRow td { font-weight: bold; }
 .glyphicon { padding-right: 5px; }
 
+/* Right fixed book address panel*/
+.fixed-right { margin-top: 40px;}
+.bookAddrBtn { text-align: center; padding: 5px; }
+/* To prevent showing the right affixed element after page load */
+#choosenAddrDiv { display: none; }
 
 /* Toggleble filter-table no borders */
 .table.filter { border-bottom:0px !important; }
@@ -41,9 +47,6 @@ a.filter-link:hover { text-decoration: none; }
 .free-but-seen { background-color: #f2dede; }
 .taken-not-seen { background-color: #d9edf7; }
 
-
-
-
 /* Dropdown button hover colors (long syntax needed for specificity) */
 .nw-table tr td.accordion-toggle { cursor: pointer; }
 .table-condensed > tbody > tr.warning > td.accordion-toggle:hover { background-color: #f0ad4e; color: #fff; }
@@ -61,9 +64,3 @@ a.filter-link:hover { text-decoration: none; }
 .nw-table tr td:nth-child(4) { width: 34%; }
 .nw-table tr td:nth-child(5) { width: 14%; }
 .nw-table tr td:nth-child(6) { width: 13%; }
-
-/* Right fixed book address panel*/
-.fixed-right { margin-top: 40px;}
-.bookAddrBtn { text-align: center; padding: 5px; }
-/* To prevent showing the right affixed element after page load */
-#choosenAddrDiv { display: none; }

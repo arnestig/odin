@@ -2,7 +2,7 @@
 
 include_once( "include/user.php" );
 include_once( "include/settings.php" );
-include( "include/html_frame.php" );
+include_once( "include/html_frame.php" );
 
 if (!empty($_POST['email']) && !empty($_POST['password'])) {
   $user = new User();
@@ -23,7 +23,7 @@ function userRegistration() {
         <div class="row">
           <div class="col-lg-offset-4 col-lg-4">
             <p class="text-center">or...</p>
-            <p class="text-center"><a href="new_user.html">Register here</a></p>
+            <p class="text-center"><a href="user_registration.php">Register here</a></p>
           </div>
         </div>';
       }
@@ -31,7 +31,9 @@ function userRegistration() {
   }
 }
 
-HTMLframe::doc_start("Log in");
+$frame = new HTMLframe();
+$frame->doc_start("Log in");
+
 echo '
     <div class="container">
       <div class="row">
@@ -64,8 +66,12 @@ echo '
           </form>
         </div>
       </div>';
+
 userRegistration();
+
 echo '
     </div>';
-HTMLframe::doc_end();
+
+$frame->doc_end();
+
 ?>

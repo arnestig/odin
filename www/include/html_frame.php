@@ -8,7 +8,7 @@ class HTMLframe {
   private $admin_nav;
 
   public function __construct() {
-    $this->admin_nav = [ ["manage_networks.php","glyphicon-signal","Networks"], ["manage_users.php","glyphicon-user","Users"], ["settings.php","glyphicon-cog","Settings"] ];
+    $this->admin_nav = [ ["manage_networks.php","glyphicon-signal","Networks"], ["manage_users.php","glyphicon-user","Users"], ["manage_settings.php","glyphicon-cog","Settings"] ];
     $this->user_nav = [ ["logout.php","glyphicon-off","Log out"],["userIPs.php","glyphicon-th-list","View your addresses"] ];
   }
 
@@ -38,7 +38,7 @@ class HTMLframe {
 	}
 
   /* TODO: Implement current page highlight, restrict admin functionality, load company logo */
-  public function doc_nav( $active ) {
+  public function doc_nav( $active, $username ) {
     echo '
     <nav class="navbar navbar-default navbar-static-top">
       <div class="container">
@@ -74,7 +74,7 @@ class HTMLframe {
             </ul>
           </li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Admin</strong><span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>'.$username.'</strong><span class="caret"></span></a>
             <ul class="dropdown-menu">
             ';
     foreach ($this->user_nav as $item) {
