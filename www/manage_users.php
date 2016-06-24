@@ -2,6 +2,44 @@
 session_start();
 
 include_once('include/html_frame.php');
+include_once('include/usermanagement.php');
+
+// Sanitize, validate, crosscheck, confirm and ask pretty...
+if (isset( $_POST['add_user'] )) {
+  $userManager = new UserManagement();
+  if ( $_POST[ 'add_user' ] === 'Add user' ) {
+    $userManager->addUser(
+        $_POST[ 'usr_usern' ],
+        $_POST[ 'usr_lastn' ],
+        $_POST[ 'usr_firstn' ],
+        $_POST[ 'usr_email' ]
+      );
+  }    
+}
+
+generate_data();
+
+function generate_data() {
+  $userManager = new UserManagement();
+  $_SESSION[ 'users' ] = $userManager->getUsers();
+}
+
+function generate_user_list() {
+  $userlist = '';
+  foreach ( $_SESSION[ 'users' ] as $row ) {
+    $userlist .= '
+                  <tr>
+                    <td>'.$row[ 'usr_usern' ].'</td>
+                    <td>'.$row[ 'usr_firstn' ].'</td>
+                    <td>'.$row[ 'usr_lastn' ].'</td>
+                    <td>'.$row[ 'usr_email' ].'</td>
+                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
+                  </tr>
+    ';
+  }
+  return $userlist;
+}
 
 $frame = new HTMLframe();
 $frame->doc_start("Manage Users");
@@ -162,170 +200,7 @@ echo '
                   </tr>
                 </thead>
                 <tbody>
-
-                 <!-- tr*20>td{user$}+td{John}+td{Doe}+td{john.doe@email.com}+(td>a[data-toggle="modal"][data-target="#editUserModal"]>i.glyphicon.glyphicon-pencil)+(td>a[data-toggle="modal"][data-target="#deleteUserModal"]>i.glyphicon.glyphicon-trash) -->
-
-                  <tr>
-                    <td>user1</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user2</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user3</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user4</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user5</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user6</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user7</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user8</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user9</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user10</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user11</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user12</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user13</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user14</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user15</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user16</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user17</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user18</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user19</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>user20</td>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john.doe@email.com</td>
-                    <td><a href="" data-toggle="modal" data-target="#editUserModal"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a href="" data-toggle="modal" data-target="#deleteUserModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  
+                '.generate_user_list().'
                 </tbody>
               </table>
             </div>

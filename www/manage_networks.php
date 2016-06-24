@@ -5,6 +5,36 @@ session_start();
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
 
+if (isset( $_POST['add_network'] )) {
+  $nwManager = new NetworkManagement();
+  if ( $_POST[ 'add_network' ] === 'Add network' ) {
+    $nwManager->addNetwork(
+        $_POST[ 'nw_base' ],
+        $_POST[ 'nw_cidr' ]
+      );
+  }    
+}
+
+generate_data();
+
+function generate_data() {
+  $nwManager = new NetworkManagement();
+  $_SESSION[ 'networks' ] = $nwManager->getNetworks();
+}
+
+function generate_nw_list() {
+  foreach ( $_SESSION[ 'networks' ] as $row ) {
+    echo '
+                 <tr>
+                    <td>'.$row['nw_id'].'</td>
+                    <td>'.$row['nw_base'].'/'.$row['nw_cidr'].'</td>
+                    <td><a href="#" data-toggle="modal" data-target="#deleteNetworkModal"><i class="glyphicon glyphicon-trash"></i></a></td>
+                  </tr>
+    ';
+  }
+}
+
+
 $frame = new HTMLframe();
 $frame->doc_start("Manage Networks");
 
@@ -17,26 +47,26 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Add network</h4>
           </div>
-          <div class="modal-body">
-            <form>
+          <form method="POST" action="manage_networks.php">
+            <div class="modal-body">
               <div class="form-group">
                 <label for="network">Network</label>
-                <input type="text" class="form-control" id="network" placeholder="Network">
+                <input type="text" class="form-control" name="nw_base" placeholder="Network">
               </div>
               <div class="form-group">
                 <label for="CIDR">CIDR/Netmask</label>
-                <input type="text" class="form-control" id="CIDR" placeholder="Write subnet in CIDR or Netmask notation">
+                <input type="text" class="form-control" name="nw_cidr" placeholder="Write subnet in CIDR or Netmask notation">
               </div>
               <div class="form-group">
                 <label for="networkDescription">Network description</label>
                 <textarea class="form-control" rows="3" id="networkDescription" placeholder="Network description"></textarea>
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input name="add_network" type="submit" value="Add network" type="button" class="btn btn-primary">
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -100,25 +130,11 @@ echo '
                   </tr>
                 </thead>
                 <tbody>
+';
 
-                 <!-- tr*3>td{$}+td{192.168.0.0/24}+(td>a[data-toggle="modal"][data-target="#deleteNetworkModal"]>i.glyphicon.glyphicon-trash) -->
+generate_nw_list();
 
-                 <tr>
-                    <td>1</td>
-                    <td>192.168.0.0/24</td>
-                    <td><a href="#" data-toggle="modal" data-target="#deleteNetworkModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>192.172.0.0/24</td>
-                    <td><a href="#" data-toggle="modal" data-target="#deleteNetworkModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>192.176.0.0/24</td>
-                    <td><a href="#" data-toggle="modal" data-target="#deleteNetworkModal"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  </tr> 
-                  
+echo '
                 </tbody>
               </table>
             </div>
