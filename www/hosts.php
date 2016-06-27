@@ -5,7 +5,7 @@ include_once( "include/tablegenerator.php" );
 
 function displayHosts() {
     $networkmanagement = new NetworkManagement();
-    $hosts = $networkmanagement->getHosts();
+    $hosts = $networkmanagement->getHosts( 1 );
 
     $tableGenerator = new TableGenerator();
     $tableGenerator->addColumn( 'host ip', '%s', array( 'host_ip' ) );

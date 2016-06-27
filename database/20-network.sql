@@ -84,7 +84,29 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT host_ip, usr_id, nw_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned, count(*) OVER() as total_rows, greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows, ceil(count(*) OVER()::float/items_per_page) as total_pages FROM hosts WHERE (get_nw_id IS NULL or nw_id = get_nw_id) ORDER BY inet(host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
+    SELECT
+        host_ip,
+        usr_id,
+        nw_id,
+        host_name,
+        host_data,
+        host_description,
+        host_lease_expiry,
+        host_last_seen,
+        host_last_scanned,
+        count(*) OVER() as total_rows,
+        greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows,
+        ceil(count(*) OVER()::float/items_per_page) as total_pages
+    FROM hosts
+    WHERE
+        (get_nw_id IS NULL or nw_id = get_nw_id) AND
+        (search_string is NULL or (
+            (lower(host_description) ~ ('^' || lower(search_string))) OR
+            (lower(host_name) ~ ('^' || lower(search_string))) OR
+            (lower(host_data) ~ ('^' || lower(search_string))) OR
+            (host_ip ~ ('^' || search_string)))
+        )
+    ORDER BY inet(host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
 return next ref1;
 end;
 $$ language plpgsql;
