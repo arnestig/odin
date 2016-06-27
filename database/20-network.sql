@@ -75,14 +75,17 @@ alter function get_networks(varchar,smallint) owner to dbaodin;
 -- get_hosts
 create or replace function get_hosts(
     ticket varchar(255),
-    get_nw_id smallint DEFAULT NULL )
+    get_nw_id smallint DEFAULT NULL,
+    page_offset integer default 0,
+    items_per_page integer default 100,
+    search_string varchar default NULL)
 returns SETOF refcursor AS $$
 declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT host_ip, usr_id, nw_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned FROM hosts WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
+    SELECT host_ip, usr_id, nw_id, host_name, host_data, host_description, host_lease_expiry, host_last_seen, host_last_scanned, count(*) OVER() as total_rows, greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows, ceil(count(*) OVER()::float/items_per_page) as total_pages FROM hosts WHERE (get_nw_id IS NULL or nw_id = get_nw_id) ORDER BY inet(host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_hosts(varchar,smallint) owner to dbaodin;
+alter function get_hosts(varchar,smallint,integer,integer,varchar) owner to dbaodin;

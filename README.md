@@ -14,6 +14,9 @@ Update the file /etc/postgresql/9.4/main/pg_hba.conf and change 'peer' to 'md5' 
 "local   all             all                                peer"
 Restart the service via /etc/init.d/postgresql restart
 
+Connecting to the database using the following command:
+psql odin dbaodin
+
 # Development
 start a tiny php server for development:
 php -S 127.0.0.1:8080 -t www/
