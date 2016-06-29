@@ -85,19 +85,23 @@ ref1 refcursor;
 begin
 open ref1 for
     SELECT
-        host_ip,
-        usr_id,
-        nw_id,
-        host_name,
-        host_data,
-        host_description,
-        host_lease_expiry,
-        host_last_seen,
-        host_last_scanned,
+        h.host_ip,
+        h.usr_id,
+        h.nw_id,
+        h.host_name,
+        h.host_data,
+        h.host_description,
+        h.host_lease_expiry,
+        h.host_last_seen,
+        h.host_last_scanned,
+        u.usr_usern,
+        u.usr_firstn,
+        u.usr_lastn,
+        u.usr_email,
         count(*) OVER() as total_rows,
         greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows,
         ceil(count(*) OVER()::float/items_per_page) as total_pages
-    FROM hosts
+    FROM hosts h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id)
     WHERE
         (get_nw_id IS NULL or nw_id = get_nw_id) AND
         (search_string is NULL or (
