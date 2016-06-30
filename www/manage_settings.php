@@ -72,12 +72,17 @@ echo '
             <div>
               <hr>
             </div>
-    
+            <div class="form-group">
+              <label for="orgName" class="col-lg-6 control-label">Organization name</label>
+              <div class="col-lg-6">
+                <input type="text" class="form-control" id="orgName" placeholder="Enter your organizations name" value="Odin">
+              </div>
+            </div>
             <div class="form-group">
               <label for="logoUploadFile" class="col-lg-6 control-label">Upload your logo</label>
               <div class="col-lg-6">
                 <input type="file" id="logoUploadFile">
-                <p class="help-block">Example block-level help text here.</p>
+                <p class="help-block">Make the size 30px in height and 60 in width. Format should be .png.</p>
               </div>
             </div>
 

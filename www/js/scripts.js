@@ -14,7 +14,7 @@ $(document).ready(function() {
     calculate();
     $('div').delegate('input:checkbox', 'click', calculate);
 
-    $('form').click(function() {
+    $('table').click(function() {
         if ( $('#choosenAddr').children().length > 0 ) {
             $('#choosenAddrDiv').show(300);
         } else {

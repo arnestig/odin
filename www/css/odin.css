@@ -7,12 +7,6 @@ body { padding-bottom: 40px; }
 .strongRow td { font-weight: bold; }
 .glyphicon { padding-right: 5px; }
 
-/* Right fixed book address panel*/
-.fixed-right { margin-top: 40px;}
-.bookAddrBtn { text-align: center; padding: 5px; }
-/* To prevent showing the right affixed element after page load */
-#choosenAddrDiv { display: none; }
-
 /* Toggleble filter-table no borders */
 .table.filter { border-bottom:0px !important; }
 .table.filter td { border: 1px !important; padding: 0px !important; }
@@ -34,6 +28,7 @@ a.filter-link:hover { text-decoration: none; }
 .page { padding-top: 9px; }
 .filter-result { padding: 10px 0px 10px 7px; }
 .input-group-sm { margin-top: 3px;}
+
 
 /* Toggleble filter row */
 .filter-row.bottom { background-color: #eee; }
@@ -64,3 +59,9 @@ a.filter-link:hover { text-decoration: none; }
 .nw-table tr td:nth-child(4) { width: 34%; }
 .nw-table tr td:nth-child(5) { width: 14%; }
 .nw-table tr td:nth-child(6) { width: 13%; }
+
+/* Right fixed book address panel*/
+.fixed-right { margin-top: 40px;}
+.bookAddrBtn { text-align: center; padding: 5px; }
+/* To prevent showing the right affixed element after page load */
+#choosenAddrDiv { display: none; }

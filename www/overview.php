@@ -82,6 +82,14 @@ function network_ranges() {
   }
 }
 
+function network_description() {
+  foreach ($_SESSION[ 'networks' ] as $range) {
+    if ($_SESSION[ 'cur_network_id' ] == $range['nw_id']) {
+      return $range['nw_description'];
+    }
+  }
+}
+
 //Controlling the toggling view of filters
 function active_filter() {
   echo '
@@ -136,14 +144,19 @@ function show_host_row_view($row) {
   $lease_expiry = strtotime($row['host_lease_expiry']);
   $cur_time = time();
   $checkbox = '<input type="checkbox" name="check_ip_list[]" value="'.$row['host_ip'].'">';
+  $notNull = false;
+  if ($last_seen != null && $lease_expiry != null) $notNull = true;
   //Free (but seen)
-  if ( !$last_seen && $row['usr_id'] == null ) {
+  if ( ($cur_time-$last_seen) < 30*24*3600 && $row['usr_id'] == 0 ) {
     $bootstrap_color_tag = ' danger';
   }
   //Taken (not seen) 30days hardcode
+  //Not wöking, men tanken r'tt if ( $notNull && ( (($cur_time-$last_seen) > (30*24*3600)) && ($lease_expiry > $cur_time) ) {
+  
   if ( ($cur_time-$last_seen) > 30*24*3600 ) {
     $bootstrap_color_tag = ' info';
-    $checkbox = '';
+    if (!$_SESSION[ 'steal_not_seen' ]) $checkbox = '';
+    
   }
   //Taken
   if ($lease_expiry > $cur_time) {
@@ -151,26 +164,13 @@ function show_host_row_view($row) {
     $checkbox = '';
   }
 
-  // !!Oi!! Mockup data overwrites set data above atm
-  $host_name = 'VDC E4S';
-  $host_desc = 'E4S. Part of cool system that does very impressive stuff but needs to be researched and developed to even higher levels of impressiveness. ArticleID: 345-578. Hardware located in the best of spots in the Lab on floor 3.';
-  $short_descript = substr($host_desc, 0, 30);
-  $short_descript .= '...';
-  $last_seen = '20160530';
-  $last_notified = '20160514 - 13:10';
-  $lease_expiry = '20160530 - 16:45';
-  $last_scanned = '20160620 - 13:13';
-  $user_name = 'Arnold S';
-  $user_mail = 'arnold.s@kali.com';
-
-
   return '
                   <tr class="'.$bootstrap_color_tag.'">
                     <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i></td>
                     <td>'.$row['host_ip'].'</td>
-                    <td>'.$host_name.'</td>
-                    <td colspan="2">'.$short_descript.'</td>
-                    <td>'.$last_seen.'</td>
+                    <td>'.$row['host_name'].'</td>
+                    <td colspan="2">'.substr($row['host_description'], 0, 30).'</td>
+                    <td>'.substr($row['host_last_seen'], 0, 10).'</td>
                     <td>'.$checkbox.'</td>
                   </tr>
                   <tr>
@@ -179,21 +179,21 @@ function show_host_row_view($row) {
                         <div class="row">
                           <div class="col-lg-6">
                             <h5>Data description</h5>
-                            '.$host_desc.'
+                            '.$row['host_description'].'
                           </div>
                           <div class="col-lg-3">
                             <h5>Last notified</h5>
-                            '.$last_notified.'
+                            '.$row['host_last_notified'].'
                             <div class="text-head-gutter"></div>
                             <h5>Lease expiry</h5>
-                            '.$lease_expiry.'  
+                            '.$row['host_lease_expiry'].'  
                           </div>
                           <div class="col-lg-3">
                             <h5>User ID</h5>
-                            <a mailto="'.$user_mail.'"><i class="glyphicon glyphicon-envelope"></i>'.$user_name.'</a>
+                            <a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].'</a>
                             <div class="text-head-gutter"></div>
                             <h5>Last scanned</h5>
-                            '.$last_scanned.'
+                            '.$row['host_last_scanned'].'
                           </div>
                         </div>
                         <div class="row spacer-row"></div>
@@ -242,7 +242,7 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <p>This IP-range is intended for use of the R&D-section of ACME. For other uses, please contact <a mailto="#">IPmasta</a> before taking water over your head.</p>
+              <p>'.network_description().'</p>
             </div>
           </div>
           <!-- START - Filter and color-info row -->
@@ -318,49 +318,15 @@ echo '
                   </tr>
                 </thead>
                 <tbody>
+                <form action="book_address.php" method="POST">
+
                   <!-- START - injection test -->
                   '.show_hosts().'
-                  <!-- END - injection test -->                  
+                  <!-- END - injection test -->
 
-                  <!-- START-Prototype -->
-                  <tr class="warning">
-                    <td data-toggle="collapse" data-target="#demo1" class="accordion-toggle" id="192.168.0.1"><i class="glyphicon glyphicon-triangle-right"></i></td>
-                    <td>192.168.0.1</td>
-                    <td>RdCam</td>
-                    <td colspan="2">E4S. Part of cool...</td>
-                    <td>20160530</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td colspan="12" class="hiddenRow">
-                      <div class="hiddenNwDiv accordion-body collapse" id="demo1">
-                        <div class="row">
-                          <div class="col-lg-6">
-                            <h5>Data description</h5>
-                            E4S. Part of cool system that does very impressive stuff but needs to be researched and developed to even higher levels of impressiveness. ArticleID: 345-578. Hardware located in the best of spots in the Lab on floor 3.
-                          </div>
-                          <div class="col-lg-3">
-                            <h5>Last notified</h5>
-                            20160514 - 17:10
-                            <div class="text-head-gutter"></div>
-                            <h5>Lease expiry</h5>
-                            20160814 - 10:04  
-                          </div>
-                          <div class="col-lg-3">
-                            <h5>User ID</h5>
-                            <a mailto="#"><i class="glyphicon glyphicon-envelope"></i>Arnold S</a>
-                            <div class="text-head-gutter"></div>
-                            <h5>Last scanned</h5>
-                            20160606 - 15:45
-                          </div>
-                        </div>
-                        <div class="row spacer-row"></div>
-                      </div>
-                    </td>
-                  </tr>
-                  <!-- END-Prototype -->
+                  <input name="book_address" value="SUBMIT" type="submit" id="submit-form" class="hidden" />
 
-
+                </form>                  
                 </tbody>
               </table>
 ';
@@ -375,8 +341,7 @@ echo '
 echo '
         </div>
 
-    <!-- FIXED RIGHT PANEL AND CHECKBOX FORM - START -->
-        <form>
+    <!-- FIXED RIGHT PANEL AND CHECKBOX FORM-BUTTON - START -->
         <div class="col-lg-3">
           <div class="affix fixed-right" id="choosenAddrDiv">
             <div class="panel panel-default">
@@ -387,16 +352,16 @@ echo '
                 <p></p>
               </div>
               <div class="bookAddrBtn">
-                <a class="btn btn-success" href="book_address.html" role="button">Book addresses</a>
+                <button for="submit-form" class="btn btn-primary">Book address(es)</button>
               </div>
             </div>
           </div>
         </div>
-        </form>
-    <!-- FIXED RIGHT PANEL AND FORM - END -->
+    <!-- FIXED RIGHT PANEL AND FORM-BUTTON - END -->
 
       </div>
     </div>
 ';
+
 $frame->doc_end();
 ?>

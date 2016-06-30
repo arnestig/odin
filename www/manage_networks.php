@@ -10,7 +10,8 @@ if (isset( $_POST['add_network'] )) {
   if ( $_POST[ 'add_network' ] === 'Add network' ) {
     $nwManager->addNetwork(
         $_POST[ 'nw_base' ],
-        $_POST[ 'nw_cidr' ]
+        $_POST[ 'nw_cidr' ],
+        $_POST[ 'nw_description' ]
       );
   }    
 }
@@ -59,12 +60,12 @@ echo '
               </div>
               <div class="form-group">
                 <label for="networkDescription">Network description</label>
-                <textarea class="form-control" rows="3" id="networkDescription" placeholder="Network description"></textarea>
+                <textarea class="form-control" rows="3" name="nw_description" id="networkDescription" placeholder="Network description"></textarea>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <input name="add_network" type="submit" value="Add network" type="button" class="btn btn-primary">
+              <input name="add_network" type="submit" value="Add network" class="btn btn-primary">
             </div>
           </form>
         </div>

@@ -10,12 +10,12 @@ class NetworkManagement
         $this->dbcon = new PDO( "pgsql:host=" . DB_SERVER . ";dbname=" . DB_DATABASE . ";user=" . DB_USER . ";password=" . DB_PASSWORD . ";port=" . DB_PORT ) or die ("Could not connect to server\n"); 
     }
 
-    public function addNetwork( $network, $cidr )
+    public function addNetwork( $network, $cidr, $description )
     {
         $base = $this->findBaseInNetwork( $network, $cidr );
-        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ?, ? )" );
+        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ?, ?, ? )" );
         $hosts = $this->getHostsInNetwork( $base, $cidr );
-        $sth->execute( array( '', $base, $cidr, "{" . implode( ', ', $hosts ) . "}" ) );
+        $sth->execute( array( '', $base, $cidr, $description, "{" . implode( ', ', $hosts ) . "}" ) );
     }
 
     public function removeNetwork( $network_id )
@@ -99,45 +99,6 @@ class NetworkManagement
 
         return $results;
     }
-
-
-    /* fippel o båg
-    public function getNwHosts($network_id)
-    {
-        // inspiration 
-        //$sth = $this->dbcon->prepare( "SELECT get_networks( ?, ? )" );
-        //$sth->execute( array( '', $network_id ) );
-        //$cursors = $sth->fetch();
-        //$sth->closeCursor();
-
-        // get each result set
-        //$results = array();
-        //$sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_networks'] .'";');
-        //$results = $sth->fetch( PDO::FETCH_ASSOC );
-        //$sth->closeCursor();
-        //$this->dbcon->commit();
-        //unset($sth);
-
-        //return $results;
-
-
-        $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_hosts( ?, ? )" );
-        $sth->execute( array( '', $network_id ) );
-        $cursors = $sth->fetch();
-        $sth->closeCursor();
-
-        // get each result set
-        $results = array();
-        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_hosts'] .'";');
-        $results = $sth->fetchAll( PDO::FETCH_ASSOC );
-        $sth->closeCursor();
-        $this->dbcon->commit();
-        unset($sth);
-
-        return $results;
-    }
-    */
 
     public function nHostsInNetwork( $cidr )
     {

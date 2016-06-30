@@ -6,7 +6,8 @@ alter sequence sq_networks_id owner to dbaodin;
 create table networks (
         nw_id smallint primary key default nextval('sq_networks_id'),
         nw_base varchar(45) not null,
-        nw_cidr numeric(2) not null
+        nw_cidr numeric(2) not null,
+        nw_description varchar(2000) not null
         );
 alter table networks owner to dbaodin;
 
@@ -16,7 +17,7 @@ create table hosts (
         nw_id smallint not null references networks,
         host_name varchar(255),
         host_data varchar(45),
-        host_description varchar(128),
+        host_description varchar(2000),
         host_lease_expiry timestamp null,
         host_last_seen timestamp null,
         host_last_scanned timestamp null,
@@ -31,19 +32,20 @@ create or replace function add_network(
     ticket varchar(255),
     network_base varchar(45),
     cidr numeric(2),
+    network_description varchar(2000),
     hosts varchar[] )
 returns void as $$
 declare
     new_nw_id smallint;
     admin_id smallint;
 begin
-    insert into networks( nw_base, nw_cidr ) values( network_base, cidr );
+    insert into networks( nw_base, nw_cidr, nw_description ) values( network_base, cidr, network_description );
     select into new_nw_id currval('sq_networks_id');  
     select usr_id from users where usr_usern = 'admin' into admin_id;
     insert into hosts( host_ip, nw_id, usr_id ) SELECT *, new_nw_id, admin_id FROM unnest(hosts);
 end;
 $$ language plpgsql;
-alter function add_network(varchar,varchar,numeric,varchar[]) owner to dbaodin;
+alter function add_network(varchar,varchar,numeric,varchar,varchar[]) owner to dbaodin;
 
 -- remove_network
 create or replace function remove_network(
@@ -66,7 +68,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT nw_id, nw_base, nw_cidr FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
+    SELECT nw_id, nw_base, nw_cidr, nw_description FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
 return next ref1;
 end;
 $$ language plpgsql;
@@ -94,6 +96,7 @@ open ref1 for
         h.host_lease_expiry,
         h.host_last_seen,
         h.host_last_scanned,
+        h.host_last_notified,
         u.usr_usern,
         u.usr_firstn,
         u.usr_lastn,
