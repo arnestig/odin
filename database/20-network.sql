@@ -89,19 +89,29 @@ alter function update_network(varchar,smallint,varchar) owner to dbaodin;
 
 
 -- get_hosts
--- mask values: free (1000), free but seen (0100), taken (0010), taken not seen (0001), show all (1111)
+-- mask values: 
+-- free (1000), free but seen (0100), taken (0010), taken not seen (0001), show all (1111)
 create or replace function get_hosts(
     ticket varchar(255),
     get_nw_id smallint DEFAULT NULL,
     page_offset integer default 0,
     items_per_page integer default 100,
     search_string varchar default NULL,
-    search_bit_mask smallint default 1111)
+    search_bit_mask smallint default 0)
 returns SETOF refcursor AS $$
 declare
     ref1 refcursor;
 begin
 open ref1 for
+    WITH CTE AS (
+        SELECT
+            hosts.*,
+            CASE
+                WHEN usr_id <> 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 1 -- taken but not seen
+                WHEN usr_id <> 0 AND host_last_seen > NOW() - interval '7 days' THEN 2 -- red, taken and seen
+                WHEN usr_id = 0 AND host_last_seen > NOW() - interval '7 days' THEN 4 -- not taken but seen
+                WHEN usr_id = 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 1 -- not taken, not seen
+            END as status FROM hosts )
     SELECT
         h.host_ip,
         h.usr_id,
@@ -119,10 +129,11 @@ open ref1 for
         u.usr_firstn,
         u.usr_lastn,
         u.usr_email,
+        h.status,
         count(*) OVER() as total_rows,
         greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows,
         ceil(count(*) OVER()::float/items_per_page) as total_pages
-    FROM hosts h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id)
+    FROM CTE h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id)
     WHERE
         (get_nw_id IS NULL or nw_id = get_nw_id) AND
         (search_string is NULL or (
@@ -130,7 +141,8 @@ open ref1 for
             (lower(host_name) ~ ('^' || lower(search_string))) OR
             (lower(host_data) ~ ('^' || lower(search_string))) OR
             (host_ip ~ ('^' || search_string)))
-        )
+        ) AND
+        (search_bit_mask = 0 OR 0 <> (h.status & search_bit_mask))
     ORDER BY inet(host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
 return next ref1;
 end;
