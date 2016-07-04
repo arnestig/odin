@@ -138,3 +138,67 @@ return next ref1;
 end;
 $$ language plpgsql;
 alter function get_hosts(varchar,smallint,integer,integer,varchar,smallint) owner to dbaodin;
+
+-- reserve_host
+-- This function will be used to preliminary book hosts for reservation
+-- Input:  session key, hosts.host_ip, current users.usr_id
+-- Output: false if booking failed, true if successful 
+create or replace function reserve_host(
+    ticket varchar(255),
+    host_to_reserve varchar(36),
+    cur_usr_id smallint )
+returns boolean as $$
+declare
+    host_already_reserved text;
+begin
+    select host_ip into host_already_reserved from hosts where host_ip = host_to_reserve AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
+    IF host_already_reserved <> '' THEN
+        RAISE 'Host % already reserved', host_already_reserved USING ERRCODE = '28001';
+        RETURN false;
+    ELSE
+        update hosts SET token_usr=cur_usr_id WHERE host_ip = host_to_reserve;
+        update hosts SET token_timestamp = NOW() WHERE token_usr=cur_usr_id;
+    END IF;
+    RETURN true;
+end;
+$$ language plpgsql;
+alter function reserve_host(varchar,varchar,smallint) owner to dbaodin;
+
+-- lease_host
+-- This function leases the host and is called after reserving the host
+-- Input: session key, hosts.host_ip, current users.usr_id, new host description
+-- Output: false if no reserved host was found, true if successful 
+create or replace function lease_host(
+    ticket varchar(255),
+    host_to_lease varchar(36),
+    cur_usr_id smallint,
+    host_desc varchar(2000) default NULL)
+returns boolean as $$
+declare
+    host_already_reserved text;
+    max_lease_time smallint;
+begin
+    SELECT s_value from settings WHERE s_name = 'host_max_lease_time' INTO max_lease_time;
+    select host_ip into host_already_reserved from hosts where host_ip = host_to_lease AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
+    IF host_already_reserved <> '' THEN
+        RAISE 'Host % already reserved by ...', host_already_reserved USING ERRCODE = '28001';
+        RETURN false;
+    ELSE
+        UPDATE hosts
+        SET
+            usr_id = cur_usr_id,
+            host_leased = now(),
+            host_lease_expiry = NOW() + max_lease_time * interval '1 days',
+            host_description = host_desc,
+            token_timestamp = NULL,
+            token_usr = DEFAULT
+        WHERE
+            host_ip = host_to_lease AND
+            token_usr = cur_usr_id AND
+            token_timestamp > NOW() - interval '10 minutes';
+    END IF;
+    RETURN true;
+end;
+$$ language plpgsql;
+alter function lease_host(varchar,varchar,smallint,varchar) owner to dbaodin;
+
