@@ -18,10 +18,13 @@ create table hosts (
         host_name varchar(255),
         host_data varchar(45),
         host_description varchar(2000),
+        host_leased timestamp null,
         host_lease_expiry timestamp null,
         host_last_seen timestamp null,
         host_last_scanned timestamp null,
-        host_last_notified timestamp null
+        host_last_notified timestamp null,
+        token_usr smallint not null references users default 0,
+        token_timestamp timestamp null
         );
 alter table hosts owner to dbaodin;
 
@@ -42,7 +45,7 @@ begin
     insert into networks( nw_base, nw_cidr, nw_description ) values( network_base, cidr, network_description );
     select into new_nw_id currval('sq_networks_id');  
     select usr_id from users where usr_usern = 'admin' into admin_id;
-    insert into hosts( host_ip, nw_id, usr_id ) SELECT *, new_nw_id, admin_id FROM unnest(hosts);
+    insert into hosts( host_ip, nw_id, usr_id, token_usr ) SELECT *, new_nw_id, admin_id, admin_id FROM unnest(hosts);
 end;
 $$ language plpgsql;
 alter function add_network(varchar,varchar,numeric,varchar,varchar[]) owner to dbaodin;
@@ -98,7 +101,7 @@ create or replace function get_hosts(
     search_bit_mask smallint default 1111)
 returns SETOF refcursor AS $$
 declare
-ref1 refcursor;
+    ref1 refcursor;
 begin
 open ref1 for
     SELECT
@@ -108,10 +111,12 @@ open ref1 for
         h.host_name,
         h.host_data,
         h.host_description,
-        h.host_lease_expiry,
+        h.host_leased,
         h.host_last_seen,
         h.host_last_scanned,
         h.host_last_notified,
+        h.host_leased,
+        h.host_lease_expiry,
         u.usr_usern,
         u.usr_firstn,
         u.usr_lastn,
