@@ -40,12 +40,10 @@ create or replace function add_network(
 returns void as $$
 declare
     new_nw_id smallint;
-    admin_id smallint;
 begin
     insert into networks( nw_base, nw_cidr, nw_description ) values( network_base, cidr, network_description );
     select into new_nw_id currval('sq_networks_id');  
-    select usr_id from users where usr_usern = 'admin' into admin_id;
-    insert into hosts( host_ip, nw_id, usr_id, token_usr ) SELECT *, new_nw_id, admin_id, admin_id FROM unnest(hosts);
+    insert into hosts( host_ip, nw_id, usr_id, token_usr ) SELECT *, new_nw_id, 0, 0 FROM unnest(hosts);
 end;
 $$ language plpgsql;
 alter function add_network(varchar,varchar,numeric,varchar,varchar[]) owner to dbaodin;
