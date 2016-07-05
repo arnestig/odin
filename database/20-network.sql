@@ -88,12 +88,14 @@ alter function update_network(varchar,smallint,varchar) owner to dbaodin;
 
 
 -- get_hosts
+-- mask values: free (1000), free but seen (0100), taken (0010), taken not seen (0001), show all (1111)
 create or replace function get_hosts(
     ticket varchar(255),
     get_nw_id smallint DEFAULT NULL,
     page_offset integer default 0,
     items_per_page integer default 100,
-    search_string varchar default NULL)
+    search_string varchar default NULL,
+    search_bit_mask smallint default 1111)
 returns SETOF refcursor AS $$
 declare
 ref1 refcursor;
@@ -130,4 +132,4 @@ open ref1 for
 return next ref1;
 end;
 $$ language plpgsql;
-alter function get_hosts(varchar,smallint,integer,integer,varchar) owner to dbaodin;
+alter function get_hosts(varchar,smallint,integer,integer,varchar,smallint) owner to dbaodin;

@@ -1,9 +1,8 @@
 <?php
 
 include_once( "config.php" );
-include_once( "odin.php" );
 
-class NetworkManagement extends Odin
+class NetworkManagement
 {
     private $dbcon;
     public function __construct()
@@ -22,7 +21,7 @@ class NetworkManagement extends Odin
     public function updateNetwork( $network_id, $network_description )
     {
         $sth = $this->dbcon->prepare( "SELECT update_network( ?, ?, ? )" );
-        $sth->execute( array( $this->getTicket(), $network_id, $network_description ) );
+        $sth->execute( array( '', $network_id, $network_description ) );
     }
 
     public function removeNetwork( $network_id )

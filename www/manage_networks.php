@@ -138,7 +138,6 @@ echo '
                 <label for="networkCidr">CIDR</label>
                 <input type="text" class="form-control" id="networkCidr" name="networkCidr" value="" disabled/>
               </div>
-
               <div class="form-group">
                 <label for="networkDescription">Network description</label>
                 <textarea class="form-control" rows="3" id="networkDescription" name="networkDescription" value="" placeholder="Description of network"></textarea>
