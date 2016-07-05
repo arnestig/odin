@@ -3,10 +3,25 @@
 session_start();
 
 include_once('include/html_frame.php');
+include_once('include/settings.php');
+
+$settings = new Settings();
+$cur_settings = $settings->getSettings();
 
 $frame = new HTMLframe();
 $frame->doc_start("Configure Settings");
-$frame->doc_nav("Settings", $_SESSION[ 'username' ] );
+$frame->doc_nav("Settings", $_SESSION[ 'user_data' ][ 'usr_usern' ] );
+
+//TODO
+function genSettings() {
+  foreach ($cur_settings as $setting_row) {
+    // Ta ut rubriker Och lägg i eǵen array
+  }
+  
+  foreach ($variable as $key => $value) {
+    # code...
+  }
+}
 
 echo '
     <div class="container">
@@ -24,13 +39,13 @@ echo '
             <div class="form-group">
               <label for="enableEmailNotifications" class="col-lg-6 control-label">Enable email notifications</label>
               <div class="col-lg-6">
-                <input type="checkbox" id="enableEmailNotifications" checked>
+                <input type="checkbox" class="form-control" id="enableEmailNotifications" '.function(){ if($cur_settings['email_notification'] !== 0) return 'checked'; }.'>
               </div>
             </div>
             <div class="form-group">
               <label for="mailServerType" class="col-lg-6 control-label">Mail server type</label>
               <div class="col-lg-6">
-                <input type="text" class="form-control" id="mailServerType" placeholder="Mail server type" value="smtp">
+                <input type="text" class="form-control" id="mailServerType" placeholder="Mail server type" value="'.$cur_settings[].'smtp">
               </div>
             </div>
             <div class="form-group">

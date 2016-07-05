@@ -15,10 +15,10 @@ $nwmanagement->addNetwork( "10.10.1.16", 32, "Men since the beginning of time ha
 
 
 $usermanagement = new UserManagement();
-$usermanagement->addUser( "testuser", "testpassword", "Testfirstname", "Testlastname", "email@test.com" );
-$usermanagement->addUser( "gresen", "goeettteeborg", "Jonas", "Berglund", "noff@sagresen.nu" );
-$usermanagement->addUser( "root", "theking", "Tobias", "Eliasson", "gresensa@noff.nu" );
-$usermanagement->addUser( "martin", "mrmrmr", "Martin", "Rydin", "martin@email.com" );
+$usermanagement->addUser( "testuser", "testpassword", 0, "Testfirstname", "Testlastname", "email@test.com" );
+$usermanagement->addUser( "gresen", "goeettteeborg", 0, "Jonas", "Berglund", "noff@sagresen.nu" );
+$usermanagement->addUser( "root", "theking", 0, "Tobias", "Eliasson", "gresensa@noff.nu" );
+$usermanagement->addUser( "martin", "mrmrmr", 0, "Martin", "Rydin", "martin@email.com" );
 $users = $usermanagement->getUsers();
 foreach ( $users as $userdata ) {
     echo $userdata[ 'usr_usern' ]."\n";

@@ -7,7 +7,7 @@ include_once('include/html_frame.php');
 $frame = new HTMLframe();
 $frame->doc_start("My addresses");
 
-$frame->doc_nav('View your addresses', $_SESSION[ 'username' ] );
+$frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_usern' ] );
 
 
 echo '

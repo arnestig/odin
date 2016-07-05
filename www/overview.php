@@ -76,8 +76,7 @@ function network_ranges() {
     if ($_SESSION[ 'cur_network_id' ] == $range['nw_id']) {
       echo ' class="active"';
     }
-    echo '
-                ><a href="overview.php?nw_id='.$range["nw_id"].'">'.$range["nw_base"].'/'.$range["nw_cidr"].'</a></li>
+    echo '><a href="overview.php?nw_id='.$range["nw_id"].'">'.$range["nw_base"].'/'.$range["nw_cidr"].'</a></li>
       ';
   }
 }
@@ -93,7 +92,7 @@ function network_description() {
 //Controlling the toggling view of filters
 function active_filter() {
   echo '
-                <td><a class="filter-link" href="overview.php?show_all=true"><div class="toggle '.compare_tags("show_all").'">Show all</div></a></td>
+                <td><a class="filter-link" href="overview.php?show_all=true"><div class="toggle  '.compare_tags("show_all").'">Show all</div></a></td>
                 <td><a class="filter-link" href="overview.php?filter_tag=free"><div class="toggle '.compare_tags("free").'"><div class="address-info free"></div>Free</div></a></td>
                 <td><a class="filter-link" href="overview.php?filter_tag=free_but_seen"><div class="toggle '.compare_tags("free_but_seen").'"><div class="address-info free-but-seen"></div>Free (but seen)</div></a></td>
                 <td><a class="filter-link" href="overview.php?filter_tag=taken"><div class="toggle '.compare_tags("taken").'"><div class="address-info taken"></div>Taken</div></a></td>
@@ -143,7 +142,11 @@ function show_host_row_view($row) {
   $last_seen = strtotime($row['host_last_seen']);
   $lease_expiry = strtotime($row['host_lease_expiry']);
   $cur_time = time();
-  $checkbox = '<input type="checkbox" name="check_ip_list[]" value="'.$row['host_ip'].'">';
+
+  $ticked_box = '';
+  if ( in_array($row['host_ip'], $_SESSION[ 'locked_ips' ]) ) $ticked_box = ' checked'; 
+  $checkbox = '<input type="checkbox" name="check_ip_list[]" value="'.$row['host_ip'].'"'.$ticked_box.'>';
+
   $notNull = false;
   if ($last_seen != null && $lease_expiry != null) $notNull = true;
   //Free (but seen)
@@ -153,7 +156,7 @@ function show_host_row_view($row) {
   //Taken (not seen) 30days hardcode
   //Not wöking, men tanken r'tt if ( $notNull && ( (($cur_time-$last_seen) > (30*24*3600)) && ($lease_expiry > $cur_time) ) {
   
-  if ( ($cur_time-$last_seen) > 30*24*3600 ) {
+  if ( $notNull && ($cur_time-$last_seen) > 30*24*3600 ) {
     $bootstrap_color_tag = ' info';
     if (!$_SESSION[ 'steal_not_seen' ]) $checkbox = '';
     
@@ -203,7 +206,17 @@ function show_host_row_view($row) {
 }
 
 
-
+function basket() {
+  $content = '';
+  foreach ($_SESSION[ 'locked_ips' ] as $ip) {
+    $content .= '<div class="clearfix" style="background-color: #f8f8f8; margin-bottom: 8px; padding:4px; display: block;">
+                  <span class="small" style="float: left;">'.$ip.'</span>
+                  <span style="float: right;" class="glyphicon glyphicon-minus"></span>
+                </div>';
+    //$content .= '<p style="width:100%;">'.$ip.'<span class="glyphicon glyphicon-minus al"></span></p>';
+  }
+  return $content;
+}
 
 //---------------------------------------------------
 //---------------------------------------------------
@@ -216,7 +229,7 @@ function show_host_row_view($row) {
 $frame = new HTMLframe();
 //Starts generating html
 $frame->doc_start("Hosts");
-$frame->doc_nav("Overview", $_SESSION[ 'username' ]);
+$frame->doc_nav("Overview", $_SESSION[ 'user_data' ][ 'usr_usern' ]);
 
 
 
@@ -350,9 +363,10 @@ echo '
               </div>
               <div class="panel-body" id="choosenAddr">
                 <p></p>
+                '.basket().'
               </div>
               <div class="bookAddrBtn">
-                <button for="submit-form" class="btn btn-primary">Book address(es)</button>
+                <label for="submit-form" class="btn btn-primary">Book address(es)</label>
               </div>
             </div>
           </div>

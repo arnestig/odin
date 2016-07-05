@@ -4,26 +4,21 @@ session_start();
 
 include_once('include/html_frame.php');
 
-$test = "no";
-
 if (isset($_POST['book_address'])) {
-  $index = 0;
-  $test = "maybe";
-  while (isset($_POST['ip' + $index])) {
-    $test = "yes";
-    $_SESSION['locked_ips'][] = $_POST['ip' + $index];
-    $index++;
-  }
-  if (isset($_POST['check_ip_list'])) {
-    $test = 'yesyseeys';
+  if (isset($_POST[ 'check_ip_list' ])) {
+    foreach ( $_POST[ 'check_ip_list' ] as $list_item ) {
+      if ( !in_array( $list_item, $_SESSION[ 'locked_ips' ]) ) {
+        $_SESSION[ 'locked_ips' ][] = $list_item;
+      }
+    }
   }
 } else {
-  $test = 'post not set';
+  header('Location: overview.php');
 }
 
 $frame = new HTMLframe();
 $frame->doc_start("Book Address");
-$frame->doc_nav('', $_SESSION[ 'username' ]);
+$frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_usern' ]);
 
 function gen_address_form() {
   $form_body = '';
@@ -65,8 +60,6 @@ echo '
         </div>
       </div>
       <form>
-      '.print_r($_POST).'
-      '.$test.'
       '.gen_address_form().'
       </form>
       <div class="row">

@@ -74,6 +74,19 @@ end;
 $$ language plpgsql;
 alter function get_networks(varchar,smallint) owner to dbaodin;
 
+-- update_network
+create or replace function update_network(
+    ticket varchar(255), 
+    networkid smallint,
+    networkdescription varchar(2000) )
+returns void as $$
+begin
+    UPDATE networks SET nw_description = networkdescription WHERE nw_id = networkid;
+end;
+$$ language plpgsql;
+alter function update_network(varchar,smallint,varchar) owner to dbaodin;
+
+
 -- get_hosts
 create or replace function get_hosts(
     ticket varchar(255),

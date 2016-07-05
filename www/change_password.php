@@ -5,22 +5,28 @@ session_start();
 include_once('include/html_frame.php');
 include_once('include/usermanagement.php');
 
-if (isset($_POST['Register'])) {
-  //sanitize input...
-  $user_man = new UserManagement();
-  $user_man->addUser(
-    $_POST[ 'reg_username' ],
-    $_POST[ 'reg_password' ],
-    0,
-    $_POST[ 'reg_first_name' ],
-    $_POST[ 'reg_last_name' ],
-    $_POST[ 'reg_email' ]
-  );
-  header('Location: index.php');
+if (isset($_POST['change_password'])) {
+  // TODO: sanitize input...
+  if ($_POST[ 'reg_password' ] !== $_POST[ 'reg_password_repeat' ]) {
+    // TODO: Never go full retard
+  } else {
+    $user_man = new UserManagement();
+    $userdata = $_SESSION[ 'user_data' ];
+    $user_man->updateUser(
+      $userdata[ 'usr_id' ],
+      $userdata[ 'usr_usern' ],
+      $_POST[ 'reg_password' ],
+      0,
+      $userdata[ 'usr_firstn' ],
+      $userdata[ 'usr_lastn' ],
+      $userdata[ 'usr_email' ]
+    );
+    header('Location: overview.php');
+  }
 }
 
 $frame = new HTMLframe();
-$frame->doc_start("Register User");
+$frame->doc_start("Change password");
 
 echo '
     <nav class="navbar navbar-default navbar-static-top">
@@ -46,23 +52,9 @@ echo '
       <div class="row"><div class="col-lg-12"><br></div></div>
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4">
-          <form action="user_registration.php" method="POST">
-            <div class="form-group">
-              <label for="inputEmail">Email address</label>
-              <input type="email" name="reg_email" class="form-control" id="inputEmail" placeholder="Email">
-            </div>
-            <div class="form-group">
-              <label for="inputFirstName">First name</label>
-              <input type="text" name="reg_first_name" class="form-control" id="inputFirstName" placeholder="First name">
-            </div>
-            <div class="form-group">
-              <label for="inputLastName">Last name</label>
-              <input type="text" name="reg_last_name" class="form-control" id="inputLastName" placeholder="Last name">
-            </div>
-            <div class="form-group">
-              <label for="inputUserName">Username</label>
-              <input type="text" name="reg_username" class="form-control" id="inputUserName" placeholder="Your desired username">
-            </div>
+          <form action="change_password.php" method="POST">
+            <h3>Change password</h3>
+            <p>'.$_SESSION[ 'user_data' ][ 'usr_usern' ].', your password needs to be changed before continuing.</p>
             <div class="form-group">
               <label for="inputPassword">Password</label>
               <input type="password" name="reg_password" class="form-control" id="inputPassword" placeholder="Password">
@@ -71,7 +63,7 @@ echo '
               <label for="inputPasswordRepeat">Repeat Password</label>
               <input type="password" name="reg_password_repeat" class="form-control" id="inputPasswordRepeat" placeholder="Password">
             </div>
-            <input type="submit" name="Register" value="Register and log in" class="btn btn-default"/>
+            <input type="submit" name="change_password" value="Register and log in" class="btn btn-default"/>
           </form>
         </div>
       </div>

@@ -5,13 +5,14 @@ body { padding-bottom: 40px; }
 .login { padding-top: 70px; }
 .hiddenNwDiv { border-width: 0px 1px 1px 1px; border-color: #ddd; border-style: solid; background-color: #fff; padding-left: 10px; }
 .strongRow td { font-weight: bold; }
-.glyphicon { padding-right: 5px; }
+.glyphicon { padding: 0px 5px 0px 5px; }
 
 /* Toggleble filter-table no borders */
 .table.filter { border-bottom:0px !important; }
 .table.filter td { border: 1px !important; padding: 0px !important; }
 .fixed-table-container.filter { border: 0px !important; }
-.toggle { padding: 7px; margin-right: 4px; background-color: #f8f8f8; border-top: solid 1px #eeeeee;}
+
+.toggle { padding: 7px; margin-right: 4px; background-color: #f8f8f8; border-top: solid 1px #eeeeee; }
 .toggle:hover { background-color: #cccccc; }
 a.filter-link { color: black; }
 a.filter-link:hover { text-decoration: none; }
@@ -64,4 +65,6 @@ a.filter-link:hover { text-decoration: none; }
 .fixed-right { margin-top: 40px;}
 .bookAddrBtn { text-align: center; padding: 5px; }
 /* To prevent showing the right affixed element after page load */
-#choosenAddrDiv { display: none; }
+/* #choosenAddrDiv { display: none; } */
+
+.form-group.textfield { padding:10px; }

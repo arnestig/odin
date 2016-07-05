@@ -2,11 +2,13 @@
 session_start();
 
 include_once( "config.php" );
+include_once( "usermanagement.php" );
+include_once( "nwmanagement.php" );
 
 class User
 {
     private $dbcon;
-    private $user_data;
+
     public function __construct()
     {
         $this->dbcon = new PDO( "pgsql:host=" . DB_SERVER . ";dbname=" . DB_DATABASE . ";user=" . DB_USER . ";password=" . DB_PASSWORD . ";port=" . DB_PORT ) or die ("Could not connect to server\n"); 
@@ -40,7 +42,17 @@ class User
 
     //TODO: no hardcoding of nw ranges and other schtuff...
     private function setSessionDefaults($username) {
-        $_SESSION[ 'username' ] = $username;
+        $userManager = new UserManagement();
+        $nwManager = new NetworkManagement();
+        $all_users = $userManager->getUsers( );
+        $user_data = array();
+        foreach ($all_users as $user) {
+            if ($user[ 'usr_usern' ] === $username) {
+                $user_data = $user;
+            }
+        }
+        //TODO: change username to fullname in navbar?
+        $_SESSION[ 'user_data' ] = $user_data;
         $_SESSION[ 'cur_network_id' ] = '1';
         $_SESSION[ 'show_all' ] = true;
         $_SESSION[ 'active_filter_tags' ] = array();

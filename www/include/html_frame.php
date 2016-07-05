@@ -9,12 +9,11 @@ class HTMLframe {
 
   public function __construct() {
     $this->admin_nav = [ ["manage_networks.php","glyphicon-signal","Networks"], ["manage_users.php","glyphicon-user","Users"], ["manage_settings.php","glyphicon-cog","Settings"] ];
-    $this->user_nav = [ ["logout.php","glyphicon-off","Log out"],["userIPs.php","glyphicon-th-list","View your addresses"] ];
+    $this->user_nav = [ ["logout.php","glyphicon-log-out","Log out"],["userIPs.php","glyphicon-th-list","View your addresses"] ];
   }
 
 	public function doc_start( $page_title ) {
-		echo '
-<!DOCTYPE html>
+		echo '<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -37,7 +36,7 @@ class HTMLframe {
   <body>';
 	}
 
-  /* TODO: Implement current page highlight, restrict admin functionality, load company logo */
+  /* TODO: restrict admin functionality, load company logo */
   public function doc_nav( $active, $username ) {
     echo '
     <nav class="navbar navbar-default navbar-static-top">
@@ -54,7 +53,7 @@ class HTMLframe {
           
         <ul class="nav navbar-nav">
           <li class="active">
-            <a href="overview.php"><i class="glyphicon glyphicon-eye-open"></i>Overview</a>  
+            <a href="overview.php">HOSTS<span class="glyphicon glyphicon-th"></span></a>  
           </li>
 
           <li class="dropdown">
@@ -67,7 +66,7 @@ class HTMLframe {
       if ($active === $item[2]) {
         echo ' class="active"';
       }
-      echo '><a href="'.$item[0].'"><i class="glyphicon '.$item[1].'"></i>'.$item[2].'</a></li>
+      echo '><a href="'.$item[0].'"><span class="glyphicon '.$item[1].'"></span>'.$item[2].'</a></li>
       ';
     }
     echo '

@@ -6,10 +6,10 @@ include_once( "odin.php" );
 class UserManagement extends Odin
 {
 
-    public function addUser( $username, $password, $firstname, $lastname, $email )
+    public function addUser( $username, $password, $serverpwd, $firstname, $lastname, $email )
     {
-        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $this->getTicket(), $username, $password, $firstname, $lastname, $email ) );
+        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $username, $password, $serverpwd, $firstname, $lastname, $email ) );
     }
 
     public function removeUser( $user_id )
@@ -18,10 +18,16 @@ class UserManagement extends Odin
         $sth->execute( array( $this->getTicket(), $user_id ) );
     }
 
-    public function updateUser( $user_id, $username, $password, $firstname, $lastname, $email )
+    public function updateUser( $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email )
     {
-        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $this->getTicket(), $user_id, $username, $password, $firstname, $lastname, $email ) );
+        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email ) );
+    }
+
+    public function adminUpdateUser( $user_id, $username, $firstname, $lastname, $email )
+    {
+        $sth = $this->dbcon->prepare( "SELECT admin_update_user( ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id, $username, $firstname, $lastname, $email ) );
     }
     
     public function getUserInfo( $user_id )
@@ -42,6 +48,7 @@ class UserManagement extends Odin
 
         return $results;
     }
+
 
     public function getUsers()
     {

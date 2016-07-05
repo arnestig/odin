@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 include_once( "include/user.php" );
 include_once( "include/settings.php" );
@@ -9,7 +10,11 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
   $name = $_POST['email'];
   $pwd = $_POST['password'];
   if ($user->login($name,$pwd)) {
-    header('Location: overview.php');  
+    if ($_SESSION[ 'user_data' ][ 'server_gen_pwd' ] === 1) {
+      header('Location: change_password.php');
+    } else {
+      header('Location: overview.php');  
+    }  
   }
 }
 
