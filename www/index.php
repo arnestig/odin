@@ -21,9 +21,8 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 function userRegistration() {
   $settings = new Settings();
   $allsettings = $settings->getSettings();
-  foreach ( $allsettings as $name ) {
-    foreach ( $name as $cursetting ) {
-      if ($cursetting[ 's_name' ] === 'allow_user_registration' && $cursetting[ 's_value' ] === '1') {
+  foreach ( $allsettings as $setting ) {
+    if ($setting[ 's_name' ] === 'allow_user_registration' && $setting[ 's_value' ] === '1') {
         echo '
         <div class="row">
           <div class="col-lg-offset-4 col-lg-4">
@@ -32,7 +31,6 @@ function userRegistration() {
           </div>
         </div>';
       }
-    }
   }
 }
 

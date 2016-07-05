@@ -9,16 +9,17 @@ $settings = new Settings();
 $cur_settings = $settings->getSettings();
 $available_groups = array();
 
-print_r($cur_settings);
+//print_r($cur_settings);
 
 foreach ($cur_settings as $setting) {
-  if (!in_array( $setting[ 's_group_name' ] , $available_groups )) {
+  if (!in_array( $setting[ 's_group_name' ] , $available_groups[ 's_group_name' ] )) {
     $available_groups[] = $setting;
   }
 }
 
 // TODO: set from GET-req 
-$cur_s_group = $available_groups[0]['s_group_name'];
+$cur_s_group = $available_groups[0];
+print_r($available_groups);
 
 if ( isset( $_POST[ 'dsSubmit' ] ) ) {
   if ( $_POST[ 'dsSubmit' ] === 'Save' ) {
@@ -43,9 +44,10 @@ if ( isset( $_POST[ 'dsSubmit' ] ) ) {
 function genNavTabs($s_group,$all_groups) {
   $nav_html = '<ul class="nav nav-tabs">
                 ';
+  print_r($all_groups);
   foreach ($all_groups as $group) {
     $nav_html .= '<li role="presentation"';
-    if ($s_group_name == $group['s_group_name']) {
+    if ($s_group === $group['s_group_name']) {
       $nav_html .= ' class="active"';
     }
     $nav_html .= '><a href="manage_settings?'.$group[ 's_group_name' ].'">'.$group[ 's_group_value' ].'</a></li>

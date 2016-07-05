@@ -13,9 +13,9 @@ Each IP-address will have the following fields describing it:
 
 Addresses shall have one of these statuses:
     Free (green) - Address is not used and can be reserved
-    Taken (red) - Address is used and been seen in the last X days (configurable setting, default 7 days?)
-    Free but taken (yellow) - Address is free but has been seen in the last X days.
-    Taken but not seen (blue) - Address is reserved but has not been seen in the last X days.
+    Taken (red) - Address is used and been seen in the last 30 days (configurable setting, default 7 days?)
+    Free but taken (yellow) - Address is free but has been seen in the last 30 days.
+    Taken but not seen (blue) - Address is reserved but has not been seen in the last 30 days.
 
 Browsing through addresses shall be done using filters such as "Reserved by", "Only free addresses", "Only taken addresses", "Lease time", etc...
 

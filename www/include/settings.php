@@ -27,7 +27,7 @@ class Settings
         // get each result set
         $results = array();
         $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_settings'] .'";');
-        $results = $sth->fetchAll( PDO::FETCH_ASSOC|PDO::FETCH_GROUP );
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC);
         $sth->closeCursor();
         $this->dbcon->commit();
         unset($sth);

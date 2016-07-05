@@ -59,20 +59,14 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
 update_meta_data();
 
 function calc_bit_mask() {
-  $string_rep = '0000';
-  if ($_SESSION[ 'show_all' ]) {
-    $string_rep = '1111';
-  } else {
-    $arr = str_split($string_rep, 1);
-    foreach ($_SESSION[ 'active_filter_tags' ] as $tag) {
-      if ($tag == 'free') $arr[0] = '1';
-      if ($tag == 'free_but_seen') $arr[1] = '1';
-      if ($tag == 'taken') $arr[2] = '1';
-      if ($tag == 'taken_not_seen') $arr[3] = '1';
-    }
-    $string_rep = join($arr);
+  $bitmask = 0;
+  foreach ($_SESSION[ 'active_filter_tags' ] as $tag) {
+      if ($tag == 'free') $bitmask |= 1;
+      if ($tag == 'free_but_seen') $bitmask |= 2;
+      if ($tag == 'taken') $bitmask |= 4;
+      if ($tag == 'taken_not_seen') $bitmask |= 8;
   }
-  return (int) $string_rep;
+  return $bitmask;
 }
 
 //TODO: page per view from setting?

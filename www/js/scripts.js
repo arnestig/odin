@@ -21,7 +21,7 @@ function calculate() {
         // if so, untick box
         success : function(data){
             console.log('reply is' + data.reply);
-            alert(data.reply);
+            //alert(data.reply);
             if (false) {
                 $().prop('checked', false);
             }

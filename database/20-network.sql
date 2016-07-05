@@ -107,9 +107,9 @@ open ref1 for
         SELECT
             hosts.*,
             CASE
-                WHEN usr_id <> 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 1 -- taken but not seen
-                WHEN usr_id <> 0 AND host_last_seen > NOW() - interval '7 days' THEN 2 -- red, taken and seen
-                WHEN usr_id = 0 AND host_last_seen > NOW() - interval '7 days' THEN 4 -- not taken but seen
+                WHEN usr_id <> 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 8 -- taken but not seen
+                WHEN usr_id <> 0 AND host_last_seen > NOW() - interval '7 days' THEN 4 -- red, taken and seen
+                WHEN usr_id = 0 AND host_last_seen > NOW() - interval '7 days' THEN 2 -- not taken but seen
                 WHEN usr_id = 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 1 -- not taken, not seen
             END as status FROM hosts )
     SELECT

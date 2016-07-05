@@ -21,7 +21,7 @@ if (isset($_POST['Register'])) {
   if ($userHandler->login($_POST[ 'reg_username' ],$_POST[ 'reg_password' ])) {
     header('Location: overview.php');
   }
-  //Ändra below till nåt gick schnett...
+  //Ändra below till: nåt gick schnett...
   header('Location: index.php');
 }
 
