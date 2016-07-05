@@ -9,27 +9,6 @@ function calculate() {
     }
     if (arr.length < 1) newHTML.push('<p><em>Empty</em></p>');
     $('div#choosenAddr').html(newHTML.join(""));
-    /* Makes server update sesh var to preserve checked hosts */
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          checkbox:arr
-        },
-        url: 'overview_handler.php',
-        // Only show reply if ticked address was taken
-        // if so, untick box
-        success : function(data){
-            console.log('reply is' + data.reply);
-            //alert(data.reply);
-            if (false) {
-                $().prop('checked', false);
-            }
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown) {
-            alert('There was an error.');
-        }
-    });
 }
 
 
@@ -95,6 +74,30 @@ $(document).ready(function() {
         $(".form-group #networkBase").val( networkBase );
         $(".form-group #networkCidr").val( networkCidr );
         $(".form-group #networkDescription").val( networkDescription );
+    });
+
+    $('td>input').on('click', function() {
+        var elementIP = this.value;
+        /* Makes server update session to preserve checked hosts */
+        $.ajax({
+            type: 'POST',
+            data: {
+            checkbox:elementIP
+            },
+            url: 'overview_handler.php',
+            // Only show reply if ticked address was taken
+            // if so, untick box
+            success : function(data){
+                console.log('reply is' + data.reply);
+                //alert(data.reply);
+                if (false) {
+                    $().prop('checked', false);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('There was an error.');
+            }
+        });
     });
     
     // get id of plus click, then replace with glyphicon-ok or glyphicon-exclamation-sign

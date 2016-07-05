@@ -155,8 +155,8 @@ function show_host_row_view($row) {
   $cur_time = time();
 
   $ticked_box = '';
-  if ( in_array($row['host_ip'], $_SESSION[ 'locked_ips' ]) ) $ticked_box = ' checked'; 
-  $checkbox = '<input type="checkbox" name="check_ip_list[]" value="'.$row['host_ip'].'"'.$ticked_box.'>';
+  if ( isset( $_SESSION[ 'locked_ips' ][ $row['host_ip'] ] ) ) $ticked_box = ' checked';
+  $checkbox = '<input type="checkbox" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.'>';
 
   $notNull = false;
   if ($last_seen != null && $lease_expiry != null) $notNull = true;

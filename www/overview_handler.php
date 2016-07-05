@@ -17,13 +17,11 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 
 if (isset($_POST[ 'checkbox' ])) {
 	$ip_array = $_POST[ 'checkbox' ];
-	if (sizeof($ip_array) > 0) {
-		foreach ($ip_array as $ip) {
-			if (!in_array($ip, $_SESSION[ 'locked_ips' ] )) {
-				$_SESSION[ 'locked_ips' ][] = $ip;
-			}
-		}
-	}
+    if ( isset( $_SESSION[ 'locked_ips' ][ $_POST[ 'checkbox'] ] ) ) {
+        unset( $_SESSION[ 'locked_ips' ][ $_POST[ 'checkbox' ] ] );
+    } else {
+        $_SESSION[ 'locked_ips'][ $_POST[ 'checkbox' ] ] = 1;
+    }
 }
 
 if (isset($_POST[ 'ip' ])) {

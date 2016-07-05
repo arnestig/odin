@@ -4,17 +4,15 @@ session_start();
 
 include_once('include/html_frame.php');
 
-if (isset($_POST['book_address'])) {
-  if (isset($_POST[ 'check_ip_list' ])) {
-    foreach ( $_POST[ 'check_ip_list' ] as $list_item ) {
-      if ( !in_array( $list_item, $_SESSION[ 'locked_ips' ]) ) {
-        $_SESSION[ 'locked_ips' ][] = $list_item;
-      }
+// NOT USED NOW?
+/**if (isset($_POST['book_address'])) {
+  if (isset($_POST[ 'book_ip' ])) {
+      //$_SESSION[ 'locked_ips' ][ $_POST[ 'book_ip' ] ] = 1;
     }
   }
-} else {
+} else {**/
   header('Location: overview.php');
-}
+//}
 
 $frame = new HTMLframe();
 $frame->doc_start("Book Address");
