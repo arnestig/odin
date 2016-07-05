@@ -100,17 +100,19 @@ create or replace function get_hosts(
     search_bit_mask smallint default 0)
 returns SETOF refcursor AS $$
 declare
+    host_not_seen_time_limit smallint;
     ref1 refcursor;
 begin
+    SELECT s_value from settings WHERE s_name = 'host_not_seen_time_limit' INTO host_not_seen_time_limit;
 open ref1 for
     WITH CTE AS (
         SELECT
             hosts.*,
             CASE
-                WHEN usr_id <> 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 8 -- taken but not seen
-                WHEN usr_id <> 0 AND host_last_seen > NOW() - interval '7 days' THEN 4 -- red, taken and seen
-                WHEN usr_id = 0 AND host_last_seen > NOW() - interval '7 days' THEN 2 -- not taken but seen
-                WHEN usr_id = 0 AND (host_last_seen < NOW() - interval '7 days' OR host_last_seen IS NULL) THEN 1 -- not taken, not seen
+                WHEN usr_id <> 0 AND (host_last_seen < NOW() - host_not_seen_time_limit * interval '1 days' OR host_last_seen IS NULL) THEN 8 -- taken but not seen
+                WHEN usr_id <> 0 AND host_last_seen > NOW() - host_not_seen_time_limit * interval '1 days' THEN 4 -- red, taken and seen
+                WHEN usr_id = 0 AND host_last_seen > NOW() - host_not_seen_time_limit * interval '1 days' THEN 2 -- not taken but seen
+                WHEN usr_id = 0 AND (host_last_seen < NOW() - host_not_seen_time_limit * interval '1 days' OR host_last_seen IS NULL) THEN 1 -- not taken, not seen
             END as status FROM hosts )
     SELECT
         h.host_ip,

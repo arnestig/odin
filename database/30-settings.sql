@@ -85,3 +85,5 @@ insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fu
 values( 'hosts', 'Hosts', 'host_expiry_warning_time', 'number', '30', 'Host expiry warning time (days)', 'Defines when the expiration email is sent to a user.' );
 insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fullname, s_description ) 
 values( 'hosts', 'Hosts', 'host_steal_not_seen', 'checkbox', '', 'Allow stealing not seen', 'Allow reservation of addresses that are taken but not seen.' );
+insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fullname, s_description )
+values( 'hosts', 'Hosts', 'host_not_seen_time_limit', 'number', '30', 'Host not seen time limit (days)', 'Defines when hosts are considered gone or not seen by the system any more.' );
