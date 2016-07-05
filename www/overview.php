@@ -58,10 +58,27 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
 
 update_meta_data();
 
+function calc_bit_mask() {
+  $string_rep = '0000';
+  if ($_SESSION[ 'show_all' ]) {
+    $string_rep = '1111';
+  } else {
+    $arr = str_split($string_rep, 1);
+    foreach ($_SESSION[ 'active_filter_tags' ] as $tag) {
+      if ($tag == 'free') $arr[0] = '1';
+      if ($tag == 'free_but_seen') $arr[1] = '1';
+      if ($tag == 'taken') $arr[2] = '1';
+      if ($tag == 'taken_not_seen') $arr[3] = '1';
+    }
+    $string_rep = join($arr);
+  }
+  return (int) $string_rep;
+}
+
 //TODO: page per view from setting?
 function update_meta_data() {
   $nwManager = new NetworkManagement();
-  $result_set = $nwManager->getHosts($_SESSION[ 'cur_network_id' ], ($_SESSION[ 'current_page' ]-1), 100, $_SESSION[ 'filter_search' ]);
+  $result_set = $nwManager->getHosts($_SESSION[ 'cur_network_id' ], ($_SESSION[ 'current_page' ]-1), 100, $_SESSION[ 'filter_search' ], calc_bit_mask());
 
   $_SESSION[ 'networks' ] = $nwManager->getNetworks();
   $first_row = $result_set[0];
@@ -250,7 +267,7 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <h3>Description</h3>
+              <h3>Description '.calc_bit_mask().'</h3>
             </div>
           </div>
           <div class="row">

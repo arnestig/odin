@@ -87,11 +87,11 @@ class NetworkManagement
         return $results;
     }
 
-    public function getHosts( $network_id, $page_offset = 0, $items_per_page = 100, $search_string = "" )
+    public function getHosts( $network_id, $page_offset = 0, $items_per_page = 100, $search_string = "", $filter_bit_mask )
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_hosts( ?, ?, ?, ?, ? )" );
-        $sth->execute( array( '', $network_id, $page_offset, $items_per_page, $search_string ) );
+        $sth = $this->dbcon->prepare( "SELECT get_hosts( ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( '', $network_id, $page_offset, $items_per_page, $search_string, $filter_bit_mask ) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
