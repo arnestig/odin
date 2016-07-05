@@ -45,7 +45,7 @@ if (isset( $_POST[ 'edit_description' ] )) {
   // reload and generate popupnotification of action
   $nwManager->updateNetwork($_POST[ 'networkId' ], $_POST[ 'networkDescription' ]);
 
-  $alert_message = 'Network <strong>'.$_POST[ 'networkBase' ].'/'.$_POST[ 'networkCidr' ].'</strong> was deleted and users messaged about deletion.';
+  $alert_message = 'The description of network <strong>'.$_POST[ 'networkBase2' ].'/'.$_POST[ 'networkCidr2' ].'</strong> was updated.';
   $alert_type = 'success';
 }
 
@@ -62,7 +62,7 @@ function generate_nw_list() {
                  <tr>
                     <td>'.$row[ 'nw_id' ].'</td>
                     <td>'.$row[ 'nw_base' ].'/'.$row['nw_cidr'].'</td>
-                    <td>'.$row[ 'nw_description' ].'</td>
+                    <td>'.substr($row[ 'nw_description' ], 0, 150).' ...</td>
                     <td><a class="open-EditNetworkDialog" data-networkid="'.$row[ 'nw_id' ].'" data-networkbase="'.$row[ 'nw_base' ].'" data-networkcidr="'.$row[ 'nw_cidr' ].'" data-networkdescription="'.$row[ 'nw_description' ].'" href="#editNetworkDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
                     <td><a class="open-RemoveNetworkDialog" data-networkid="'.$row[ 'nw_id' ].'" data-networkbase="'.$row[ 'nw_base' ].'" data-networkcidr="'.$row[ 'nw_cidr' ].'" data-networkdescription="'.$row[ 'nw_description' ].'" href="#removeNetworkDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a></td>
                   
@@ -132,11 +132,13 @@ echo '
               <div class="form-group">
                 <label for="networkBase">Base</label>
                 <input type="text" class="form-control" id="networkBase" name="networkBase" value="" disabled/>
-                <input type="hidden" class="form-control" id="networkId" name="networkId" value=""/>
+                <input type="hidden" id="networkBase2" name="networkBase2" value=""/>
+                <input type="hidden" id="networkId" name="networkId" value=""/>
               </div>
               <div class="form-group">
                 <label for="networkCidr">CIDR</label>
                 <input type="text" class="form-control" id="networkCidr" name="networkCidr" value="" disabled/>
+                <input type="hidden" id="networkCidr2" name="networkCidr2" value=""/>
               </div>
               <div class="form-group">
                 <label for="networkDescription">Network description</label>

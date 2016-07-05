@@ -5,6 +5,7 @@ create extension pgcrypto;
 create sequence sq_users_id maxvalue 32700 start with 1;
 alter sequence sq_users_id owner to dbaodin;
 
+
 create table users (
         usr_id smallint primary key default nextval('sq_users_id'),
         usr_usern varchar(45) not null,
@@ -13,6 +14,7 @@ create table users (
         usr_pwd varchar(100) not null,
         server_gen_pwd smallint default 0,
         usr_email varchar(128),
+        usr_privileges smallint default 0,
         usr_session_key varchar(255),
         usr_last_touch timestamp
         );
@@ -81,13 +83,14 @@ create or replace function admin_update_user(
     username varchar(45),
     firstname varchar(45),
     lastname varchar(45),
-    email varchar(128) )
+    email varchar(128),
+    privileges smallint )
 returns void as $$
 begin
-    UPDATE users SET usr_usern = username, usr_firstn = firstname, usr_lastn = lastname, usr_email = email WHERE usr_id = userid;
+    UPDATE users SET usr_usern = username, usr_firstn = firstname, usr_lastn = lastname, usr_email = email, usr_privileges = privileges WHERE usr_id = userid;
 end;
 $$ language plpgsql;
-alter function admin_update_user(varchar,smallint,varchar,varchar,varchar,varchar) owner to dbaodin;
+alter function admin_update_user(varchar,smallint,varchar,varchar,varchar,varchar,smallint) owner to dbaodin;
 
 
 -- remove_user
@@ -113,4 +116,4 @@ $$ language plpgsql;
 alter function remove_user(varchar,smallint) owner to dbaodin;
 
 -- Create our administrator
-insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email ) values( 'admin', crypt( '', gen_salt('md5') ), '', '', '' );
+insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email, usr_privileges ) values( 'admin', crypt( '', gen_salt('md5') ), '', '', '', 2 );

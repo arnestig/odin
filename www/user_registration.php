@@ -4,6 +4,7 @@ session_start();
 
 include_once('include/html_frame.php');
 include_once('include/usermanagement.php');
+include_once('include/user.php');
 
 if (isset($_POST['Register'])) {
   //sanitize input...
@@ -16,6 +17,11 @@ if (isset($_POST['Register'])) {
     $_POST[ 'reg_last_name' ],
     $_POST[ 'reg_email' ]
   );
+  $userHandler = new User();
+  if ($userHandler->login($_POST[ 'reg_username' ],$_POST[ 'reg_password' ])) {
+    header('Location: overview.php');
+  }
+  //Ändra below till nåt gick schnett...
   header('Location: index.php');
 }
 
@@ -46,7 +52,7 @@ echo '
       <div class="row"><div class="col-lg-12"><br></div></div>
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4">
-          <form action="user_registration.php" method="POST">
+          <form class="form" action="user_registration.php" method="POST">
             <div class="form-group">
               <label for="inputEmail">Email address</label>
               <input type="email" name="reg_email" class="form-control" id="inputEmail" placeholder="Email">

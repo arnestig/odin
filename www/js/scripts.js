@@ -11,11 +11,24 @@ function calculate() {
     $('div#choosenAddr').html(newHTML.join(""));
     /* Makes server update sesh var to preserve checked hosts */
     $.ajax({
-        type: "POST",
+        type: 'POST',
+        dataType: 'json',
         data: {
           checkbox:arr
         },
-        url: "overview_handler.php",
+        url: 'overview_handler.php',
+        // Only show reply if ticked address was taken
+        // if so, untick box
+        success : function(data){
+            console.log('reply is' + data.reply);
+            alert(data.reply);
+            if (false) {
+                $().prop('checked', false);
+            }
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+            alert('There was an error.');
+        }
     });
 }
 
@@ -65,7 +78,9 @@ $(document).ready(function() {
 
         $(".form-group #networkId").val( networkId );
         $(".form-group #networkBase").val( networkBase );
+        $(".form-group #networkBase2").val( networkBase );
         $(".form-group #networkCidr").val( networkCidr );
+        $(".form-group #networkCidr2").val( networkCidr );
         $(".form-group #networkDescription").val( networkDescription );
     });
 

@@ -21,17 +21,15 @@ if (isset( $_POST[ 'add_user' ] )) {
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
   $alert_message = 'Server generated pwd is <strong>'.$not_very_rnd_pwd.'</strong>. Testing only. Remove this alert and mail to user instead.';
   $alert_type = 'warning';
-  //Generate and mail password
-  if ( $_POST[ 'add_user' ] === 'Add user' ) {
-    $userManager->addUser(
-        $_POST[ 'userName' ],
-        $not_very_rnd_pwd, 
-        1, //<- Server has set the pwd
-        $_POST[ 'firstName' ],
-        $_POST[ 'lastName' ],
-        $_POST[ 'email' ]
-    );
-  }    
+
+  $userManager->addUser(
+      $_POST[ 'userName' ],
+      $not_very_rnd_pwd, 
+      1, //<- Server has set the pwd
+      $_POST[ 'firstName' ],
+      $_POST[ 'lastName' ],
+      $_POST[ 'email' ]
+  );
 }
 
 if (isset( $_POST[ 'edit_user' ] )) {
@@ -141,7 +139,7 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Add user</h4>
           </div>
-          <form>
+          <form class="form" method="POST" action="manage_users.php">
           <div class="modal-body">
             
             <div class="form-group col-lg-12">
@@ -149,25 +147,25 @@ echo '
             </div>
             <div class="form-group col-lg-12">
               <label for="userName">Username</label>
-              <input type="text" class="form-control" id="userName" placeholder="Username">
+              <input type="text" class="form-control" id="userName" name="userName" placeholder="Username">
             </div>
             <div class="form-group col-lg-6">
               <label for="firstName">First name</label>
-              <input type="text" class="form-control" id="firstName" placeholder="First name">
+              <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name">
             </div>
             <div class="form-group col-lg-6">
               <label for="lastName">Last name</label>
-              <input type="text" class="form-control" id="lastName" placeholder="First name">
+              <input type="text" class="form-control" id="lastName" name="lastName" placeholder="First name">
             </div>
             <div class="form-group col-lg-12">
               <label for="email">Email</label>
-              <input type="email" class="form-control" id="email" placeholder="Email"></input>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Email"></input>
             </div>
         
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <input type="submit" class="btn btn-primary" name="add_user" value="Add User">
+            <input type="submit" class="btn btn-primary" name="add_user" value="Add user">
           </div>
           </form>
         </div>
@@ -207,7 +205,7 @@ echo '
                 <input type="submit" name="generate_new_password" value="Generate and mail new password" class="btn btn-primary"/>
               </div>
               <div class="form-group">
-                <input type="checkbox" name="adminPrivileges" checked> Check to give user Admin-privileges</input>
+                <input type="checkbox" name="adminPrivileges"> Check to give user Admin-privileges</input>
               </div>
             
           </div>
@@ -236,7 +234,7 @@ echo '
               <div class="form-group">
                 <label for="userName" class="col-lg-6">Username</label>
                 <input class="form-control" type="text" id="userName" name="userName" value="" disabled>
-                <input class="form-control" type="hidden" id="userId" name="userId" value="">
+                <input type="hidden" id="userId" name="userId" value="">
               </div>
               <div class="form-group">
                 <label for="firstName" class="col-lg-6">First name</label>
