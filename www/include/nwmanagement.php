@@ -8,6 +8,7 @@ class NetworkManagement
     public function __construct()
     {
         $this->dbcon = new PDO( "pgsql:host=" . DB_SERVER . ";dbname=" . DB_DATABASE . ";user=" . DB_USER . ";password=" . DB_PASSWORD . ";port=" . DB_PORT ) or die ("Could not connect to server\n"); 
+        $this->dbcon->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function addNetwork( $network, $cidr, $description )
@@ -104,6 +105,30 @@ class NetworkManagement
         unset($sth);
 
         return $results;
+    }
+
+    public function reserveHost( $host_ip, $user_id )
+    {
+        $sth = $this->dbcon->prepare( "SELECT reserve_host( ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id ) );
+        $result = $sth->fetch( PDO::FETCH_ASSOC );
+        if ( $result[ 'reserve_host' ] != true ) {
+            // Error handling
+            return false;
+        }
+        return true;
+    }
+
+    public function leaseHost( $host_ip, $user_id, $host_desc = "" )
+    {
+        $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id, $host_desc ) );
+        $result = $sth->fetch( PDO::FETCH_ASSOC );
+        if ( $result[ 'lease_host' ][ 1 ] != true ) {
+            // Error handling
+            return false;
+        }
+        return true;
     }
 
     public function nHostsInNetwork( $cidr )

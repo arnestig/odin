@@ -3,6 +3,7 @@
 session_start();
 
 include_once('include/html_frame.php');
+include_once('include/nwmanagement.php');
 
 // NOT USED NOW?
 /**if (isset($_POST['book_address'])) {
@@ -11,20 +12,38 @@ include_once('include/html_frame.php');
     }
   }
 } else {**/
-  header('Location: overview.php');
+//  header('Location: overview.php');
 //}
 
 $frame = new HTMLframe();
 $frame->doc_start("Book Address");
 $frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_usern' ]);
 
+
 function gen_address_form() {
   $form_body = '';
-  foreach($_SESSION[ 'locked_ips' ] as $ip) {
+  foreach( array_keys($_SESSION[ 'locked_ips' ]) as $ip) {
     $form_body .= gen_address_form_row($ip);
   }
   return $form_body;
-}  
+}
+
+/** Example:
+    $nwmanagement = new NetworkManagement();
+    // First, reserve the host to make sure we got the lock.
+    foreach ( ... as $ip ) {
+        if ( $nwmanagement->reserveHost($ip,1) == true ) {
+            // continue
+        }
+    }
+    // once filled in description and pressed book.
+    foreach ( ... as $ip ) {
+        if ( $nwmanagement->leaseHost($ip,1,'') == true ) {
+            // congratulations
+        }
+    }
+**/
+
 
 function gen_address_form_row($ip) {
   return '
