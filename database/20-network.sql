@@ -69,7 +69,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT nw_id, nw_base, nw_cidr, nw_description FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id); 
+    SELECT nw_id, nw_base, nw_cidr, nw_description FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id) ORDER BY nw_id; 
 return next ref1;
 end;
 $$ language plpgsql;
@@ -105,7 +105,7 @@ declare
 begin
     SELECT s_value from settings WHERE s_name = 'host_not_seen_time_limit' INTO host_not_seen_time_limit;
 open ref1 for
-    WITH CTE AS (
+    WITH host_data AS (
         SELECT
             hosts.*,
             CASE
@@ -113,7 +113,15 @@ open ref1 for
                 WHEN usr_id <> 0 AND host_last_seen > NOW() - host_not_seen_time_limit * interval '1 days' THEN 4 -- red, taken and seen
                 WHEN usr_id = 0 AND host_last_seen > NOW() - host_not_seen_time_limit * interval '1 days' THEN 2 -- not taken but seen
                 WHEN usr_id = 0 AND (host_last_seen < NOW() - host_not_seen_time_limit * interval '1 days' OR host_last_seen IS NULL) THEN 1 -- not taken, not seen
-            END as status FROM hosts )
+            END as status FROM hosts ),
+    reserve_check AS (
+        SELECT
+            rcu.usr_usern,
+            rcu.usr_email,
+            CASE
+                WHEN rch.usr_id <> 0 AND (token_timestamp < NOW() - interval '10 minutes') THEN true
+                WHEN rch.usr_id = 0 OR token_timestamp > NOW() - interval '10 minutes' THEN false
+            END as reserved_status FROM hosts rch LEFT OUTER JOIN users rcu ON ( rch.token_usr = rcu.usr_id ) )
     SELECT
         h.host_ip,
         h.usr_id,
@@ -132,10 +140,13 @@ open ref1 for
         u.usr_lastn,
         u.usr_email,
         h.status,
+        t.reserved_status,
+        t.usr_usern as reserved_by_usern,
+        t.usr_email as reserved_by_email,
         count(*) OVER() as total_rows,
         greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows,
         ceil(count(*) OVER()::float/items_per_page) as total_pages
-    FROM CTE h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id)
+    FROM host_data h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id), reserve_check t
     WHERE
         (get_nw_id IS NULL or nw_id = get_nw_id) AND
         (search_string is NULL or (
@@ -154,48 +165,63 @@ alter function get_hosts(varchar,smallint,integer,integer,varchar,smallint) owne
 -- reserve_host
 -- This function will be used to preliminary book hosts for reservation
 -- Input:  session key, hosts.host_ip, current users.usr_id
--- Output: false + error message if booking failed, true if successful
+-- Output: false if booking failed, true if successful
 create or replace function reserve_host(
     ticket varchar(255),
     host_to_reserve varchar(36),
     cur_usr_id smallint )
-returns sp_result as $$
+returns boolean as $$
 declare
     host_already_reserved text;
-    sp_res sp_result;
 begin
     select host_ip into host_already_reserved from hosts where host_ip = host_to_reserve AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
     IF host_already_reserved <> '' THEN
-        SELECT false::boolean,'Host ' || host_already_reserved || ' already reserved'::varchar INTO sp_res;
+        RETURN false;
     ELSE
         update hosts SET token_usr=cur_usr_id WHERE host_ip = host_to_reserve;
         update hosts SET token_timestamp = NOW() WHERE token_usr=cur_usr_id;
-    SELECT true::boolean,''::varchar INTO sp_res;
     END IF;
-    RETURN sp_res;
+    RETURN true;
 end;
 $$ language plpgsql;
 alter function reserve_host(varchar,varchar,smallint) owner to dbaodin;
 
+-- unreserve_host
+-- This function will be used to remove a reserveration of a host
+-- Input:  session key, hosts.host_ip, current users.usr_id
+create or replace function unreserve_host(
+    ticket varchar(255),
+    host_to_remove varchar(36),
+    cur_usr_id smallint )
+returns void as $$
+begin
+    update hosts SET 
+        token_usr=0,
+        token_timestamp = NULL
+    WHERE host_ip = host_to_remove AND token_usr = cur_usr_id;
+end;
+$$ language plpgsql;
+alter function unreserve_host(varchar,varchar,smallint) owner to dbaodin;
+
 -- lease_host
 -- This function leases the host and is called after reserving the host
 -- Input: session key, hosts.host_ip, current users.usr_id, new host description
--- Output: false + error message if no reserved host was found, true if successful
+-- Output: false if no reserved host was found, true if successful
 create or replace function lease_host(
     ticket varchar(255),
     host_to_lease varchar(36),
     cur_usr_id smallint,
+    host_new_name varchar(255) default NULL,
     host_desc varchar(2000) default NULL)
-returns sp_result as $$
+returns boolean as $$
 declare
     host_already_reserved text;
     max_lease_time smallint;
-    sp_res sp_result;
 begin
     SELECT s_value from settings WHERE s_name = 'host_max_lease_time' INTO max_lease_time;
     select host_ip into host_already_reserved from hosts where host_ip = host_to_lease AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
     IF host_already_reserved <> '' THEN
-        SELECT false::boolean ,'Host ' || host_already_reserved || ' already reserved by ...'::varchar INTO sp_res;
+        RETURN false;
     ELSE
         UPDATE hosts
         SET
@@ -207,12 +233,38 @@ begin
             token_usr = DEFAULT
         WHERE
             host_ip = host_to_lease AND
+            host_name = host_new_name AND
+            host_description = host_desc AND
             token_usr = cur_usr_id AND
             token_timestamp > NOW() - interval '10 minutes';
-    SELECT true::boolean,''::varchar INTO sp_res;
+    RETURN true;
     END IF;
-    RETURN sp_res;
 end;
 $$ language plpgsql;
-alter function lease_host(varchar,varchar,smallint,varchar) owner to dbaodin;
+alter function lease_host(varchar,varchar,smallint,varchar,varchar) owner to dbaodin;
 
+-- terminate_lease
+-- This function leases the host and is called after reserving the host
+-- Input: session key, hosts.host_ip, current users.usr_id, new host description
+-- Output: false if no reserved host was found, true if successful
+create or replace function terminate_lease(
+    ticket varchar(255),
+    host_to_terminate varchar(36),
+    cur_usr_id smallint)
+returns void as $$
+begin
+    UPDATE hosts
+    SET
+        usr_id = DEFAULT,
+        host_leased = NULL,
+        host_lease_expiry = NULL,
+        host_description = NULL,
+        token_timestamp = NULL,
+        token_usr = DEFAULT
+    WHERE
+        host_ip = host_to_terminate AND
+        usr_id = cur_usr_id;
+        
+end;
+$$ language plpgsql;
+alter function terminate_lease(varchar,varchar,smallint) owner to dbaodin;

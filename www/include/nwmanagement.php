@@ -111,24 +111,30 @@ class NetworkManagement
     {
         $sth = $this->dbcon->prepare( "SELECT reserve_host( ?, ?, ? )" );
         $sth->execute( array( '', $host_ip, $user_id ) );
-        $result = $sth->fetch( PDO::FETCH_ASSOC );
-        if ( $result[ 'reserve_host' ] != true ) {
-            // Error handling
-            return false;
-        }
-        return true;
+        $result = $sth->fetch();
+        return $result[ 'reserve_host' ];
     }
 
-    public function leaseHost( $host_ip, $user_id, $host_desc = "" )
+    public function unreserveHost( $host_ip, $user_id )
     {
-        $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ?, ? )" );
-        $sth->execute( array( '', $host_ip, $user_id, $host_desc ) );
-        $result = $sth->fetch( PDO::FETCH_ASSOC );
-        if ( $result[ 'lease_host' ][ 1 ] != true ) {
-            // Error handling
-            return false;
-        }
-        return true;
+        $sth = $this->dbcon->prepare( "SELECT reserve_host( ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id ) );
+        $result = $sth->fetch();
+    }
+
+    public function leaseHost( $host_ip, $user_id, $host_name, $host_desc )
+    {
+        $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id, $host_name, $host_desc ) );
+        $result = $sth->fetch();
+        return $result[ 'lease_host' ];
+    }
+
+    public function terminateLease( $host_ip, $user_id )
+    {
+        $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id ) );
+        $result = $sth->fetch();
     }
 
     public function nHostsInNetwork( $cidr )
