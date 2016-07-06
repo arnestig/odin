@@ -116,6 +116,7 @@ open ref1 for
             END as status FROM hosts ),
     reserve_check AS (
         SELECT
+            rch.host_ip,
             rcu.usr_usern,
             rcu.usr_email,
             CASE
@@ -146,17 +147,17 @@ open ref1 for
         count(*) OVER() as total_rows,
         greatest(0,(count(*) OVER()) - (items_per_page * (page_offset+1))) as remaining_rows,
         ceil(count(*) OVER()::float/items_per_page) as total_pages
-    FROM host_data h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id), reserve_check t
+    FROM host_data h LEFT OUTER JOIN users u ON (h.usr_id = u.usr_id) LEFT OUTER JOIN reserve_check t ON (t.host_ip = h.host_ip)
     WHERE
-        (get_nw_id IS NULL or nw_id = get_nw_id) AND
+        (get_nw_id IS NULL or h.nw_id = get_nw_id) AND
         (search_string is NULL or (
-            (lower(host_description) ~ ('^' || lower(search_string))) OR
-            (lower(host_name) ~ ('^' || lower(search_string))) OR
-            (lower(host_data) ~ ('^' || lower(search_string))) OR
-            (host_ip ~ ('^' || search_string)))
+            (lower(h.host_description) ~ ('^' || lower(search_string))) OR
+            (lower(h.host_name) ~ ('^' || lower(search_string))) OR
+            (lower(h.host_data) ~ ('^' || lower(search_string))) OR
+            (h.host_ip ~ ('^' || search_string)))
         ) AND
         (search_bit_mask = 0 OR 0 <> (h.status & search_bit_mask))
-    ORDER BY inet(host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
+    ORDER BY inet(h.host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
 return next ref1;
 end;
 $$ language plpgsql;
