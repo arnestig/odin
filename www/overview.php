@@ -154,6 +154,7 @@ function show_host_row_view($row) {
   //TODO: Fix if below?
   if ( isset( $_SESSION[ 'locked_ips' ][ $row['host_ip'] ] ) ) $ticked_box = ' checked';
 
+
   // Set the disabled tag if other user owns lock
   $disabled = '';
   if ( $row[ 'reserved_by_usern' ] !== 'nobody' && $row[ 'reserved_by_usern' ] !== $_SESSION[ 'user_data' ][ 'usr_usern' ] ) $disabled = ' disabled';
@@ -188,9 +189,9 @@ function show_host_row_view($row) {
                     <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i></td>
                     <td>'.$row['host_ip'].'</td>
                     <td>'.$row['host_name'].'</td>
-                    <td colspan="2">'.substr($row['host_description'], 0, 30).'</td>
+                    <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
                     <td>'.substr($row['host_last_seen'], 0, 10).'</td>
-                    <td>'.$checkbox.'</td>
+                    <td title="Someone beat you to it...">'.$checkbox.'</td>
                   </tr>
                   <tr>
                     <td colspan="12" class="hiddenRow">
@@ -351,7 +352,7 @@ echo '
                   '.show_hosts().'
                   <!-- END - injection test -->
 
-                  <input name="book_address" value="SUBMIT" type="submit" id="submit-form" class="hidden" />
+                  <input name="continue_reservation" value="SUBMIT" type="submit" id="submit-form" class="hidden" />
 
                 </form>                  
                 </tbody>

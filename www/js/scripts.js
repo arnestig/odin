@@ -127,7 +127,6 @@ $(document).ready(function() {
         $(".form-group #networkCidr").val( networkCidr );
         $(".form-group #networkDescription").val( networkDescription );
     });
-
     
     // get id of plus click, then replace with glyphicon-ok or glyphicon-exclamation-sign
     // when ajax-call returns status on ip (locked/available)
