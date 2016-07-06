@@ -251,13 +251,12 @@ begin
             usr_id = cur_usr_id,
             host_leased = now(),
             host_lease_expiry = NOW() + max_lease_time * interval '1 days',
+            host_name  = host_new_name,
             host_description = host_desc,
             token_timestamp = NULL,
             token_usr = DEFAULT
         WHERE
             host_ip = host_to_lease AND
-            host_name = host_new_name AND
-            host_description = host_desc AND
             token_usr = cur_usr_id AND
             token_timestamp > NOW() - interval '10 minutes';
     PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host leased' );
