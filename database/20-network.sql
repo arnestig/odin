@@ -162,6 +162,28 @@ end;
 $$ language plpgsql;
 alter function get_hosts(varchar,smallint,integer,integer,varchar,smallint) owner to dbaodin;
 
+-- update_host
+-- Will update host with hostname and description
+create or replace function update_host(
+    ticket varchar(255),
+    host_to_update varchar(36),
+    cur_usr_id smallint,
+    host_new_name varchar(255),
+    host_desc varchar(2000))
+returns void as $$
+begin
+    UPDATE hosts
+    SET
+        host_description = host_desc,
+        host_name = host_new_name
+    WHERE
+        host_ip = host_to_update AND
+        usr_id = cur_usr_id;
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_terminate, 'Host details updated' );
+end;
+$$ language plpgsql;
+alter function update_host(varchar,varchar,smallint,varchar,varchar) owner to dbaodin;
+
 -- reserve_host
 -- This function will be used to preliminary book hosts for reservation
 -- Input:  session key, hosts.host_ip, current users.usr_id
@@ -237,6 +259,7 @@ begin
             host_description = host_desc AND
             token_usr = cur_usr_id AND
             token_timestamp > NOW() - interval '10 minutes';
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host leased' );
     RETURN true;
     END IF;
 end;
@@ -264,7 +287,7 @@ begin
     WHERE
         host_ip = host_to_terminate AND
         usr_id = cur_usr_id;
-        
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_terminate, 'Lease terminated' );
 end;
 $$ language plpgsql;
 alter function terminate_lease(varchar,varchar,smallint) owner to dbaodin;

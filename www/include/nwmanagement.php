@@ -107,6 +107,13 @@ class NetworkManagement
         return $results;
     }
 
+    public function updateHost( $host_ip, $user_id, $host_name, $host_description )
+    {
+        $sth = $this->dbcon->prepare( "SELECT update_host( ?, ?, ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id, $host_name, $host_description ) );
+        $result = $sth->fetch();
+    }
+
     public function reserveHost( $host_ip, $user_id )
     {
         $sth = $this->dbcon->prepare( "SELECT reserve_host( ?, ?, ? )" );
