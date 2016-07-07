@@ -1,6 +1,27 @@
+function refreshBasket() {
+    var ipList = [];
+    var newHTML = [];
+    $.ajax({
+        url: 'overview_handler.php',
+        type: 'POST',
+        data: getReserved,
+        dataType: 'json',
+        success: function(data) {
+            ipList = data;
+            alert(data[0]);
+        }
+    });
+    for (var i = 0; i < ipList.length; i++) {
+        newHTML.push('<p>' + ipList[i] + '</p>');
+    }
+    if (ipList.length < 1) newHTML.push('<p><em>Empty</em></p>');
+    $('div#choosenAddr').html(newHTML.join(""));
+}
+
+
 function calculate() {
     var arr = $.map($('input:checkbox:checked'), function(e, i) {
-        //console.log(e.value);
+        console.log(e.value);
         return e.value;
     });
     var newHTML = [];
@@ -13,8 +34,39 @@ function calculate() {
 
 
 $(document).ready(function() {
+
     calculate();
     $('td').delegate('input:checkbox', 'click', calculate);
+    
+
+    
+    $('td>input').on('click', function() {
+        var elementIP = this.value;
+        console.log('AJAX sends this: ' + elementIP);
+        /* Makes server update session to preserve checked hosts */
+        $.ajax({
+            type: 'POST',
+            data: {
+                checkbox:elementIP
+            },
+            url: 'overview_handler.php',
+            // Only show reply if ticked address was taken
+            // if so, untick box
+            success : function(data){
+                console.log('reply is' + data.reply);
+                console.log('Var reached: ' + this.value);
+                var cbID = '#cb' + elementIP;
+                $(cbID).prop('checked', false);
+                //alert(data.reply);
+                if (false) {
+                    $().prop('checked', false);
+                }
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('There was an error.');
+            }
+        });
+    });
 
     // Manage Users
     $(document).on("click", ".open-EditUserDialog", function () {
@@ -76,29 +128,6 @@ $(document).ready(function() {
         $(".form-group #networkDescription").val( networkDescription );
     });
 
-    $('td>input').on('click', function() {
-        var elementIP = this.value;
-        /* Makes server update session to preserve checked hosts */
-        $.ajax({
-            type: 'POST',
-            data: {
-            checkbox:elementIP
-            },
-            url: 'overview_handler.php',
-            // Only show reply if ticked address was taken
-            // if so, untick box
-            success : function(data){
-                console.log('reply is' + data.reply);
-                //alert(data.reply);
-                if (false) {
-                    $().prop('checked', false);
-                }
-            },
-            error : function(XMLHttpRequest, textStatus, errorThrown) {
-                alert('There was an error.');
-            }
-        });
-    });
     
     // get id of plus click, then replace with glyphicon-ok or glyphicon-exclamation-sign
     // when ajax-call returns status on ip (locked/available)

@@ -16,17 +16,36 @@ class Settings
         $sth->execute( array( '', $name, $value ) );
     }
     
-    public function getSettings()
+    public function getSettings($settings_group)
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT get_settings( ? )" );
-        $sth->execute( array( '') );
+        $sth = $this->dbcon->prepare( "SELECT get_settings( ?, ? )" );
+        $sth->execute( array( '', $settings_group) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
         // get each result set
         $results = array();
         $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_settings'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC);
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
+    public function getSettingGroups()
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_setting_groups( ? )" );
+        $sth->execute( array( '') );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_setting_groups'] .'";');
         $results = $sth->fetchAll( PDO::FETCH_ASSOC);
         $sth->closeCursor();
         $this->dbcon->commit();

@@ -43,7 +43,7 @@ if ( isset( $_REQUEST[ 'filter_tag' ] ) ) {
 }
 
 //TODO: Search string from filter search. Validate input.
-if ( isset( $_REQUEST[ 'filter_search' ])) {
+if ( isset( $_REQUEST[ 'filter_search' ]) ) {
   $_SESSION[ 'filter_search' ] = $_REQUEST[ 'filter_search' ];
   $_SESSION[ 'current_page' ] = 1;
 }
@@ -147,36 +147,41 @@ function show_hosts() {
 }
 
 function show_host_row_view($row) {
-  //Function that returns tag(enum?): free, free_but_seen, taken, taken_not_seen 
-  $host_status = '';
-  $bootstrap_color_tag = '';
-  $last_seen = strtotime($row['host_last_seen']);
-  $lease_expiry = strtotime($row['host_lease_expiry']);
-  $cur_time = time();
-
+  // ====================================
+  // ALL POSSIBLE TAGS IN THE <INPUT> FOR CHECKBOX BELOW
   $ticked_box = '';
-  if ( isset( $_SESSION[ 'locked_ips' ][ $row['host_ip'] ] ) ) $ticked_box = ' checked';
-  $checkbox = '<input type="checkbox" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.'>';
 
-  $notNull = false;
-  if ($last_seen != null && $lease_expiry != null) $notNull = true;
+  //TODO: Fix if below?
+  if ( isset( $_SESSION[ 'locked_ips' ][ $row['host_ip'] ] ) ) $ticked_box = ' checked';
+
+  // Set the disabled tag if other user owns lock
+  $disabled = '';
+  if ( $row[ 'reserved_by_usern' ] !== 'nobody' && $row[ 'reserved_by_usern' ] !== $_SESSION[ 'user_data' ][ 'usr_usern' ] ) $disabled = ' disabled';
+ 
+  $checkbox = '<input type="checkbox" id="cb'.$row['host_ip'].'" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.' '.$disabled.'>';
+  if ( $disabled === ' disabled' ) $checkbox .= '<i class="glyphicon glyphicon-exclamation-sign"></i>';
+
+  // ====================================
+  // COLORING AND CHECKBOX SETTING BELOW
+  $bootstrap_color_tag = '';
+
   //Free (but seen)
-  if ( ($cur_time-$last_seen) < 30*24*3600 && $row['usr_id'] == 0 ) {
+  if ( $row[ 'status' ] == 2 ) {
     $bootstrap_color_tag = ' danger';
   }
-  //Taken (not seen) 30days hardcode
-  //Not wöking, men tanken r'tt if ( $notNull && ( (($cur_time-$last_seen) > (30*24*3600)) && ($lease_expiry > $cur_time) ) {
-  
-  if ( $notNull && ($cur_time-$last_seen) > 30*24*3600 ) {
-    $bootstrap_color_tag = ' info';
-    if (!$_SESSION[ 'steal_not_seen' ]) $checkbox = '';
-    
-  }
+
   //Taken
-  if ($lease_expiry > $cur_time) {
+  if ( $row[ 'status' ] == 4 ) {
     $bootstrap_color_tag = ' warning';
     $checkbox = '';
   }
+
+  // Taken (not seen)
+  if ( $row[ 'status' ] == 8) {
+    $bootstrap_color_tag = ' info';
+    if (!$_SESSION[ 'steal_not_seen' ]) $checkbox = '';
+  }
+  // ====================================
 
   return '
                   <tr class="'.$bootstrap_color_tag.'">
@@ -261,7 +266,7 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <h3>Description '.calc_bit_mask().'</h3>
+              <h3>Description</h3>
             </div>
           </div>
           <div class="row">
@@ -326,8 +331,6 @@ echo '
 ';
 
 //tbody_content($_SESSION['cur_network_id']);
-// Host table
-// GENERATE
 
 echo '
               <table class="table table-condensed nw-table">

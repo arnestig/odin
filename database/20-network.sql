@@ -185,6 +185,26 @@ end;
 $$ language plpgsql;
 alter function update_host(varchar,varchar,smallint,varchar,varchar) owner to dbaodin;
 
+
+-- get_reserved
+-- This function will get all hosts reserved by a user
+-- Input: session key, user id
+-- Output: reserved host_ips of the user, otherwise null
+create or replace function get_reserved(
+    ticket varchar(255),
+    user_id smallint )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT host_ip FROM hosts WHERE token_usr = user_id AND token_timestamp > NOW() - interval '10 minutes' ORDER BY inet(host_ip); 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_reserved(varchar,smallint) owner to dbaodin;
+
+
 -- reserve_host
 -- This function will be used to preliminary book hosts for reservation
 -- Input:  session key, hosts.host_ip, current users.usr_id

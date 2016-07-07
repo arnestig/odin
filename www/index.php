@@ -5,9 +5,9 @@ include_once( "include/user.php" );
 include_once( "include/settings.php" );
 include_once( "include/html_frame.php" );
 
-if (!empty($_POST['email']) && !empty($_POST['password'])) {
+if (!empty($_POST['username']) && !empty($_POST['password'])) {
   $user = new User();
-  $name = $_POST['email'];
+  $name = $_POST['username'];
   $pwd = $_POST['password'];
   if ($user->login($name,$pwd)) {
     if ($_SESSION[ 'user_data' ][ 'server_gen_pwd' ] === 1) {
@@ -20,7 +20,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
 function userRegistration() {
   $settings = new Settings();
-  $allsettings = $settings->getSettings();
+  $allsettings = $settings->getSettings('user_registration');
   foreach ( $allsettings as $setting ) {
     if ($setting[ 's_name' ] === 'allow_user_registration' && $setting[ 's_value' ] === '1') {
         echo '
@@ -53,8 +53,8 @@ echo '
         <div class="col-lg-offset-4 col-lg-4">
           <form id="login" name="login_form" action="" method="post">
             <div class="form-group">
-              <label for="email">Email address</label>
-              <input type="text" class="form-control" id="email" name="email" placeholder="Email" autocomplete="on">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="on">
             </div>
             <div class="form-group">
               <label for="password">Password</label>

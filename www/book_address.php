@@ -5,15 +5,32 @@ session_start();
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
 
-// NOT USED NOW?
-/**if (isset($_POST['book_address'])) {
-  if (isset($_POST[ 'book_ip' ])) {
-      //$_SESSION[ 'locked_ips' ][ $_POST[ 'book_ip' ] ] = 1;
+
+// The Booking Controller
+// TODO: check that posted IPs match those in sesh var
+if (isset($_POST[ 'book_addresses' ])) {
+  $nwmanagement = new NetworkManagement();
+
+  $nbr_of_items = $_POST[ 'nbr_of_ips' ];
+  $host_ip = '';
+  $host_name = '';
+  $host_desc = '';
+
+  for ($i = 0; $i < $nbr_of_items; $i++) {
+
+    $host_ip = $_POST[ 'hostIP'.$i ];
+    $host_name = $_POST[ 'hostName'.$i ];
+    $host_desc = $_POST[ 'dataDescription'.$i ];
+
+    echo $host_ip.': '.$host_name.' &&&& '.$host_desc;
+
+    if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
+           echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
     }
   }
-} else {**/
-//  header('Location: overview.php');
-//}
+} else {
+  header('Location: overview.php');
+}
 
 $frame = new HTMLframe();
 $frame->doc_start("Book Address");
@@ -28,24 +45,21 @@ function gen_address_form() {
   return $form_body;
 }
 
-/** Example:
-    $nwmanagement = new NetworkManagement();
-    // First, reserve the host to make sure we got the lock.
-    foreach ( ... as $ip ) {
-        if ( $nwmanagement->reserveHost($ip,1) == true ) {
-            // continue
-        }
-    }
-    // once filled in description and pressed book.
-    foreach ( ... as $ip ) {
-        if ( $nwmanagement->leaseHost($ip,1,'') == true ) {
-            // congratulations
-        }
-    }
-**/
+function gen_address_form() {
+  $form_body = '';
+  $index = 0;
+  $nwmanagement = new NetworkManagement();
+  $reservedIPs = $nwmanagement->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
+  print_r($reservedIPs);
+  
+  foreach( array_values($reservedIPs) as $ip) {
+    $form_body .= gen_address_form_row($ip, $index);
+    $index++;
+  }
+  return $form_body;
+}
 
-
-function gen_address_form_row($ip) {
+function gen_address_form_row($ip, $index) {
   return '
         <div class="row">
           <div class="col-lg-offset-2 col-lg-6">
