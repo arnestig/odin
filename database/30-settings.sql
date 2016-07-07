@@ -67,8 +67,6 @@ end;
 $$ language plpgsql;
 alter function get_settings(varchar,varchar) owner to dbaodin;
 
-<<<<<<< Updated upstream
-=======
 -- get_settings
 create or replace function get_settings(
     ticket varchar(255),
@@ -84,10 +82,6 @@ end;
 $$ language plpgsql;
 alter function get_settings(varchar,varchar) owner to dbaodin;
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 -- get_setting_groups
 create or replace function get_setting_groups(
     ticket varchar(255))
