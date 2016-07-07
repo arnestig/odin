@@ -16,6 +16,8 @@ if (isset($_POST[ 'book_addresses' ])) {
   $host_name = '';
   $host_desc = '';
 
+  echo $nbr_of_items;
+
   for ($i = 0; $i < $nbr_of_items; $i++) {
 
     $host_ip = $_POST[ 'hostIP'.$i ];
@@ -28,8 +30,6 @@ if (isset($_POST[ 'book_addresses' ])) {
            echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
     }
   }
-} else {
-  header('Location: overview.php');
 }
 
 $frame = new HTMLframe();
@@ -45,10 +45,11 @@ function gen_address_form() {
   $reservedIPs = $nwmanagement->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
   print_r($reservedIPs);
   
-  foreach( array_values($reservedIPs) as $ip) {
+  foreach( $reservedIPs as $ip) {
     $form_body .= gen_address_form_row($ip, $index);
     $index++;
   }
+  $form_body .= gen_form_footer($index);
   return $form_body;
 }
 
@@ -77,6 +78,18 @@ function gen_address_form_row($ip, $index) {
         </div>';
 }
 
+function gen_form_footer($index) {
+  return '
+        <div class="row">
+          <div class="col-lg-offset-2 col-lg-6 pull-right">
+            <a class="btn btn-default" href="overview.php" role="button">Cancel</a>
+            <input type="hidden" name="nbr_of_ips" value="'.$index.'">
+            <input type="submit" name="book_addresses" value="Book Addresses" class="btn btn-success">
+          </div>
+        </div>
+  ';
+}
+
 echo '
     <div class="container">
       <div class="row">
@@ -87,13 +100,6 @@ echo '
       </div>
       <form class="form" method="POST" action="book_address.php">
       '.gen_address_form().'
-        <div class="row">
-          <div class="col-lg-offset-2 col-lg-6 pull-right">
-            <a class="btn btn-default" href="overview.php" role="button">Cancel</a>
-            <input type="hidden" name="nbr_of_ips" value="'.sizeof($_SESSION[ 'locked_ips' ]).'">
-            <input type="submit" name="book_addresses" value="Book Addresses" class="btn btn-success">
-          </div>
-        </div>
       </form>
     </div>
 ';

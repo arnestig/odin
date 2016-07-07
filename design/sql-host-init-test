@@ -1,0 +1,90 @@
+UPDATE hosts 
+SET 
+usr_id = 2, 
+host_name = 'RDcam', 
+host_data = 'blurg', 
+host_description = 'E4S. Part of cool system',
+host_leased = '2015-06-16 04:05:06',
+host_last_seen = '2016-07-01 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2016-06-16 04:05:06'
+WHERE 
+host_ip = '192.168.0.1';
+
+UPDATE hosts 
+SET 
+usr_id = 3, 
+host_name = 'VDC1', 
+host_data = 'blurg', 
+host_description = 'Hangs by road. Cool schtuff.',
+host_leased = '2015-07-16 04:05:06',
+host_last_seen = '2016-05-01 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2016-06-01 04:05:06'
+WHERE 
+host_ip = '192.168.0.2';
+
+UPDATE hosts 
+SET 
+usr_id = 3, 
+host_name = 'VDC2', 
+host_data = 'blurg', 
+host_description = 'Hangs also by road. Is nice.',
+host_leased = '2015-07-16 04:05:06',
+host_last_seen = '2016-05-30 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2016-04-01 04:05:06'
+WHERE 
+host_ip = '192.168.0.3';
+
+UPDATE hosts 
+SET 
+usr_id = 4, 
+host_name = 'TR-909', 
+host_data = 'blurg', 
+host_description = 'Hangs with musicians. Beats everything.',
+host_leased = '2015-09-10 04:05:06',
+host_last_seen = '2016-05-01 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2016-06-01 04:05:06'
+WHERE 
+host_ip = '192.168.0.4';
+
+UPDATE hosts 
+SET 
+usr_id = 0, 
+host_name = '', 
+host_data = '', 
+host_description = '',
+host_leased = '2014-06-15 04:05:06',
+host_last_seen = '2016-06-20 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2015-06-15 04:05:06'
+WHERE 
+host_ip = '192.168.0.5';
+
+UPDATE hosts 
+SET 
+usr_id = 5, 
+host_name = 'OCR-cam', 
+host_data = 'blurg', 
+host_description = 'E4S. Calibrating complex software algorithms data.',
+host_leased = '2015-07-16 04:05:06',
+host_last_seen = '2016-06-20 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2016-06-01 04:05:06'
+WHERE 
+host_ip = '192.168.0.6';
+
+UPDATE hosts 
+SET 
+usr_id = 0, 
+host_name = '', 
+host_data = '', 
+host_description = '',
+host_leased = '2014-06-15 04:05:06',
+host_last_seen = '2016-04-01 04:05:06',
+host_last_scanned = '2016-06-27 04:05:06',
+host_last_notified = '2015-06-15 04:05:06'
+WHERE 
+host_ip = '192.168.0.7';
