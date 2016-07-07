@@ -36,13 +36,12 @@ alter function update_setting(varchar,varchar,varchar) owner to dbaodin;
 create or replace function get_setting_value(
     ticket varchar(255),
     setting_name varchar(45) )
-returns SETOF refcursor AS $$
+returns varchar AS $$
 declare
-ref1 refcursor;
+    retval varchar;
 begin
-open ref1 for
-    SELECT s_value FROM settings WHERE s_name = setting_name; 
-return next ref1;
+    SELECT s_value FROM settings WHERE s_name = setting_name INTO retval;
+    return retval;
 end;
 $$ language plpgsql;
 alter function get_setting_value(varchar,varchar) owner to dbaodin;
@@ -87,3 +86,5 @@ insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fu
 values( 'hosts', 'Hosts', 'host_steal_not_seen', 'checkbox', '', 'Allow stealing not seen', 'Allow reservation of addresses that are taken but not seen.' );
 insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fullname, s_description )
 values( 'hosts', 'Hosts', 'host_not_seen_time_limit', 'number', '30', 'Host not seen time limit (days)', 'Defines when hosts are considered gone or not seen by the system any more.' );
+insert into settings( s_group_name, s_group_value, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'hosts', 'Hosts', 'host_scan_interval', 'number', '5', 'Host scan interval (minutes)', 'Time between host scans in minutes.' );

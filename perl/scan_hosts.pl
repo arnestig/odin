@@ -6,11 +6,12 @@ use warnings;
 use DBI;
 use Data::Dumper;
 use Net::Ping;
+use Scalar::Util qw(looks_like_number);
 use POSIX qw(strftime);
 use threads;
 
 our $running = 1;
-our $update_interval = 300; # 5 minutes
+our $update_interval;
 
 sub signal_handler
 {
@@ -40,12 +41,23 @@ $SIG{ INT } = \&signal_handler;
 # connect
 my $dbh = DBI->connect("DBI:Pg:dbname=odin;host=localhost", "dbaodin", "gresen", {'RaiseError' => 1});
 
+my $sth = $dbh->prepare( 'SELECT * FROM get_setting_value( ?, ? );' );
+$sth->bind_param( 1, '' );
+$sth->bind_param( 2, 'host_scan_interval' );
+$sth->execute();
+$::update_interval = $sth->fetchrow_array();
+if ( ! looks_like_number( $::update_interval ) ) {
+    print STDERR "Setting host_scan_interval not a number: $::update_interval\n";
+    exit;
+}
+
 while ( $::running ) {
     my @hosts_to_scan;
     my %hostinfo;
     $dbh->{ AutoCommit } = 1;
+
     # select our stored procedure for hosts to scan
-    my $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan();' );
+    $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan();' );
     $sth->execute();
 
     # fetch our reference cursor
@@ -68,6 +80,7 @@ while ( $::running ) {
     while ( @hosts_to_scan ) {
         my @hosts_to_add;
         my @thread_pool;
+
         # only 20 at time, rest will be done next batch
         if ( $#hosts_to_scan >= 19 ) {
             @hosts_to_add = splice( @hosts_to_scan, -20 );
@@ -104,7 +117,7 @@ while ( $::running ) {
     $dbh->commit();
 
     # sleep until next time we're checking the hosts
-    sleep( $::update_interval );
+    sleep( $::update_interval  * 60 );
 }
 
 # clean up
