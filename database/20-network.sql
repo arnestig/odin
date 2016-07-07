@@ -180,7 +180,7 @@ begin
     WHERE
         host_ip = host_to_update AND
         usr_id = cur_usr_id;
-    PERFORM add_log_entry( ticket, cur_usr_id, host_to_terminate, 'Host details updated' );
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_terminate, 'Host details updated, new hostname = "' || host_new_name || '", new description = "' || host_desc || '".' );
 end;
 $$ language plpgsql;
 alter function update_host(varchar,varchar,smallint,varchar,varchar) owner to dbaodin;
@@ -259,7 +259,7 @@ begin
             host_ip = host_to_lease AND
             token_usr = cur_usr_id AND
             token_timestamp > NOW() - interval '10 minutes';
-    PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host leased' );
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host leased, hostname = "' || host_new_name || '", description = "' || host_desc || '".' );
     RETURN true;
     END IF;
 end;
