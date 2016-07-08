@@ -21,13 +21,19 @@ if (isset( $_POST['add_network'] )) {
 }
 
 // TODO
-if (isset( $_POST[ 'delete_network' ] )) {
+if (isset( $_POST[ 'delete_and_notify' ] )) {
   // generate mail
   // input validation and error handling
   // confirmation
+
+  //=====================
+  // TODO: Solve this with html5 instead
+  $nwId = $_POST[ 'networkId' ];
+  $nwInfo = $nwManager->getNetworkInfo( $nwId );
+  //=====================
   $nwManager->removeNetwork($_POST[ 'networkId' ]);
 
-  $alert_message = 'Network <strong>'.$_POST[ 'networkBase' ].'/'.$_POST[ 'networkCidr' ].'</strong> was succefully removed.';
+  $alert_message = 'Network <strong>'.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ].'</strong> was succefully removed.';
   $alert_type = 'success';
 }
 
@@ -164,8 +170,9 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Delete network</h4>
           </div>
-          <div class="modal-body">
-            <form>
+          <form class="form" action="manage_networks.php" method="POST">
+            <div class="modal-body">
+            
               <div class="form-group">
                 <label for="networkBase">Base</label>
                 <input type="text" class="form-control" id="networkBase" name="networkBase" value="" disabled/>
@@ -182,13 +189,14 @@ echo '
                 <label for="notificationMessage">Notification message</label>
                 <textarea class="form-control" rows="3" id="notificationMessage" name="notificationMessage" value="" placeholder="Notification message"></textarea>
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" class="btn btn-primary" name="notify_only" value="Notify users"/>
-            <input type="submit" class="btn btn-primary" name="delete_and_notify" value="Delete range and notify users"/>
-          </div>
+     
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" name="notify_only" value="Notify users"/>
+              <input type="submit" class="btn btn-primary" name="delete_and_notify" value="Delete range and notify users"/>
+            </div>
+          </form>
         </div>
       </div>
     </div>
