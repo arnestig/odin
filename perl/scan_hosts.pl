@@ -24,13 +24,16 @@ sub ping_host
 {
     my($ip_address) = @_;
 
-    my $ph = Net::Ping->new();
     my %retval;
     $retval{ ip_address } = $ip_address;
     $retval{ online } = 0;
     $retval{ timestamp } = strftime( "%F %T", localtime ); # %Y-%m-%d %H:%M:%S
-    if ( $ph->ping($ip_address) ) {
-        $retval{ online } = 1;
+    for my $proto ( qw{ tcp icmp } ) {
+        print "$proto: $ip_address\n";
+        if ( Net::Ping->new( $proto, 5 )->ping($ip_address) ) {
+            $retval{ online } = 1;
+            last;
+        }
     }
     return \%retval;
 }
@@ -76,6 +79,8 @@ while ( $::running ) {
     $sth->execute();
     $sth->finish();
     
+    $dbh->{ AutoCommit } = 0;
+
     # iterate over all hosts to scan, 20 at a time
     while ( @hosts_to_scan ) {
         my @hosts_to_add;
@@ -100,24 +105,23 @@ while ( $::running ) {
             $hostinfo{ $retval{ ip_address } }{ online } = $retval{ online };
             $hostinfo{ $retval{ ip_address } }{ timestamp } = $retval{ timestamp };
         }
+
+        # update database with current status of the hosts
+        foreach ( keys %hostinfo ) {
+            my $sth = $dbh->prepare( 'SELECT update_host_status( ?, ?, ? )' );
+            $sth->bind_param( 1, $_ );
+            $sth->bind_param( 2, $hostinfo{ $_ }{ online } );
+            $sth->bind_param( 3, $hostinfo{ $_ }{ timestamp } );
+            $sth->execute();
+            $sth->finish();
+        }
+
+        $dbh->commit();
     }
 
-    $dbh->{ AutoCommit } = 0;
-
-    # update database with current status of the hosts
-    foreach ( keys %hostinfo ) {
-        my $sth = $dbh->prepare( 'SELECT update_host_status( ?, ?, ? )' );
-        $sth->bind_param( 1, $_ );
-        $sth->bind_param( 2, $hostinfo{ $_ }{ online } );
-        $sth->bind_param( 3, $hostinfo{ $_ }{ timestamp } );
-        $sth->execute();
-        $sth->finish();
-    }
-
-    $dbh->commit();
 
     # sleep until next time we're checking the hosts
-    sleep( $::update_interval  * 60 );
+    sleep( 60 );
 }
 
 # clean up
