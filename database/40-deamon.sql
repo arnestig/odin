@@ -4,10 +4,12 @@
 create or replace function get_hosts_to_scan()
 returns SETOF refcursor AS $$
 declare
-ref1 refcursor;
+    host_not_seen_time_limit smallint;
+    ref1 refcursor;
 begin
 open ref1 for
-    SELECT host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - interval '1 hour'); 
+    SELECT s_value from settings WHERE s_name = 'host_scan_interval' INTO host_scan_interval;
+    SELECT host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - host_scan_interval * interval '1 minute'); 
 return next ref1;
 end;
 $$ language plpgsql;
