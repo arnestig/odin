@@ -44,9 +44,9 @@ declare
 begin
 open ref1 for
     SELECT nu.nu_id, nu.nu_message, u.usr_email, u.usr_firstn, u.usr_lastn
+    FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.usr_id)
     WHERE
-        nu.nu_notification_sent = false
-    FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.usr_id);
+        nu.nu_notification_sent = false;
 return next ref1;
 end;
 $$ language plpgsql;
