@@ -11,7 +11,6 @@ use POSIX qw(strftime);
 use threads;
 
 our $running = 1;
-our $update_interval;
 
 sub signal_handler
 {
@@ -29,7 +28,6 @@ sub ping_host
     $retval{ online } = 0;
     $retval{ timestamp } = strftime( "%F %T", localtime ); # %Y-%m-%d %H:%M:%S
     for my $proto ( qw{ tcp icmp } ) {
-        print "$proto: $ip_address\n";
         if ( Net::Ping->new( $proto, 5 )->ping($ip_address) ) {
             $retval{ online } = 1;
             last;
@@ -44,23 +42,13 @@ $SIG{ INT } = \&signal_handler;
 # connect
 my $dbh = DBI->connect("DBI:Pg:dbname=odin;host=localhost", "dbaodin", "gresen", {'RaiseError' => 1});
 
-my $sth = $dbh->prepare( 'SELECT * FROM get_setting_value( ?, ? );' );
-$sth->bind_param( 1, '' );
-$sth->bind_param( 2, 'host_scan_interval' );
-$sth->execute();
-$::update_interval = $sth->fetchrow_array();
-if ( ! looks_like_number( $::update_interval ) ) {
-    print STDERR "Setting host_scan_interval not a number: $::update_interval\n";
-    exit;
-}
-
 while ( $::running ) {
     my @hosts_to_scan;
     my %hostinfo;
     $dbh->{ AutoCommit } = 1;
 
     # select our stored procedure for hosts to scan
-    $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan();' );
+    my $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan();' );
     $sth->execute();
 
     # fetch our reference cursor
