@@ -22,7 +22,11 @@ returns SETOF refcursor AS $$
 declare
     ref1 refcursor;
 begin
-    SELECT * FROM logbook
+    SELECT
+        lb_usr_id,
+        to_char(lb_time, 'YYYY-MM-DD HH24:MI:SS') as lb_time,
+        lb_text
+    FROM logbook
     WHERE
         lb_host_ip = host_ip
     ORDER BY lb_time;
@@ -39,7 +43,11 @@ returns SETOF refcursor AS $$
 declare
     ref1 refcursor;
 begin
-    SELECT * FROM logbook
+    SELECT 
+        lb_host_ip,
+        to_char(lb_time, 'YYYY-MM-DD HH24:MI:SS') as lb_time,
+        lb_text
+    FROM logbook
     WHERE
         lb_usr_id = usr_id
     ORDER BY lb_time;
