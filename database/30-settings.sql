@@ -61,22 +61,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT s_name, s_type, s_value, s_fullname, s_description FROM settings WHERE sg_name = settingsgroup ORDER BY s_id;
-return next ref1;
-end;
-$$ language plpgsql;
-alter function get_settings(varchar,varchar) owner to dbaodin;
-
--- get_settings
-create or replace function get_settings(
-    ticket varchar(255),
-    settingsgroup varchar)
-returns SETOF refcursor AS $$
-declare
-ref1 refcursor;
-begin
-open ref1 for
-    SELECT s_name, s_type, s_value, s_fullname, s_description FROM settings WHERE sg_name = settingsgroup ORDER BY s_id;
+    SELECT s_id, s_name, s_type, s_value, s_fullname, s_description FROM settings WHERE sg_name = settingsgroup ORDER BY s_id;
 return next ref1;
 end;
 $$ language plpgsql;

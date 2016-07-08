@@ -16,11 +16,11 @@ class Settings
         $sth->execute( array( '', $name, $value ) );
     }
     
-    public function getSettings($settings_group)
+    public function getSettings($settings_group_name)
     {
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT get_settings( ?, ? )" );
-        $sth->execute( array( '', $settings_group) );
+        $sth->execute( array( '', $settings_group_name) );
         $cursors = $sth->fetch();
         $sth->closeCursor();
 
