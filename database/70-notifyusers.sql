@@ -6,6 +6,7 @@ alter sequence sq_notify_id owner to dbaodin;
 create table notifyusers (
         nu_id integer primary key default nextval('sq_notify_id'),
         nu_usr_id smallint not null references users default 0,
+        nu_notification_sent boolean default false,
         nu_message text
         );
 alter table notifyusers owner to dbaodin;

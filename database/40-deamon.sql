@@ -44,6 +44,8 @@ declare
 begin
 open ref1 for
     SELECT nu.nu_id, nu.nu_message, u.usr_email, u.usr_firstn, u.usr_lastn
+    WHERE
+        nu.nu_notification_sent = false
     FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.usr_id);
 return next ref1;
 end;
@@ -55,7 +57,7 @@ create or replace function remove_notifyuser_message(
     nu_msg_id integer )
 returns void as $$
 begin
-    DELETE FROM notifyusers WHERE nu_id = nu_msg_id;
+    UPDATE notifyusers SET nu_notification_sent = true WHERE nu_id = nu_msg_id;
 end;
 $$ language plpgsql;
 alter function remove_notifyuser_message(integer) owner to dbaodin;
