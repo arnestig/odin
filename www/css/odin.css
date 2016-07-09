@@ -23,11 +23,11 @@ a.filter-link:hover { text-decoration: none; }
 .toggle.active { background-color: #eeeeee; font-weight: bold; }
 .filter tr td:nth-child(1) { width: 14%; }
 .filter tr td:nth-child(2) { width: 14%; }
-.filter tr td:nth-child(3) { width: 16%; }
+.filter tr td:nth-child(3) { width: 20%; }
 .filter tr td:nth-child(4) { width: 14%; }
 .filter tr td:nth-child(5) { width: 20%; }
-.filter tr td:nth-child(6) { width: 11%; }
-.filter tr td:nth-child(7) { width: 11%; }
+.filter tr td:nth-child(6) { width: 9%; }
+.filter tr td:nth-child(7) { width: 9%; }
 .filter tr.filter-bottom { padding: 8px; }
 .filter-bottom { background-color: #eeeeee; }
 .page { padding-top: 9px; }
