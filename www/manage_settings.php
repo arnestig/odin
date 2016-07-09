@@ -20,6 +20,7 @@ if ( isset($_GET[ 'group' ]) && !empty($_GET[ 'group' ]) ) {
 $cur_settings = $settings->getSettings($cur_s_group['sg_name']);
 
 if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
+  print_r($_POST[ 'submit' ]);
   $settingsmax = $_POST[ 'settingsIdMax' ];
   $settingsmin = $_POST[ 'settingsIdMin' ];
   for ( $i = $settingsmin; $i <= $settingsmax; $i++ ) {
@@ -27,7 +28,7 @@ if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
     $updateValue = $_POST[ 'value'.$i ];
     $updateType = $_POST[ 'type'.$i ];
     if ( $updateType === 'checkbox' ) {
-      if ( $updateValue === 'on' ) {
+      if ( $updateValue === 'checked' ) {
         $updateValue = 1;
       } else {
         $updateValue = 0;
