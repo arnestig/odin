@@ -36,6 +36,55 @@ class HTMLframe {
   <body>';
 	}
 
+  /* Helper to doc nav */
+  private function adminNav($active) {
+    $admin_html = '';
+    $is_active = '';
+    foreach ($this->admin_nav as $li_row) {
+      if (in_array($active, $li_row)) $is_active = ' active';
+    }
+    $admin_html .= '<li class="dropdown'.$is_active.'">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Manage</strong><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            ';
+    foreach ($this->admin_nav as $item) {
+      $admin_html .= '<li';
+      if ($active === $item[2]) {
+        $admin_html .= ' class="active"';
+      }
+      $admin_html .= '><a href="'.$item[0].'"><span class="glyphicon '.$item[1].'"></span>'.$item[2].'</a></li>
+      ';
+    }
+    $admin_html .= '
+            </ul>
+          </li>';
+    if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] < 1) $admin_html = '';
+    return $admin_html;
+  }
+
+  private function userNav($active, $username) {
+    $user_html = '';
+    $is_active = '';
+    foreach ($this->user_nav as $li_row) {
+      if (in_array($active, $li_row)) $is_active = ' active';
+    }
+    $user_html .= '<li class="dropdown'.$is_active.'">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>'.$username.'</strong><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            ';
+    foreach ($this->user_nav as $item) {
+      $user_html .= '<li';
+      if ($active === $item[2]) {
+        $user_html .= ' class="active"';
+      }
+      $user_html .= '><a href="'.$item[0].'"><i class="glyphicon '.$item[1].'"></i>'.$item[2].'</a></li>
+      ';
+    }
+    $user_html .= '</ul>
+          </li>';
+    return $user_html;
+  }
+
   /* TODO: restrict admin functionality, load company logo */
   public function doc_nav( $active, $username ) {
     echo '
@@ -52,42 +101,13 @@ class HTMLframe {
         <a class="navbar-brand" href="overview.php"><img src="images/ODIN.png" alt="Odin - Logo"></a>
           
         <ul class="nav navbar-nav">
-          <li class="active">
+          <li';
+    if ($active === 'Overview') echo ' class="active"'; 
+    echo '>
             <a href="overview.php">HOSTS<span class="glyphicon glyphicon-th"></span></a>  
           </li>
-
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Manage</strong><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-            ';
-    foreach ($this->admin_nav as $item) {
-      echo '
-              <li';
-      if ($active === $item[2]) {
-        echo ' class="active"';
-      }
-      echo '><a href="'.$item[0].'"><span class="glyphicon '.$item[1].'"></span>'.$item[2].'</a></li>
-      ';
-    }
-    echo '
-            </ul>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>'.$username.'</strong><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-            ';
-    foreach ($this->user_nav as $item) {
-      echo '
-              <li';
-      if ($active === $item[2]) {
-        echo ' class="active"';
-      }
-      echo '><a href="'.$item[0].'"><i class="glyphicon '.$item[1].'"></i>'.$item[2].'</a></li>
-      ';
-    }
-    echo '
-            </ul>
-          </li>
+          '.$this->adminNav($active).'
+          '.$this->userNav($active, $username).'
         </ul>
 
         <div id="navbar" class="collapse navbar-collapse navbar-right">
