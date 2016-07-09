@@ -116,4 +116,4 @@ $$ language plpgsql;
 alter function remove_user(varchar,smallint) owner to dbaodin;
 
 -- Create our administrator
-insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email, usr_privileges ) values( 'admin', crypt( 'admin', gen_salt('md5') ), '', '', '', 2 );
+insert into users( usr_usern, usr_pwd, usr_firstn, usr_lastn, usr_email, usr_privileges ) values( 'admin', crypt( '', gen_salt('md5') ), '', '', '', 2 );
