@@ -24,7 +24,6 @@ if ( isset( $_REQUEST[ 'show_all' ] ) ) {
 
 if ( isset( $_REQUEST[ 'filter_tag' ] ) ) {
   $req_tag = $_REQUEST[ 'filter_tag' ];
-  // Check if tag already is set in session
   $index = array_search($req_tag, $_SESSION[ 'active_filter_tags' ]);
   if ($index !== false) {
     unset($_SESSION[ 'active_filter_tags' ][$index]);
@@ -42,7 +41,6 @@ if ( isset( $_REQUEST[ 'filter_tag' ] ) ) {
   $_SESSION[ 'current_page' ] = 1;
 }
 
-//TODO: Search string from filter search. Validate input.
 if ( isset( $_REQUEST[ 'filter_search' ]) ) {
   $_SESSION[ 'filter_search' ] = $_REQUEST[ 'filter_search' ];
   $_SESSION[ 'current_page' ] = 1;
@@ -383,7 +381,6 @@ echo '
               </div>
               <div class="panel-body" id="choosenAddr">
                 <p></p>
-                '.basket().'
               </div>
               <div class="bookAddrBtn">
                 <label for="submit-form" class="btn btn-primary">Book address(es)</label>
