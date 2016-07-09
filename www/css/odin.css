@@ -1,6 +1,10 @@
 html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
+/* Colors */
+.bg-light { background-color: #eee; }
+.bg-dark { background-color: #ccc; }
+
 .navbar-default { color: #fff; }
 .login { padding-top: 70px; }
 .hiddenNwDiv { border-width: 0px 1px 1px 1px; border-color: #ddd; border-style: solid; background-color: #fff; padding-left: 10px; }
