@@ -31,7 +31,11 @@ if (isset($_POST[ 'checkbox' ]) && !empty($_POST[ 'checkbox' ])) {
     }
 }
 if (isset($_POST[ 'getReserved' ]) && !empty($_POST[ 'getReserved' ])) {
-    print json_encode( $_SESSION[ 'locked_ips' ] );
+
+    $nw_manager = new NetworkManagement();
+    $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );    
+
+    print json_encode( $cur_reservations );
 }
 
 ?>

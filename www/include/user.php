@@ -52,7 +52,7 @@ class User
         }
         //TODO: change username to fullname in navbar?
         $_SESSION[ 'user_data' ] = $user_data;
-        $_SESSION[ 'cur_network_id' ] = '1';
+        $_SESSION[ 'cur_network_id' ] = $nwManager->getNetworks()[0][ 'nw_id' ];
         $_SESSION[ 'show_all' ] = true;
         $_SESSION[ 'active_filter_tags' ] = array();
         $_SESSION[ 'host_rows' ] = '';
@@ -61,7 +61,6 @@ class User
         $_SESSION[ 'current_page' ] = 1;
         $_SESSION[ 'result_set' ] = null;
         $_SESSION[ 'networks' ] = null;
-        $_SESSION[ 'locked_ips' ] = array();
         $_SESSION[ 'steal_not_seen' ] = true;
     }
 }

@@ -69,7 +69,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT nw_id, nw_base, nw_cidr, nw_description FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id) ORDER BY nw_id; 
+    SELECT nw_id, nw_base, nw_cidr, nw_description FROM networks WHERE (get_nw_id IS NULL or nw_id = get_nw_id) ORDER BY inet(nw_base); 
 return next ref1;
 end;
 $$ language plpgsql;

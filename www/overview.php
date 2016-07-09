@@ -152,7 +152,10 @@ function show_host_row_view($row) {
   $ticked_box = '';
 
   //TODO: Fix if below?
-  if ( isset( $_SESSION[ 'locked_ips' ][ $row['host_ip'] ] ) ) $ticked_box = ' checked';
+
+  $nw_manager = new NetworkManagement();
+  $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
+  if ( in_array( $row[ 'host_ip' ], $cur_reservations ) ) $ticked_box = ' checked';
 
 
   // Set the disabled tag if other user owns lock
@@ -224,8 +227,10 @@ function show_host_row_view($row) {
 
 
 function basket() {
+  $nw_manager = new NetworkManagement();
+  $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
   $content = '';
-  foreach ($_SESSION[ 'locked_ips' ] as $ip) {
+  foreach ($cur_reservations as $ip) {
     $content .= '<div class="clearfix" style="background-color: #f8f8f8; margin-bottom: 8px; padding:4px; display: block;">
                   <span class="small" style="float: left;">'.$ip.'</span>
                   <span style="float: right;" class="glyphicon glyphicon-minus"></span>
