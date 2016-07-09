@@ -53,7 +53,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT usr_id, usr_usern, usr_lastn, usr_firstn, usr_email, server_gen_pwd FROM users WHERE usr_id > 0 and (get_usr_id IS NULL or usr_id = get_usr_id); 
+    SELECT usr_id, usr_usern, usr_lastn, usr_firstn, usr_email, usr_privileges, server_gen_pwd FROM users WHERE usr_id > 0 and (get_usr_id IS NULL or usr_id = get_usr_id); 
 return next ref1;
 end;
 $$ language plpgsql;
