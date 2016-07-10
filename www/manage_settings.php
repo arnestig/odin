@@ -20,18 +20,25 @@ if ( isset($_GET[ 'group' ]) && !empty($_GET[ 'group' ]) ) {
 $cur_settings = $settings->getSettings($cur_s_group['sg_name']);
 
 if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
-  print_r($_POST[ 'submit' ]);
   $settingsmax = $_POST[ 'settingsIdMax' ];
   $settingsmin = $_POST[ 'settingsIdMin' ];
   for ( $i = $settingsmin; $i <= $settingsmax; $i++ ) {
-    $updateName = $_POST[ 'name'.$i ];
-    $updateValue = $_POST[ 'value'.$i ];
-    $updateType = $_POST[ 'type'.$i ];
+    $updateValue = $_POST[$i];
+    $updateName = '';
+    $updateType = '';
+
+    // TODO: getSetting by id instead
+    foreach ($cur_settings as $row) {
+      if ( $row[ 's_id' ] == $i ) {
+        $updateName = $row[ 's_name' ];
+        $updateType = $row[ 's_type' ];
+      }
+    }
     if ( $updateType === 'checkbox' ) {
-      if ( $updateValue === 'checked' ) {
-        $updateValue = 1;
+      if ( $updateValue === 'on' ) {
+        $updateValue = 'checked';
       } else {
-        $updateValue = 0;
+        $updateValue = '';
       }
     }      
     $settings->changeSetting( $updateName, $updateValue );
@@ -67,8 +74,8 @@ function displaySettings($s_group) {
                     <label for="'.$cursetting[ 's_name' ].'" class="col-lg-6 control-label">'.$cursetting[ 's_fullname' ].'</label>
                     <div class="col-lg-6">
                       <input type="'.$cursetting[ 's_type' ].'" class="form-control" id="'.$cursetting[ 's_name' ].'" name="'.$cursetting[ 's_id' ].'" ';
-    if ($cursetting[ 's_type' ] === 'checkbox' && $cursetting[ 's_value' ] === '1') {
-      $form_html .= 'checked';
+    if ($cursetting[ 's_type' ] === 'checkbox') {
+      $form_html .= $cursetting[ 's_value' ];
     } else {
       $form_html .= 'value="'.$cursetting[ 's_value' ].'"';
     }
@@ -82,7 +89,7 @@ function displaySettings($s_group) {
                     <input type="hidden" name="settingsIdMin" value="'.$minId.'">
                     <input type="hidden" name="settingsIdMax" value="'.$maxId.'">
                     <button class="btn btn-default" href="manage_settings.php?group='.$s_group.'">Discard</button>
-                    <input type="submit" class="btn btn-success pull-right" name="submit" value="Save changes"> 
+                    <input type="submit" class="btn btn-info pull-right" name="submit" value="Save changes"> 
                   </div>
                 </div>
               </form>';
