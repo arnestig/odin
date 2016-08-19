@@ -66,7 +66,6 @@ function generate_nw_list() {
   foreach ( $_SESSION[ 'networks' ] as $row ) {
     echo '
                  <tr>
-                    <td>'.$row[ 'nw_id' ].'</td>
                     <td>'.$row[ 'nw_base' ].'/'.$row['nw_cidr'].'</td>
                     <td>'.substr($row[ 'nw_description' ], 0, 150).' ...</td>
                     <td><a class="open-EditNetworkDialog" data-networkid="'.$row[ 'nw_id' ].'" data-networkbase="'.$row[ 'nw_base' ].'" data-networkcidr="'.$row[ 'nw_cidr' ].'" data-networkdescription="'.$row[ 'nw_description' ].'" href="#editNetworkDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
@@ -102,16 +101,16 @@ echo '
           <form method="POST" action="manage_networks.php">
             <div class="modal-body">
               <div class="form-group">
-                <label for="network">Network</label>
-                <input type="text" class="form-control" name="nw_base" placeholder="Network">
+                <label for="addNetworkBase">Network</label>
+                <input type="text" class="form-control" name="nw_base" id="addNetworkBase" placeholder="Network">
               </div>
               <div class="form-group">
-                <label for="CIDR">CIDR/Netmask</label>
-                <input type="text" class="form-control" name="nw_cidr" placeholder="Write subnet in CIDR or Netmask notation">
+                <label for="addCIDR">CIDR/Netmask</label>
+                <input type="text" class="form-control" name="nw_cidr" id="addCIDR" placeholder="Write subnet in CIDR or Netmask notation">
               </div>
               <div class="form-group">
-                <label for="networkDescription">Network description</label>
-                <textarea class="form-control" rows="3" name="nw_description" id="networkDescription" placeholder="Network description"></textarea>
+                <label for="addNetworkDescription">Network description</label>
+                <textarea class="form-control" rows="3" name="nw_description" id="addNetworkDescription" placeholder="Network description"></textarea>
               </div>
             </div>
             <div class="modal-footer">
@@ -224,10 +223,9 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <table class="table table-condensed">
+              <table class="table table-condensed table-hover">
                 <thead>
                   <tr>
-                    <th>Network ID</th>
                     <th>Scope</th>
                     <th>Description</th>
                     <th>Edit</th>
