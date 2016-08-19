@@ -33,8 +33,6 @@ if (isset( $_POST[ 'add_user' ] )) {
 }
 
 if (isset( $_POST[ 'edit_user' ] )) {
-  // update values in model IF clean input
-  //WARNING!! fulhack below updateUser>pw set to blank!!
   $userManager->adminUpdateUser(
     $_POST[ 'userId' ],
     $_POST[ 'userName' ],
@@ -287,7 +285,7 @@ echo '
           </div>
           <div class="row">
             <div class="col-lg-12">
-              <table class="table table-condensed">
+              <table class="table table-condensed table-hover">
                 <thead>
                   <tr>
                     <th>Username</th>
