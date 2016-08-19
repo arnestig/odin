@@ -34,7 +34,7 @@ function userRegistration() {
   $settings = new Settings();
   $allsettings = $settings->getSettings('user_registration');
   foreach ( $allsettings as $setting ) {
-    if ($setting[ 's_name' ] === 'allow_user_registration' && $setting[ 's_value' ] === '1') {
+    if ($setting[ 's_name' ] === 'allow_user_registration' && $setting[ 's_value' ] !== '') {
         echo '
         <div class="row">
           <div class="col-lg-offset-4 col-lg-4">
