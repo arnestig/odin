@@ -9,7 +9,7 @@ include_once('include/settings.php');
 
 $settings = new Settings();
 $user_reg = $settings->getSettings('user_registration');
-if ($user_reg[0]['s_value'] != 1) {
+if ($user_reg[0]['s_value'] != 'checked') {
   header('Location: index.php');
 }
 
