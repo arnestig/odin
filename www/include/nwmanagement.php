@@ -124,7 +124,7 @@ class NetworkManagement
 
     public function unreserveHost( $host_ip, $user_id )
     {
-        $sth = $this->dbcon->prepare( "SELECT reserve_host( ?, ?, ? )" );
+        $sth = $this->dbcon->prepare( "SELECT unreserve_host( ?, ?, ? )" );
         $sth->execute( array( '', $host_ip, $user_id ) );
         $result = $sth->fetch();
     }
@@ -158,7 +158,7 @@ class NetworkManagement
 
     public function terminateLease( $host_ip, $user_id )
     {
-        $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ? )" );
+        $sth = $this->dbcon->prepare( "SELECT terminate_lease( ?, ?, ? )" );
         $sth->execute( array( '', $host_ip, $user_id ) );
         $result = $sth->fetch();
     }
