@@ -4,6 +4,8 @@ session_start();
 include_once('include/nwmanagement.php');
 include_once('include/html_frame.php');
 
+$nwManager = new NetworkManagement();
+
 //Default range-view (TODO: delete init after implemented as user-default)
 if ( isset( $_REQUEST[ 'nw_id' ] ) ) {
   $_SESSION[ 'cur_network_id' ] = $_REQUEST[ 'nw_id' ];
@@ -54,6 +56,13 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
   }
 }
 
+if (!empty($_POST['admin-rm-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 1) {
+  if ($_POST['lease_holder'] != 0) {
+    $ip = $_POST['admin-rm-lease'];
+    $nw_manager->terminateLease($ip,$_POST['lease_holder']);
+  }
+}
+
 update_meta_data();
 
 function calc_bit_mask() {
@@ -69,7 +78,7 @@ function calc_bit_mask() {
 
 //TODO: page per view from setting?
 function update_meta_data() {
-  $nwManager = new NetworkManagement();
+  
   $result_set = $nwManager->getHosts($_SESSION[ 'cur_network_id' ], ($_SESSION[ 'current_page' ]-1), 100, $_SESSION[ 'filter_search' ], calc_bit_mask());
 
   $_SESSION[ 'networks' ] = $nwManager->getNetworks();
@@ -77,6 +86,7 @@ function update_meta_data() {
   $_SESSION[ 'result_set' ] = $result_set;
   $_SESSION[ 'host_rows' ] = $first_row['total_rows'];
   $_SESSION[ 'max_pages' ] = $first_row['total_pages'];
+
 }
 
 function network_ranges() {
@@ -137,22 +147,25 @@ function filter_search_placeholder() {
 
 
 function show_hosts() {
+  $nw_manager = new NetworkManagement();
+  $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
   $generated_table = "";
+
   foreach ($_SESSION[ 'result_set' ] as $host_row) {
-    $generated_table .= show_host_row_view($host_row);
+    $generated_table .= show_host_row_view($host_row, $cur_reservations);
   }
+
   return $generated_table;
 }
 
-function show_host_row_view($row) {
+function show_host_row_view($row, $cur_reservations) {
   // ====================================
   // ALL POSSIBLE TAGS IN THE <INPUT> FOR CHECKBOX BELOW
   $ticked_box = '';
 
   //TODO: Fix if below?
 
-  $nw_manager = new NetworkManagement();
-  $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
+  
   if ( in_array( $row[ 'host_ip' ], $cur_reservations ) ) $ticked_box = ' checked';
 
 
@@ -162,6 +175,11 @@ function show_host_row_view($row) {
  
   $checkbox = '<input type="checkbox" id="cb'.$row['host_ip'].'" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.' '.$disabled.'>';
   if ( $disabled === ' disabled' ) $checkbox .= '<i class="glyphicon glyphicon-exclamation-sign"></i>';
+
+  $admin_rm_lease = '';
+  if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
+    $admin_rm_lease = '<form method="POST" action="overview.php"><button class="btn btn-small" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;"><input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/><i class="glyphicon glyphicon-trash"></i></button></form>';    
+  }
 
   // ====================================
   // COLORING AND CHECKBOX SETTING BELOW
@@ -192,7 +210,7 @@ function show_host_row_view($row) {
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
                     <td>'.substr($row['host_last_seen'], 0, 10).'</td>
-                    <td title="Someone beat you to it...">'.$checkbox.'</td>
+                    <td title="Someone beat you to it..." style="display:inline;">'.$checkbox.''.$admin_rm_lease.'</td>
                   </tr>
                   <tr>
                     <td colspan="12" class="hiddenRow">
@@ -229,11 +247,10 @@ function basket() {
   $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
   $content = '';
   foreach ($cur_reservations as $ip) {
-    $content .= '<div class="clearfix" style="background-color: #f8f8f8; margin-bottom: 8px; padding:4px; display: block;">
-                  <span class="small" style="float: left;">'.$ip.'</span>
-                  <span style="float: right;" class="glyphicon glyphicon-minus"></span>
-                </div>';
-    //$content .= '<p style="width:100%;">'.$ip.'<span class="glyphicon glyphicon-minus al"></span></p>';
+    //$content .= '<p class="basket-item" id="bi'.$ip.'">'.$ip.'</p>
+    //';
+    $content .= '<p id="bi'.$ip.'" class="cart-item">'.$ip.'<span id="rm'.$ip.'" class="glyphicon glyphicon-remove cart-remove pull-right"></span><p>
+    ';
   }
   return $content;
 }
@@ -380,7 +397,7 @@ echo '
                 <p>Choosen addresses</p>
               </div>
               <div class="panel-body" id="choosenAddr">
-                <p></p>
+                '.basket().'
               </div>
               <div class="bookAddrBtn">
                 <label for="submit-form" class="btn btn-primary">Book address(es)</label>
