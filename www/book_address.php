@@ -16,15 +16,11 @@ if (isset($_POST[ 'book_addresses' ])) {
   $host_name = '';
   $host_desc = '';
 
-  echo $nbr_of_items;
-
   for ($i = 0; $i < $nbr_of_items; $i++) {
 
     $host_ip = $_POST[ 'hostIP'.$i ];
     $host_name = $_POST[ 'hostName'.$i ];
     $host_desc = $_POST[ 'dataDescription'.$i ];
-
-    echo $host_ip.': '.$host_name.' &&&& '.$host_desc;
 
     if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
            echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
@@ -43,7 +39,7 @@ function gen_address_form() {
   $index = 0;
   $nwmanagement = new NetworkManagement();
   $reservedIPs = $nwmanagement->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
-  print_r($reservedIPs);
+  //print_r($reservedIPs);
   
   foreach( $reservedIPs as $ip) {
     $form_body .= gen_address_form_row($ip, $index);
@@ -98,7 +94,7 @@ echo '
           <p>Please provide following details for your choosen addresses:</p>
         </div>
       </div>
-      <form class="form" method="POST" action="book_address.php">
+      <form class="form" method="POST" action="book_address.php" autocomplete="off">
       '.gen_address_form().'
       </form>
     </div>
