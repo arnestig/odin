@@ -56,7 +56,7 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
   }
 }
 
-if (!empty($_POST['admin-rm-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 1) {
+if (!empty($_POST['admin-rm-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
   if ($_POST['lease_holder'] != 0) {
     $ip = $_POST['admin-rm-lease'];
     $nw_manager->terminateLease($ip,$_POST['lease_holder']);
