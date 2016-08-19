@@ -1,71 +1,65 @@
-function refreshBasket() {
-    var ipList = [];
-    var newHTML = [];
-    $.ajax({
-        url: 'overview_handler.php',
-        type: 'POST',
-        data: getReserved,
-        dataType: 'json',
-        success: function(data) {
-            ipList = data;
-            alert(data[0]);
-        }
-    });
-    for (var i = 0; i < ipList.length; i++) {
-        newHTML.push('<p>' + ipList[i] + '</p>');
-    }
-    if (ipList.length < 1) newHTML.push('<p><em>Empty</em></p>');
-    $('div#choosenAddr').html(newHTML.join(""));
-}
-
-
-function calculate() {
-    var arr = $.map($('input:checkbox:checked'), function(e, i) {
-        console.log(e.value);
-        return e.value;
-    });
-    var newHTML = [];
-    for (var i = 0; i < arr.length; i++) {
-        newHTML.push('<p>' + arr[i] + '</p>');
-    }
-    if (arr.length < 1) newHTML.push('<p><em>Empty</em></p>');
-    $('div#choosenAddr').html(newHTML.join(""));
-}
-
-
 $(document).ready(function() {
-
-    calculate();
-    $('td').delegate('input:checkbox', 'click', calculate);
     
-
-    
-    $('td>input').on('click', function() {
-        var elementIP = this.value;
-        console.log('AJAX sends this: ' + elementIP);
-        /* Makes server update session to preserve checked hosts */
+    $('td').on('click', 'input:checkbox', function() {
+        var $element = $(this);
+        var ip = this.value;
+        var action = $(this).is(':checked');
         $.ajax({
             type: 'POST',
+            dataType: 'json',
             data: {
-                checkbox:elementIP
+                ip: ip,
+                action: action
             },
             url: 'overview_handler.php',
-            // Only show reply if ticked address was taken
-            // if so, untick box
             success : function(data){
-                console.log('reply is' + data.reply);
-                console.log('Var reached: ' + this.value);
-                var cbID = '#cb' + elementIP;
-                $(cbID).prop('checked', false);
-                //alert(data.reply);
-                if (false) {
-                    $().prop('checked', false);
+                if (action && !data.opStatus) {
+                    location.reload(true);
+                    $element.prop('checked', false);
+                } else if (action && data.opStatus) {
+                    var ips = data.ipList;
+                    var basketHtml = '';
+                    for (i = 0; i < ips.length; i++) {
+                        basketHtml += '<p id="bi' + ips[i] + '" class="cart-item">' + ips[i] + '<span id="rm' + ips[i] + '" class="glyphicon glyphicon-remove cart-remove pull-right"></span><p>';
+                    }
+                    $('div#choosenAddr').html(basketHtml);
+                } else if (!action && data.opStatus) {
+                    $('p#bi' + ip).remove();
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
-                alert('There was an error.');
+                alert('Your request was not handled properly. Please try again.');
             }
         });
+    });
+
+    $('div#choosenAddr').on('click', '.cart-remove', function() {
+        var ip = $(this).prop('id').substr(2);
+        var action = 'false';
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                ip: ip,
+                action: action
+            },
+            url: 'overview_handler.php',
+            success : function(data){
+                console.log(data);
+                var ips = data.ipList;
+                for (j = 0; j < ips.length; j++) {
+                    console.log('ipList[' + j + ']: ' + ips[j]);
+                }
+                var checkbox = 'input[id="cb' + ip + '"]';
+                var basketItem = 'p[id="bi' + ip + '"]';
+                $(checkbox).prop('checked', false);
+                $(basketItem).hide();
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('Your request was not handled properly. Please try again.');
+            }
+        });
+        console.log('#bi' +ip);
     });
 
     // Manage Users
@@ -128,36 +122,6 @@ $(document).ready(function() {
         $(".form-group #networkDescription").val( networkDescription );
     });
     
-    // get id of plus click, then replace with glyphicon-ok or glyphicon-exclamation-sign
-    // when ajax-call returns status on ip (locked/available)
-    /*
-    $('td>i.glyphicon-plus').on('click', function() {
-        var elementIP = this.id;
-        console.log(elementIP + ' first hurdle..');
-        $.ajax({
-            type: "POST",
-            dataType: 'json',
-            data: {
-                ip:elementIP
-            },
-            url: "overview_handler.php",
-            success : function(data) {
-                console.log('reply is' + data.reply);
-                alert(data.reply);
-                $('i#plus192.168.0.1').replaceWith('<i class="glyphicon glyphicon-exclamation-sign"></i>');
-            },
-        });
-    });
-    */
-    /*
-    $('table').click(function() {
-        if ( $('#choosenAddr').children().length > 0 ) {
-            $('#choosenAddrDiv').show(300);
-        } else {
-            $('#choosenAddrDiv').hide(200);
-        }
-    });
-    */
 
     //Submit page number when hitting enter
     $('.result-page-field').keydown(function(event) {
@@ -176,18 +140,5 @@ $(document).ready(function() {
             return console.log('yis - glyphicon-triangle-right');
         }
 
-
-/*      TODO: Make the right-arrow a down-arrow when expanding host in overview.php
-
-        var parentGlyphElement = document.getElementById(this.id);
-        glyphElement = $(":first-child", parentGlyphElement);
-        console.log(glyphElement);
-        if ($(glyphElement).hasClass('glyphicon-triangle-right')) {
-            console.log($(glyphElement).hasClass('glyphicon-triangle-right'));
-            $(glyphElement).switchClass('glyphicon-triangle-right', 'glyphicon-triangle-down');
-        } else {
-            $(glyphElement).switchClass('glyphicon-triangle-down', 'glyphicon-triangle-right');
-        }
-*/
     });
 });
