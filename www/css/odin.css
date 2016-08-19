@@ -1,6 +1,12 @@
 html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
+* {
+	-webkit-border-radius: 0 !important;
+	   -moz-border-radius: 0 !important;
+	   		border-radius: 0 !important;
+}
+
 /* Colors */
 .bg-light { background-color: #eee; }
 .bg-dark { background-color: #ccc; }
@@ -72,3 +78,8 @@ a.filter-link:hover { text-decoration: none; }
 /* #choosenAddrDiv { display: none; } */
 
 .form-group.textfield { padding:10px; }
+
+.cart-item { padding: 2px; }
+.cart-item:hover { background-color: #eee; }
+.cart-remove { padding: 4px 4px 4px 4px; font-size: 75%; color: #999;}
+.cart-remove:hover { color:red; cursor: pointer; background-color: #ddd; }
