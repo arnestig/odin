@@ -54,7 +54,7 @@ $(document).ready(function() {
                 var checkbox = 'input[id="cb' + ip + '"]';
                 var basketItem = 'p[id="bi' + ip + '"]';
                 $(checkbox).prop('checked', false);
-                $(basketItem).hide();
+                $(basketItem).remove();
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                 alert('Your request was not handled properly. Please try again.');
@@ -68,6 +68,29 @@ $(document).ready(function() {
         if( !confirm('Are you sure that you want to terminate the lease?') ) {
             event.preventDefault();
         }
+    });
+
+    $(".book-address-container").on('click', '.book-address-remove', function() {
+        var ip = this.id.substr(5);
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                ip: ip,
+                action: 'false'
+            },
+            url: 'overview_handler.php',
+            success : function(data){
+                var target = 'div[id="book' + ip + '"]';
+                $(target).hide('slow', function(){ 
+                    $(target).remove(); 
+                });
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('Your request was not handled properly. Please try again.');
+            }
+        });
+        
     });
 
     // Manage Users
