@@ -171,10 +171,14 @@ function show_host_row_view($row, $cur_reservations) {
 
   // Set the disabled tag if other user owns lock
   $disabled = '';
+  $td_tooltip = '';
   if ( $row[ 'reserved_by_usern' ] !== 'nobody' && $row[ 'reserved_by_usern' ] !== $_SESSION[ 'user_data' ][ 'usr_usern' ] ) $disabled = ' disabled';
  
   $checkbox = '<input type="checkbox" id="cb'.$row['host_ip'].'" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.' '.$disabled.'>';
-  if ( $disabled === ' disabled' ) $checkbox .= '<i class="glyphicon glyphicon-exclamation-sign"></i>';
+  if ( $disabled === ' disabled' ) {
+    $checkbox .= '<i class="glyphicon glyphicon-exclamation-sign"></i>';
+    $td_tooltip = ' title="Another user reserved the host."';
+  }
 
   $admin_rm_lease = '';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
@@ -218,7 +222,7 @@ function show_host_row_view($row, $cur_reservations) {
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
                     <td>'.substr($row['last_seen'], 0, 10).'</td>
-                    <td title="Someone beat you to it...">'.$checkbox.''.$admin_rm_lease.'</td>
+                    <td'.$td_tooltip.'>'.$checkbox.''.$admin_rm_lease.'</td>
                   </tr>
                   <tr>
                     <td colspan="12" class="hiddenRow">
