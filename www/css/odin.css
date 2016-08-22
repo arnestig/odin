@@ -84,3 +84,5 @@ a.filter-link:hover { text-decoration: none; }
 .cart-item:hover { background-color: #eee; }
 .cart-remove { padding: 4px 4px 4px 4px; font-size: 75%; color: #999;}
 .cart-remove:hover { color:red; cursor: pointer; background-color: #ddd; }
+
+.book-address-remove:hover { cursor: pointer; color:red;}
