@@ -63,13 +63,14 @@ a.filter-link:hover { text-decoration: none; }
 .spacer-row { padding: 8px; }
 .text-head-gutter { padding: 7px; }
 
-/* Ratios for td's in overview: 5 + 17 + 17 + 34 + 14 + 13 = 100% */
+/* Ratios for td's in overview: 5 + 17 + 17 + 34 + 14 + 8 + (5 only in admin)= 100% */
 .nw-table tr td:nth-child(1) { width: 5%; }
 .nw-table tr td:nth-child(2) { width: 17%; }
 .nw-table tr td:nth-child(3) { width: 17%; }
 .nw-table tr td:nth-child(4) { width: 34%; }
 .nw-table tr td:nth-child(5) { width: 14%; }
-.nw-table tr td:nth-child(6) { width: 13%; }
+.nw-table tr td:nth-child(6) { width: 8%; }
+.nw-table tr td:nth-child(7) { width: 5%; }
 
 /* Right fixed book address panel*/
 .fixed-right { margin-top: 40px;}
