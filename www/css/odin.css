@@ -73,7 +73,7 @@ a.filter-link:hover { text-decoration: none; }
 
 /* Right fixed book address panel*/
 .fixed-right { margin-top: 40px;}
-.bookAddrBtn { text-align: center; padding: 5px; }
+.bookAddrBtn { text-align: center; margin: 7px; }
 /* To prevent showing the right affixed element after page load */
 /* #choosenAddrDiv { display: none; } */
 
