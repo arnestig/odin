@@ -4,7 +4,7 @@ session_start();
 include_once('include/nwmanagement.php');
 include_once('include/html_frame.php');
 
-$nwManager = new NetworkManagement();
+
 
 //Default range-view (TODO: delete init after implemented as user-default)
 if ( isset( $_REQUEST[ 'nw_id' ] ) ) {
@@ -59,7 +59,8 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
 if (!empty($_POST['admin-rm-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
   if ($_POST['lease_holder'] != 0) {
     $ip = $_POST['admin-rm-lease'];
-    $nw_manager->terminateLease($ip,$_POST['lease_holder']);
+    $nwManager = new NetworkManagement();
+    $nwManager->terminateLease($ip,$_POST['lease_holder']);
   }
 }
 
@@ -78,9 +79,8 @@ function calc_bit_mask() {
 
 //TODO: page per view from setting?
 function update_meta_data() {
-  
+  $nwManager = new NetworkManagement();
   $result_set = $nwManager->getHosts($_SESSION[ 'cur_network_id' ], ($_SESSION[ 'current_page' ]-1), 100, $_SESSION[ 'filter_search' ], calc_bit_mask());
-
   $_SESSION[ 'networks' ] = $nwManager->getNetworks();
   $first_row = $result_set[0];
   $_SESSION[ 'result_set' ] = $result_set;
@@ -178,8 +178,16 @@ function show_host_row_view($row, $cur_reservations) {
 
   $admin_rm_lease = '';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
-    $admin_rm_lease = '<form method="POST" action="overview.php"><button class="btn btn-small" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;"><input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/><i class="glyphicon glyphicon-trash"></i></button></form>';    
+    $admin_rm_lease = '<form method="POST" action="overview.php">
+                        <button class="btn btn-small" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
+                          <input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/>
+                          <i class="glyphicon glyphicon-trash"></i>
+                        </button>
+                      </form>';    
   }
+
+  $admin_rm_lease = '';
+
 
   // ====================================
   // COLORING AND CHECKBOX SETTING BELOW
@@ -209,8 +217,8 @@ function show_host_row_view($row, $cur_reservations) {
                     <td>'.$row['host_ip'].'</td>
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
-                    <td>'.substr($row['host_last_seen'], 0, 10).'</td>
-                    <td title="Someone beat you to it..." style="display:inline;">'.$checkbox.''.$admin_rm_lease.'</td>
+                    <td>'.substr($row['last_seen'], 0, 10).'</td>
+                    <td title="Someone beat you to it...">'.$checkbox.''.$admin_rm_lease.'</td>
                   </tr>
                   <tr>
                     <td colspan="12" class="hiddenRow">
@@ -222,7 +230,7 @@ function show_host_row_view($row, $cur_reservations) {
                           </div>
                           <div class="col-lg-3">
                             <h5>Last notified</h5>
-                            '.$row['host_last_notified'].'
+                            '.$row['last_notified'].'
                             <div class="text-head-gutter"></div>
                             <h5>Lease expiry</h5>
                             '.$row['host_lease_expiry'].'  
@@ -232,7 +240,7 @@ function show_host_row_view($row, $cur_reservations) {
                             <a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].'</a>
                             <div class="text-head-gutter"></div>
                             <h5>Last scanned</h5>
-                            '.$row['host_last_scanned'].'
+                            '.$row['last_scanned'].'
                           </div>
                         </div>
                         <div class="row spacer-row"></div>
@@ -366,6 +374,16 @@ echo '
                   </tr>
                 </thead>
                 <tbody>
+
+                  <!-- START - injection test -->
+                  '.show_hosts().'
+                  <!-- END - injection test -->
+               
+                </tbody>
+              </table>
+';
+
+/*
                 <form action="book_address.php" method="POST">
 
                   <!-- START - injection test -->
@@ -375,9 +393,8 @@ echo '
                   <input name="continue_reservation" value="SUBMIT" type="submit" id="submit-form" class="hidden" />
 
                 </form>                  
-                </tbody>
-              </table>
-';
+
+*/
 
 // Host row (layout-element) end snippet
 echo '
@@ -399,9 +416,7 @@ echo '
               <div class="panel-body" id="choosenAddr">
                 '.basket().'
               </div>
-              <div class="bookAddrBtn">
-                <label for="submit-form" class="btn btn-primary">Book address(es)</label>
-              </div>
+              <a href="book_address.php" role="button" class="btn btn-primary bookAddrBtn">Book address(es)</a>
             </div>
           </div>
         </div>
@@ -411,5 +426,10 @@ echo '
     </div>
 ';
 
+
+/*            <div class="bookAddrBtn">
+                <label for="submit-form" class="btn btn-primary">Book address(es)</label>
+              </div>
+*/
 $frame->doc_end();
 ?>
