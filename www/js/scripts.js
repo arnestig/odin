@@ -48,6 +48,7 @@ $(document).ready(function() {
             success : function(data){
                 console.log(data);
                 var ips = data.ipList;
+                // TODO: compare recieved data to value sent to ensure proper removal
                 for (j = 0; j < ips.length; j++) {
                     console.log('ipList[' + j + ']: ' + ips[j]);
                 }
