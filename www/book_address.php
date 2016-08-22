@@ -23,7 +23,8 @@ if (isset($_POST[ 'book_addresses' ])) {
     $host_desc = $_POST[ 'dataDescription'.$i ];
 
     if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
-           echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
+      header('Location: booking_completed.php');
+           //echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
     }
   }
 }
@@ -95,7 +96,7 @@ echo '
         </div>
       </div>
       <form class="form" method="POST" action="book_address.php" autocomplete="off">
-      '.gen_address_form().'
+        '.gen_address_form().'
       </form>
     </div>
 ';
