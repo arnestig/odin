@@ -63,6 +63,13 @@ $(document).ready(function() {
         console.log('#bi' +ip);
     });
 
+    
+    $(".rm-lease").click(function(event) {
+        if( !confirm('Are you sure that you want to terminate the lease?') ) {
+            event.preventDefault();
+        }
+    });
+
     // Manage Users
     $(document).on("click", ".open-EditUserDialog", function () {
 
