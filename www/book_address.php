@@ -53,11 +53,11 @@ function gen_address_form() {
 
 function gen_address_form_row($ip, $index) {
   return '
-        <div class="row">
+        <div class="row book-address-container" id="book'.$ip.'">
           <div class="col-lg-offset-2 col-lg-6">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">'.$ip.'</h3>
+                <h3 class="panel-title">'.$ip.'<span id="rmbtn'.$ip.'" class="glyphicon glyphicon-remove book-address-remove pull-right"></span></h3>
               </div>
               <div class="panel-body">
                 <div class="form-group">
