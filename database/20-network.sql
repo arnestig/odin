@@ -222,7 +222,7 @@ begin
         RETURN false;
     ELSE
         update hosts SET token_usr=cur_usr_id WHERE host_ip = host_to_reserve;
-        update hosts SET token_timestamp = NOW() WHERE token_usr=cur_usr_id;
+        update hosts SET token_timestamp = NOW() WHERE token_usr=cur_usr_id AND token_timestamp < NOW() - interval '10 minutes';
     END IF;
     RETURN true;
 end;
