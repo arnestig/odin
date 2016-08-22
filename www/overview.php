@@ -182,12 +182,14 @@ function show_host_row_view($row, $cur_reservations) {
 
   $admin_rm_lease = '';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
-    $admin_rm_lease = '<td><form method="POST" action="overview.php">
-                        <button class="btn btn-small btn-danger" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
-                          <input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/>
-                          <i class="glyphicon glyphicon-trash"></i>
-                        </button>
-                      </form></td>';    
+    $admin_rm_lease = '<td>
+                        <form class="rm-lease" method="POST" action="overview.php">
+                          <button class="btn btn-small btn-danger" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
+                            <input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/>
+                            <i class="glyphicon glyphicon-trash"></i>
+                          </button>
+                        </form>
+                      </td>';    
   }
 
 
