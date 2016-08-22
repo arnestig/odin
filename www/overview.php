@@ -182,15 +182,13 @@ function show_host_row_view($row, $cur_reservations) {
 
   $admin_rm_lease = '';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
-    $admin_rm_lease = '<form method="POST" action="overview.php">
-                        <button class="btn btn-small" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
+    $admin_rm_lease = '<td><form method="POST" action="overview.php">
+                        <button class="btn btn-small btn-danger" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
                           <input type="hidden" name="lease_holder" value="'.$row[ 'usr_id' ].'"/>
                           <i class="glyphicon glyphicon-trash"></i>
                         </button>
-                      </form>';    
+                      </form></td>';    
   }
-
-  $admin_rm_lease = '';
 
 
   // ====================================
@@ -222,7 +220,8 @@ function show_host_row_view($row, $cur_reservations) {
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
                     <td>'.substr($row['last_seen'], 0, 10).'</td>
-                    <td'.$td_tooltip.'>'.$checkbox.''.$admin_rm_lease.'</td>
+                    <td'.$td_tooltip.'>'.$checkbox.'</td>
+                    '.$admin_rm_lease.'
                   </tr>
                   <tr>
                     <td colspan="12" class="hiddenRow">
@@ -290,7 +289,7 @@ $frame->doc_nav("Overview", $_SESSION[ 'user_data' ][ 'usr_usern' ]);
 echo '
     <div class="container">
       <div class="row">
-        <div class="col-lg-offset-1 col-lg-8">
+        <div class="col-lg-9">
           <div class="row">
             <div class="col-lg-12">
               <ul class="nav nav-tabs"> 
