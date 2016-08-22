@@ -3,6 +3,7 @@
 include_once( "config.php" );
 include_once( "usermanagement.php" );
 include_once( "nwmanagement.php" );
+include_once( "settings.php" );
 
 class User
 {
@@ -43,6 +44,14 @@ class User
     private function setSessionDefaults($username) {
         $userManager = new UserManagement();
         $nwManager = new NetworkManagement();
+        $settings = new Settings();
+        $settings_group = $settings->getSettings('hosts');
+        $steal_not_seen = false;
+        foreach ($settings_group as $setting) {
+            if ($setting['s_name'] == 'host_steal_not_seen' && $setting['s_value'] == 'checked') {
+                $steal_not_seen = true;
+            }
+        }
         $all_users = $userManager->getUsers( );
         $user_data = array();
         foreach ($all_users as $user) {
@@ -62,7 +71,7 @@ class User
         $_SESSION[ 'current_page' ] = 1;
         $_SESSION[ 'result_set' ] = null;
         $_SESSION[ 'networks' ] = null;
-        $_SESSION[ 'steal_not_seen' ] = true;
+        $_SESSION[ 'steal_not_seen' ] = $steal_not_seen;
     }
 }
 
