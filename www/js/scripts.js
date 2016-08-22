@@ -14,6 +14,7 @@ $(document).ready(function() {
             url: 'overview_handler.php',
             success : function(data){
                 if (action && !data.opStatus) {
+                    alert("Another user reserved this host. The host might be available in a few minutes again if the user don't book the address.");
                     location.reload(true);
                     $element.prop('checked', false);
                 } else if (action && data.opStatus) {
