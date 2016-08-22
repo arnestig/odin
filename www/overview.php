@@ -231,6 +231,9 @@ function show_host_row_view($row, $cur_reservations) {
                           <div class="col-lg-6">
                             <h5>Data description</h5>
                             '.$row['host_description'].'
+                            <div class="text-head-gutter"></div>
+                            <h5>User ID</h5>
+                            <a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].'</a>
                           </div>
                           <div class="col-lg-3">
                             <h5>Last notified</h5>
@@ -240,8 +243,8 @@ function show_host_row_view($row, $cur_reservations) {
                             '.$row['host_lease_expiry'].'  
                           </div>
                           <div class="col-lg-3">
-                            <h5>User ID</h5>
-                            <a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].'</a>
+                            <h5>Last seen</h5>
+                            '.$row['last_seen'].'
                             <div class="text-head-gutter"></div>
                             <h5>Last scanned</h5>
                             '.$row['last_scanned'].'
