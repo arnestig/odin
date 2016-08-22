@@ -149,7 +149,7 @@ echo '
                 <input type="checkbox" name="terms_and_conditions" class="form-control">
               </div>
               <div class="col-lg-11 form-group">
-                <p>I have read, understood and agree to these <a href="free-website-terms-and-conditions.pdf">terms and conditions</a></p>
+                <p>I have read, understood and agree to these <a href="#" data-toggle="modal" data-target="#termsAndConditionsModal">terms and conditions</a></p>
               </div>
             </div>
             '.alert($alert_msg).'
@@ -159,6 +159,91 @@ echo '
               </div>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="termsAndConditionsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Terms and conditions</h2>
+          </div>
+          <div class="modal-body">
+
+            <p>We own your data now</p>
+
+            <ol>
+              <li>Introduction
+                <ol>
+                  <li>These terms and conditions shall govern your use of our website.</li>
+                  <li>By using our website, you accept these terms and conditions in full;
+accordingly, if you disagree with these terms and conditions or any part of
+these terms and conditions, you must not use our website.</li>
+                  <li>If you [register with our website, submit any material to our website or use
+any of our website services], we will ask you to expressly agree to these terms
+and conditions.</li>
+                  <li>You must be at least [18] years of age to use our website; by using our
+website or agreeing to these terms and conditions, you warrant and represent
+to us that you are at least [18] years of age.</li>
+                  <li>Our website uses cookies; by using our website or agreeing to these terms
+and conditions, you consent to our use of cookies in accordance with the
+terms of our [privacy and cookies policy].</li>
+                </ol>
+              </li>
+              <li>Credit
+                <ol>
+                  <li>This document was created using a template from SEQ Legal
+(http://www.seqlegal.com).</li>
+                </ol>
+              </li>
+              <li>Copyright notice
+                <ol>
+                  <li>Copyright (c) [year(s) of first publication] [full name].</li>
+                  <li>Subject to the express provisions of these terms and conditions:
+                    <ol>
+                      <li>we, together with our licensors, own and control all the copyright and
+other intellectual property rights in our website and the material on our
+website; and</li>
+                      <li>all the copyright and other intellectual property rights in our website
+and the material on our website are reserved.</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+              <li>Licence to use website
+                <ol>
+                  <li>You may:
+                    <ol>
+                      <li>view pages from our website in a web browser;</li>
+                      <li>download pages from our website for caching in a web browser;</li>
+                      <li>print pages from our website;</li>
+                      <li>[stream audio and video files from our website]; and</li>
+                      <li>[use [our website services] by means of a web browser],</li>
+                    </ol>
+                    subject to the other provisions of these terms and conditions.
+                  </li>
+                  <li>Except as expressly permitted by Section 4.1 or the other provisions of these
+terms and conditions, you must not download any material from our website
+or save any such material to your computer.</li>
+                  <li>You may only use our website for [your own personal and business purposes],
+and you must not use our website for any other purposes.</li>
+                  <li>Except as expressly permitted by these terms and conditions, you must not
+edit or otherwise modify any material on our website.</li>
+                  <li>Unless you own or control the relevant rights in the material, you must not:
+                    <ol>
+                      <li></li>
+                      <li></li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
