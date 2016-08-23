@@ -68,8 +68,20 @@ function generate_nw_list() {
                  <tr>
                     <td>'.$row[ 'nw_base' ].'/'.$row['nw_cidr'].'</td>
                     <td>'.substr($row[ 'nw_description' ], 0, 150).' ...</td>
-                    <td><a class="open-EditNetworkDialog" data-networkid="'.$row[ 'nw_id' ].'" data-networkbase="'.$row[ 'nw_base' ].'" data-networkcidr="'.$row[ 'nw_cidr' ].'" data-networkdescription="'.$row[ 'nw_description' ].'" href="#editNetworkDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a class="open-RemoveNetworkDialog" data-networkid="'.$row[ 'nw_id' ].'" data-networkbase="'.$row[ 'nw_base' ].'" data-networkcidr="'.$row[ 'nw_cidr' ].'" data-networkdescription="'.$row[ 'nw_description' ].'" href="#removeNetworkDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a></td>
+                    <td><a class="open-EditNetworkDialog" 
+                          data-networkid="'.$row[ 'nw_id' ].'" 
+                          data-networkbase="'.$row[ 'nw_base' ].'" 
+                          data-networkcidr="'.$row[ 'nw_cidr' ].'" 
+                          data-networkdescription="'.$row[ 'nw_description' ].'" 
+                          href="#editNetworkDialog" data-toggle="modal" 
+                          data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                    <td><a class="open-RemoveNetworkDialog" 
+                          data-networkid="'.$row[ 'nw_id' ].'" 
+                          data-networkbase="'.$row[ 'nw_base' ].'" 
+                          data-networkcidr="'.$row[ 'nw_cidr' ].'" 
+                          data-networkdescription="'.$row[ 'nw_description' ].'" 
+                          href="#removeNetworkDialog" data-toggle="modal" 
+                          data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a></td>
                   
 
 
