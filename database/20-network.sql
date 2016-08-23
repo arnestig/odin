@@ -204,6 +204,24 @@ end;
 $$ language plpgsql;
 alter function get_reserved(varchar,smallint) owner to dbaodin;
 
+-- get_user_hosts
+-- This function will get all hosts leased by a user
+-- Input: session key, user id
+-- Output: leased host_ips, host_name and host_description of the user, otherwise null
+create or replace function get_user_hosts(
+    ticket varchar(255),
+    user_id smallint )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT host_ip, host_name, host_description FROM hosts WHERE usr_id = user_id ORDER BY inet(host_ip); 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_user_hosts(varchar,smallint) owner to dbaodin;
+
 
 -- reserve_host
 -- This function will be used to preliminary book hosts for reservation
