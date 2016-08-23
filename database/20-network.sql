@@ -349,6 +349,7 @@ begin
         host_leased = NULL,
         host_lease_expiry = NULL,
         host_description = NULL,
+        host_name = NULL,
         token_timestamp = NULL,
         token_usr = DEFAULT
     WHERE
