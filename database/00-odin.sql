@@ -1,6 +1,6 @@
 -- WARNING
- DROP DATABASE odin;
- DROP USER dbaodin;
+-- DROP DATABASE odin;
+-- DROP USER dbaodin;
 -- WARNING
 
 create user dbaodin with password 'gresen';
