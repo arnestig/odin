@@ -222,7 +222,7 @@ function show_host_row_view($row, $cur_reservations) {
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
                     <td>'.substr($row['last_seen'], 0, 10).'</td>
-                    <td'.$td_tooltip.'>'.$checkbox.'</td>
+                    <td class="check-reserve"'.$td_tooltip.'>'.$checkbox.'</td>
                     '.$admin_rm_lease.'
                   </tr>
                   <tr>
