@@ -20,7 +20,7 @@ if (isset($_POST[ 'book_addresses' ])) {
 
     $host_ip = $_POST[ 'hostIP'.$i ];
     $host_name = $_POST[ 'hostName'.$i ];
-    $host_desc = $_POST[ 'dataDescription'.$i ];
+    $host_desc = $_POST[ 'hostDescription'.$i ];
 
     if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
       header('Location: booking_completed.php');
@@ -66,8 +66,8 @@ function gen_address_form_row($ip, $index) {
                   <input type="hidden" name="hostIP'.$index.'" value="'.$ip.'">
                 </div>
                 <div class="form-group">
-                  <label for="dataDescription'.$index.'">Data description</label>
-                  <textarea class="form-control" rows="3" name="dataDescription'.$index.'" id="dataDescription'.$index.'" placeholder="Data description"></textarea>
+                  <label for="hostDescription'.$index.'">Host description</label>
+                  <textarea class="form-control" rows="3" name="hostDescription'.$index.'" id="hostDescription'.$index.'" placeholder="Host description"></textarea>
                 </div>
               </div>
             </div>

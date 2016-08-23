@@ -230,7 +230,7 @@ function show_host_row_view($row, $cur_reservations) {
                       <div class="hiddenNwDiv accordion-body collapse" id="acc'.str_replace(".", "", $row['host_ip']).'">
                         <div class="row">
                           <div class="col-lg-6">
-                            <h5>Data description</h5>
+                            <h5>Host description</h5>
                             '.$row['host_description'].'
                             <div class="text-head-gutter"></div>
                             <h5>User ID</h5>
@@ -376,7 +376,7 @@ echo '
                     <th></th>
                     <th>Host IP</th>
                     <th>Host name</th>
-                    <th colspan="2">Data description</th>
+                    <th colspan="2">Host description</th>
                     <th>Last seen</th>
                     <th>Reserve</th>
                   </tr>

@@ -12,7 +12,7 @@ if (!empty($_POST[ 'edit_host' ])) {
   $nw_manager->updateHost( $_POST[ 'userHostIp2' ], 
                           $_SESSION[ 'user_data' ][ 'usr_id' ], 
                           $_POST[ 'userHostName' ], 
-                          $_POST[ 'userDataDescription' ]);
+                          $_POST[ 'userHostDescription' ]);
 }
 
 if (!empty( $_POST[ 'mod_leases' ] )) {
@@ -43,7 +43,7 @@ function gen_host_table($user_hosts) {
                       <a class="open-EditHostDialog" 
                           data-hostip="'.$host[ 'host_ip' ].'" 
                           data-hostname="'.$host[ 'host_name' ].'" 
-                          data-datadescription="'.$host[ 'host_description' ].'" 
+                          data-hostdescription="'.$host[ 'host_description' ].'" 
                           href="#editHostDialog" 
                           data-toggle="modal" 
                           data-backdrop="static">
@@ -86,7 +86,7 @@ echo '
                   <tr>
                     <th>Host IP</th>
                     <th>Host name</th>
-                    <th>Data description</th>
+                    <th>Host description</th>
                     <th>Lease expiry</th>
                     <th>Last seen</th>
                     <th>Edit</th>
@@ -155,8 +155,8 @@ echo '
                 <input type="text" class="form-control" id="userHostName" name="userHostName" value=""/>
               </div>
               <div class="form-group">
-                <label for="userDataDescription">Data description</label>
-                <textarea class="form-control" rows="3" id="userDataDescription" name="userDataDescription" value="" placeholder="Description of host"></textarea>
+                <label for="userHostDescription">Host description</label>
+                <textarea class="form-control" rows="3" id="userHostDescription" name="userHostDescription" value="" placeholder="Description of host"></textarea>
               </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

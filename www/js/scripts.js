@@ -110,12 +110,12 @@ $(document).ready(function() {
 
         var hostIp = $(this).data('hostip');
         var hostName = $(this).data('hostname');
-        var dataDescription = $(this).data('datadescription');
+        var hostDescription = $(this).data('hostdescription');
 
         $(".form-group #userHostIp").val( hostIp );
         $(".form-group #userHostIp2").val( hostIp );
         $(".form-group #userHostName").val( hostName );
-        $(".form-group #userDataDescription").val( dataDescription );
+        $(".form-group #userHostDescription").val( hostDescription );
 
     });
 
