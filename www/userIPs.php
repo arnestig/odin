@@ -5,7 +5,29 @@ session_start();
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
 
+
 $nw_manager = new NetworkManagement();
+
+if (!empty($_POST[ 'edit_host' ])) {
+  $nw_manager->updateHost( $_POST[ 'userHostIp2' ], 
+                          $_SESSION[ 'user_data' ][ 'usr_id' ], 
+                          $_POST[ 'userHostName' ], 
+                          $_POST[ 'userDataDescription' ]);
+}
+
+if (!empty( $_POST[ 'mod_leases' ] )) {
+  if ( $_POST[ 'lease_option' ] === 'extend' ) {
+    foreach ($_POST[ 'ip_list' ] as $k => $v) {
+      //$nw_manager->extendLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+    }
+  } else {
+    foreach ($_POST[ 'ip_list' ] as $k => $v) {
+      //$nw_manager->terminateLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+    }
+  }
+}
+
+
 $user_hosts = $nw_manager->getUserHosts( $_SESSION[ 'user_data' ][ 'usr_id' ] );
 
 function gen_host_table($user_hosts) {
@@ -28,7 +50,10 @@ function gen_host_table($user_hosts) {
                         <span class="glyphicon glyphicon-edit"></span>
                       </a>
                     </td>
-                    <td class="check-lease-opt"><input type="checkbox"></td>
+                    <td class="check-lease-opt"><input type="checkbox" 
+                                                      id="userhost'.$host[ 'host_ip' ].'" 
+                                                      name="ip_list[]"
+                                                      value="'.$host[ 'host_ip' ].'"></td>
                   </tr>
                   ';
   }
@@ -42,6 +67,7 @@ $frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_usern' ] )
 
 
 echo '
+    <form method="POST" name="host_leases" action="userIPs.php">
     <div class="container">
       <div class="row">
         <div class="col-lg-9">
@@ -69,43 +95,6 @@ echo '
                 </thead>
                 <tbody>
                   '.gen_host_table($user_hosts).'
-                  <tr>
-                    <td>192.168.5.150</td>
-                    <td>LaserVD7</td>
-                    <td>Placed above test track to ...</td>
-                    <td>20160616</td>
-                    <td>20160616</td>
-                    <td>
-                      <a class="open-EditHostDialog" 
-                          data-hostip="10.010.01.0.1" 
-                          data-hostname="The coolio cam" 
-                          data-datadescription="This is very good camera. Much in useful for very many people. Need better. Plenty research. Nobel prize. Peace." 
-                          href="#editHostDialog" 
-                          data-toggle="modal" 
-                          data-backdrop="static">
-                        <span class="glyphicon glyphicon-edit"></span>
-                      </a>
-                    </td>
-                    <td><input type="checkbox" class="check-terminate"></td>
-                  </tr>
-                  <tr>
-                    <td>192.168.5.151</td>
-                    <td>LaserVD5</td>
-                    <td>Placed above test track to ...</td>
-                    <td>20160616</td>
-                    <td>20160616</td>
-                    <td><span class="glyphicon glyphicon-edit"></span></td>
-                    <td><input type="checkbox" class="check-terminate"></td>
-                  </tr>
-                  <tr>
-                    <td>192.168.5.152</td>
-                    <td>LaserVD8</td>
-                    <td>Placed above test track to ...</td>
-                    <td>20160616</td>
-                    <td>20160616</td>
-                    <td><span class="glyphicon glyphicon-edit"></span></td>
-                    <td><input type="checkbox" class="check-terminate"></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -120,22 +109,20 @@ echo '
               <div class="panel-heading">
                 <h4>Choosen addresses</h4>
               </div>
-              <div class="panel-body">
-                <p>192.168.5.151</p>
-                <p>192.168.5.152</p>
+              <div class="panel-body" id="leaseBasket">
               </div>
               <div class="panel-footer">
                 <div class="form-group">
                   <label class="control-label" for="action">Choose action</label>
                   <div>
-                    <select id="action" class="form-control">
-                      <option>Extend leases</option>
-                      <option>Terminate leases</option>
+                    <select id="action" class="form-control" name="lease_option">
+                      <option value="extend">Extend leases</option>
+                      <option value="terminate">Terminate leases</option>
                     </select> 
                   </div>
                 </div>
                 <div class="form-group">
-                  <input role="button" class="btn btn-info" name="Execute" value="Execute">
+                  <input role="button" type="submit" class="btn btn-info" name="mod_leases" value="Execute">
                 </div>
               </div>
             </div>
@@ -146,6 +133,7 @@ echo '
 
       </div>  
     </div>
+    </form>
 
     <!-- Modal EDIT HOST code start -->
     <div class="modal fade" id="editHostDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
