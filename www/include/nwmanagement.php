@@ -148,6 +148,25 @@ class NetworkManagement
         return $results;
     }
 
+    public function getUserHosts( $user_id )
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_user_hosts( ?, ? )" );
+        $sth->execute( array( '', $user_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_user_hosts'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_COLUMN, 0 );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }    
+
     public function leaseHost( $host_ip, $user_id, $host_name, $host_desc )
     {
         $sth = $this->dbcon->prepare( "SELECT lease_host( ?, ?, ?, ?, ? )" );
