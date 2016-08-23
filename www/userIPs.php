@@ -3,6 +3,12 @@
 session_start();
 
 include_once('include/html_frame.php');
+include_once('include/nwmanagement.php');
+
+$nw_manager = new NetworkManagement();
+$user_hosts = $nw_manager->getUserHosts( $_SESSION[ 'user_data' ][ 'usr_id' ] );
+
+print_r($user_hosts);
 
 $frame = new HTMLframe();
 $frame->doc_start("My addresses");
@@ -11,42 +17,6 @@ $frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_usern' ] )
 
 
 echo '
-<!-- Modal EDIT HOST code start -->
-    <div class="modal fade" id="editHostDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Edit Host</h4>
-          </div>
-          <form class="form" method="POST" action="userIPs.php">
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="hostName">Host name</label>
-                <input type="text" class="form-control" id="hostName" name="hostName" value="" disabled/>
-                <input type="hidden" id="networkBase2" name="networkBase2" value=""/>
-                <input type="hidden" id="networkId" name="networkId" value=""/>
-              </div>
-              <div class="form-group">
-                <label for="networkCidr">CIDR</label>
-                <input type="text" class="form-control" id="networkCidr" name="networkCidr" value="" disabled/>
-                <input type="hidden" id="networkCidr2" name="networkCidr2" value=""/>
-              </div>
-              <div class="form-group">
-                <label for="networkDescription">Network description</label>
-                <textarea class="form-control" rows="3" id="networkDescription" name="networkDescription" value="" placeholder="Description of network"></textarea>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <input type="submit" class="btn btn-primary" name="edit_description" value="Save changes"/>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-<!-- Modal EDIT HOST code end --> 
-
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-1 col-lg-8">
@@ -79,10 +49,9 @@ echo '
                     <td>20160616</td>
                     <td>
                       <a class="open-EditHostDialog" 
-                          data-hostname="'.$row[ 'nw_id' ].'" 
-                          data-networkbase="'.$row[ 'nw_base' ].'" 
-                          data-networkcidr="'.$row[ 'nw_cidr' ].'" 
-                          data-networkdescription="'.$row[ 'nw_description' ].'" 
+                          data-hostip="10.010.01.0.1" 
+                          data-hostname="The coolio cam" 
+                          data-datadescription="This is very good camera. Much in useful for very many people. Need better. Plenty research. Nobel prize. Peace." 
                           href="#editHostDialog" 
                           data-toggle="modal" 
                           data-backdrop="static">
@@ -147,6 +116,39 @@ echo '
 
       </div>  
     </div>
+
+    <!-- Modal EDIT HOST code start -->
+    <div class="modal fade" id="editHostDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Edit Host</h4>
+          </div>
+          <form class="form" method="POST" action="userIPs.php">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="userHostIp">Host IP</label>
+                <input type="text" class="form-control" id="userHostIp" name="userHostIp" value="" disabled/>
+                <input type="hidden" id="userHostIp2" name="userHostIp2" value=""/>
+              </div>
+              <div class="form-group">
+                <label for="userHostName">Host name</label>
+                <input type="text" class="form-control" id="userHostName" name="userHostName" value=""/>
+              </div>
+              <div class="form-group">
+                <label for="userDataDescription">Data description</label>
+                <textarea class="form-control" rows="3" id="userDataDescription" name="userDataDescription" value="" placeholder="Description of host"></textarea>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" name="edit_host" value="Save changes"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<!-- Modal EDIT HOST code end --> 
 ';
 
 $frame->doc_end();
