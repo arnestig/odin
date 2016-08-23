@@ -8,7 +8,32 @@ include_once('include/nwmanagement.php');
 $nw_manager = new NetworkManagement();
 $user_hosts = $nw_manager->getUserHosts( $_SESSION[ 'user_data' ][ 'usr_id' ] );
 
-print_r($user_hosts);
+function gen_host_table($user_hosts) {
+  $table = '';
+  foreach ($user_hosts as $host) {
+    $table .= '<tr>
+                    <td>'.$host[ 'host_ip' ].'</td>
+                    <td>'.$host[ 'host_name' ].'</td>
+                    <td>'.substr($host[ 'host_description' ], 0, 30).' ...</td>
+                    <td>'.substr($host[ 'host_lease_expiry' ], 0, 10).'</td>
+                    <td>'.substr($host[ 'host_last_seen' ], 0, 10).'</td>
+                    <td>
+                      <a class="open-EditHostDialog" 
+                          data-hostip="'.$host[ 'host_ip' ].'" 
+                          data-hostname="'.$host[ 'host_name' ].'" 
+                          data-datadescription="'.$host[ 'host_description' ].'" 
+                          href="#editHostDialog" 
+                          data-toggle="modal" 
+                          data-backdrop="static">
+                        <span class="glyphicon glyphicon-edit"></span>
+                      </a>
+                    </td>
+                    <td class="check-lease-opt"><input type="checkbox"></td>
+                  </tr>
+                  ';
+  }
+  return $table;
+}
 
 $frame = new HTMLframe();
 $frame->doc_start("My addresses");
@@ -19,7 +44,7 @@ $frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_usern' ] )
 echo '
     <div class="container">
       <div class="row">
-        <div class="col-lg-offset-1 col-lg-8">
+        <div class="col-lg-9">
           
           <div class="row">
             <div class="col-lg-12">
@@ -37,15 +62,18 @@ echo '
                     <th>Host name</th>
                     <th>Data description</th>
                     <th>Lease expiry</th>
+                    <th>Last seen</th>
                     <th>Edit</th>
                     <th>Choose</th>
                   </tr>
                 </thead>
                 <tbody>
+                  '.gen_host_table($user_hosts).'
                   <tr>
                     <td>192.168.5.150</td>
                     <td>LaserVD7</td>
                     <td>Placed above test track to ...</td>
+                    <td>20160616</td>
                     <td>20160616</td>
                     <td>
                       <a class="open-EditHostDialog" 
@@ -65,6 +93,7 @@ echo '
                     <td>LaserVD5</td>
                     <td>Placed above test track to ...</td>
                     <td>20160616</td>
+                    <td>20160616</td>
                     <td><span class="glyphicon glyphicon-edit"></span></td>
                     <td><input type="checkbox" class="check-terminate"></td>
                   </tr>
@@ -72,6 +101,7 @@ echo '
                     <td>192.168.5.152</td>
                     <td>LaserVD8</td>
                     <td>Placed above test track to ...</td>
+                    <td>20160616</td>
                     <td>20160616</td>
                     <td><span class="glyphicon glyphicon-edit"></span></td>
                     <td><input type="checkbox" class="check-terminate"></td>
