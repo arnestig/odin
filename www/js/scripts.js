@@ -1,11 +1,16 @@
 $(document).ready(function() {
     // userIPs.php
     $('td.check-lease-opt').on('click', 'input:checkbox', function() {
-
+        var ip = this.id.substr(8);
+        if ($(this).is(':checked')) {
+            $('#leaseBasket').append('<p id="ci' + ip + '"">' + ip + '</p>');
+        } else {
+            $('p[id="ci' + ip + '"]').remove();
+        }
     });
 
     // overview.php
-    $('td').on('click', 'input:checkbox', function() {
+    $('td.check-reserve').on('click', 'input:checkbox', function() {
         var $element = $(this);
         var ip = this.value;
         var action = $(this).is(':checked');
@@ -31,7 +36,7 @@ $(document).ready(function() {
                     }
                     $('div#choosenAddr').html(basketHtml);
                 } else if (!action && data.opStatus) {
-                    $('p#bi' + ip).remove();
+                    $('p[id="bi' + ip + '"]').remove();
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -108,6 +113,7 @@ $(document).ready(function() {
         var dataDescription = $(this).data('datadescription');
 
         $(".form-group #userHostIp").val( hostIp );
+        $(".form-group #userHostIp2").val( hostIp );
         $(".form-group #userHostName").val( hostName );
         $(".form-group #userDataDescription").val( dataDescription );
 
