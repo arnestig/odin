@@ -216,7 +216,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT host_ip, host_name, host_description FROM hosts WHERE usr_id = user_id ORDER BY inet(host_ip); 
+    SELECT host_ip, host_name, host_description, host_lease_expiry, host_last_seen FROM hosts WHERE usr_id = user_id ORDER BY inet(host_ip); 
 return next ref1;
 end;
 $$ language plpgsql;
