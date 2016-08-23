@@ -18,11 +18,11 @@ if (!empty($_POST[ 'edit_host' ])) {
 if (!empty( $_POST[ 'mod_leases' ] )) {
   if ( $_POST[ 'lease_option' ] === 'extend' ) {
     foreach ($_POST[ 'ip_list' ] as $k => $v) {
-      //$nw_manager->extendLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+      $nw_manager->extendLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
     }
   } else {
     foreach ($_POST[ 'ip_list' ] as $k => $v) {
-      //$nw_manager->terminateLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+      $nw_manager->terminateLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
     }
   }
 }

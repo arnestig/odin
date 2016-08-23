@@ -311,31 +311,26 @@ alter function lease_host(varchar,varchar,smallint,varchar,varchar) owner to dba
 create or replace function extend_lease(
     ticket varchar(255),
     host_to_lease varchar(36),
-    cur_usr_id smallint,
+    cur_usr_id smallint)
 returns boolean as $$
 declare
     max_lease_time smallint;
 begin
     SELECT s_value from settings WHERE s_name = 'host_max_lease_time' INTO max_lease_time;
-    select host_ip into host_already_reserved from hosts where host_ip = host_to_lease AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
-    IF host_already_reserved <> '' THEN
-        RETURN false;
-    ELSE
-        UPDATE hosts
-        SET
-            host_leased = now(),
-            host_lease_expiry = NOW() + max_lease_time * interval '1 days',
-            token_timestamp = NULL,
-            token_usr = DEFAULT
-        WHERE
-            host_ip = host_to_lease AND
-            usr_id = cur_usr_id;
-    PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host-lease extended, date = "' || now() || '", to = "' || host_desc || '".' );
+    UPDATE hosts
+    SET
+        host_leased = now(),
+        host_lease_expiry = NOW() + max_lease_time * interval '1 days',
+        token_timestamp = NULL,
+        token_usr = DEFAULT
+    WHERE
+        host_ip = host_to_lease AND
+        usr_id = cur_usr_id;
+    PERFORM add_log_entry( ticket, cur_usr_id, host_to_lease, 'Host-lease extended, new expiry = ' || now() + max_lease_time * interval '1 days' || '.' );
     RETURN true;
-    END IF;
 end;
 $$ language plpgsql;
-alter function lease_host(varchar,varchar,smallint) owner to dbaodin;
+alter function extend_lease(varchar,varchar,smallint) owner to dbaodin;
 
 
 -- terminate_lease
