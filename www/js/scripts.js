@@ -1,10 +1,14 @@
 $(document).ready(function() {
-    
+    // userIPs.php
+    $('td.check-lease-opt').on('click', 'input:checkbox', function() {
+
+    });
+
+    // overview.php
     $('td').on('click', 'input:checkbox', function() {
         var $element = $(this);
         var ip = this.value;
         var action = $(this).is(':checked');
-        console.log(ip);
         $.ajax({
             type: 'POST',
             dataType: 'json',
