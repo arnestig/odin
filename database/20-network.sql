@@ -151,10 +151,10 @@ open ref1 for
     WHERE
         (get_nw_id IS NULL or h.nw_id = get_nw_id) AND
         (search_string is NULL or (
-            (lower(h.host_description) ~ ('^' || lower(search_string))) OR
-            (lower(h.host_name) ~ ('^' || lower(search_string))) OR
-            (lower(h.host_data) ~ ('^' || lower(search_string))) OR
-            (h.host_ip ~ ('^' || search_string)))
+            (lower(h.host_description) ~ lower(search_string)) OR
+            (lower(h.host_name) ~ lower(search_string)) OR
+            (lower(h.host_data) ~ lower(search_string)) OR
+            (h.host_ip ~ search_string))
         ) AND
         (search_bit_mask = 0 OR 0 <> (h.status & search_bit_mask))
     ORDER BY inet(h.host_ip) LIMIT items_per_page offset(items_per_page * page_offset);
