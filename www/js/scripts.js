@@ -4,6 +4,7 @@ $(document).ready(function() {
         var $element = $(this);
         var ip = this.value;
         var action = $(this).is(':checked');
+        console.log(ip);
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -13,6 +14,7 @@ $(document).ready(function() {
             },
             url: 'overview_handler.php',
             success : function(data){
+                console.log(data);
                 if (action && !data.opStatus) {
                     alert("Another user reserved this host. The host might be available in a few minutes again if the user don't book the address.");
                     location.reload(true);
@@ -92,6 +94,19 @@ $(document).ready(function() {
             }
         });
         
+    });
+
+    // UserIPS
+    $(document).on("click", ".open-EditHostDialog", function () {
+
+        var hostIp = $(this).data('hostip');
+        var hostName = $(this).data('hostname');
+        var dataDescription = $(this).data('datadescription');
+
+        $(".form-group #userHostIp").val( hostIp );
+        $(".form-group #userHostName").val( hostName );
+        $(".form-group #userDataDescription").val( dataDescription );
+
     });
 
     // Manage Users
