@@ -182,6 +182,13 @@ class NetworkManagement
         $result = $sth->fetch();
     }
 
+    public function extendLease( $host_ip, $user_id )
+    {
+        $sth = $this->dbcon->prepare( "SELECT extend_lease( ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $user_id ) );
+        $result = $sth->fetch();
+    }
+
     public function nHostsInNetwork( $cidr )
     {
         return pow( 2, ( 32 - $cidr ) ) - 2;
