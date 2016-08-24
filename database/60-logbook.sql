@@ -22,14 +22,30 @@ returns SETOF refcursor AS $$
 declare
     ref1 refcursor;
 begin
+open ref1 for
     SELECT
-        lb_usr_id,
-        to_char(lb_time, 'YYYY-MM-DD HH24:MI:SS') as lb_time,
-        lb_text
-    FROM logbook
+        u.usr_usern,
+        to_char(l.lb_time, 'YYYY-MM-DD HH24:MI:SS') as lb_time,
+        l.lb_text
+    FROM
+        logbook l
+    LEFT OUTER JOIN
+        users u
+    ON
+        l.lb_usr_id = u.usr_id
     WHERE
-        lb_host_ip = host_ip
-    ORDER BY lb_time;
+        l.lb_host_ip = host_ip
+    ORDER BY
+        l.lb_time
+    DESC;
+--    SELECT
+--        lb_usr_id,
+--        to_char(lb_time, 'YYYY-MM-DD HH24:MI:SS') as lb_time,
+--        lb_text
+--    FROM logbook
+--    WHERE
+--        lb_host_ip = host_ip
+--    ORDER BY lb_time;
 return next ref1;
 end;
 $$ language plpgsql;
