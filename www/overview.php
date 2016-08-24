@@ -1,10 +1,8 @@
 <?php
-session_start();
 
+include_once('include/session.php'); # always include this file first
 include_once('include/nwmanagement.php');
 include_once('include/html_frame.php');
-
-
 
 //Default range-view (TODO: delete init after implemented as user-default)
 if ( isset( $_REQUEST[ 'nw_id' ] ) ) {

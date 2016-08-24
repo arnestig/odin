@@ -1,7 +1,6 @@
 <?php
 
-session_start();
-
+include_once('include/session.php'); # always include this file first
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
 

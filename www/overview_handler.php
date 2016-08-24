@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include_once('include/nwmanagement.php');
 /*
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
