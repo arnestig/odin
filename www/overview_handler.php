@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once('include/nwmanagement.php');
+include_once('include/logbookmanagement.php');
 /*
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
     if(isset($_POST['Pid'])) {
@@ -15,6 +16,22 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
 }
 
 */
+
+if (!empty($_GET[ 'host' ])) {
+    $ip = $_GET[ 'host' ];
+    $log_manager = new LogbookManagement();
+    $hostEntries = $log_manager->getHostEntry( $ip );
+    $html_res = '<table class="pop-table"><tr><th>User</th><th>Date</th><th>Change</th></tr>';
+    foreach ($hostEntries as $entry) {
+        $html_res .= '<tr>';
+        foreach ($entry as $field) {
+            $html_res .= '<td>'.$field.'</td>';
+        }
+        $html_res .= '</tr>';
+    }
+    $html_res .= '</table>';
+    echo $html_res;
+}
 
 if (!empty($_POST[ 'ip' ]) && !empty($_POST[ 'action' ])) {
 	
@@ -34,6 +51,7 @@ if (!empty($_POST[ 'ip' ]) && !empty($_POST[ 'action' ])) {
     echo json_encode( array('opStatus' => $status, 'ipList' => $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] )) );
 
 }
+
 if (isset($_POST[ 'getReserved' ]) && !empty($_POST[ 'getReserved' ])) {
 
     $nw_manager = new NetworkManagement();
