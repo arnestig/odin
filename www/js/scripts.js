@@ -1,5 +1,33 @@
 $(document).ready(function() {
-    // userIPs.php
+
+    $('.history').popover({
+        trigger: 'click',
+        placement: 'right',
+        title: 'Log',
+        container: 'body',
+        html: true,
+        content: function() {
+            var theLog = '<p>No history for this ip yet</p>';
+            var host = this.id.substr(3);
+            var heyhey = 'alhd';
+            $.ajax({
+                url: 'overview_handler.php',
+                type: 'GET',
+                dataType: 'text',
+                data: 'host=' + host,
+                //very bad with async false....
+                async: false,
+                success: function( response ) {
+                    theLog = response;
+                    console.log(theLog);
+                }
+            });
+            //console.log(theLog);
+            return theLog;
+        }   
+    });
+
+
     $('td.check-lease-opt').on('click', 'input:checkbox', function() {
         var ip = this.id.substr(8);
         if ($(this).is(':checked')) {
