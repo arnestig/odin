@@ -7,6 +7,14 @@ body { padding-bottom: 40px; }
 	   		border-radius: 0 !important;
 }
 
+.history h6 { cursor: pointer; padding: 2px; border: 1px solid black; }
+table .pop-table { width: 500px;}
+.pop-table tr th { padding: 3px; }
+.pop-table tr td { vertical-align: top; }
+.pop-table tr td:nth-child(1) { width: 50px; }
+.pop-table tr td:nth-child(2) { width: 150px; }
+.pop-table tr td:nth-child(3) { width: 300px; }
+
 /* Colors */
 .bg-light { background-color: #eee; }
 .bg-dark { background-color: #ccc; }
