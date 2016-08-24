@@ -69,6 +69,25 @@ class NetworkManagement
         return $results;
     }
 
+    public function getNetworkUsers( $network_id )
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_network_users( ?, ? )" );
+        $sth->execute( array( '', $network_id ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_network_users'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_COLUMN, 0 );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results;
+    }
+
     public function getHostInfo()
     {
         $this->dbcon->beginTransaction();
