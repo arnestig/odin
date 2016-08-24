@@ -359,3 +359,18 @@ begin
 end;
 $$ language plpgsql;
 alter function terminate_lease(varchar,varchar,smallint) owner to dbaodin;
+
+-- get_network_users
+create or replace function get_network_users(
+    ticket varchar(255),
+    get_nw_id smallint DEFAULT NULL )
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
+begin
+open ref1 for
+    SELECT DISTINCT usr_id FROM hosts WHERE nw_id = get_nw_id; 
+return next ref1;
+end;
+$$ language plpgsql;
+alter function get_network_users(varchar,smallint) owner to dbaodin;
