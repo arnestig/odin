@@ -228,7 +228,16 @@ function show_host_row_view($row, $cur_reservations) {
                       <div class="hiddenNwDiv accordion-body collapse" id="acc'.str_replace(".", "", $row['host_ip']).'">
                         <div class="row">
                           <div class="col-lg-6">
-                            <h5>Host description</h5>
+                            <div class="row">
+                              <div class="col-lg-6">
+                                <h5>Host description</h5>
+                              </div>
+                              <div class="col-lg-3">
+                                <a id="log'.$row['host_ip'].'" class="history">
+                                  <h6>Host log<span class="glyphicon glyphicon-list-alt"></span></h6>
+                                </a>
+                              </div>
+                            </div>
                             '.$row['host_description'].'
                             <div class="text-head-gutter"></div>
                             <h5>User ID</h5>
