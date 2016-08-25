@@ -45,6 +45,7 @@ $$ language plpgsql;
 alter function add_user(varchar,varchar,varchar,smallint,varchar,varchar,varchar) owner to dbaodin;
 
 -- get_users
+-- Returns all users if get_usr_id is NULL or specified user otherwise
 create or replace function get_users(
     ticket varchar(255), 
     get_usr_id smallint DEFAULT NULL )
