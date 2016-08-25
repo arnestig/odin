@@ -5,6 +5,10 @@ include_once('include/usermanagement.php');
 include_once('include/mail_handler.php');
 include_once('include/settings.php');
 
+if ($_SESSION['user_data']['usr_privileges'] < 1) {
+  header('Location: overview.php');
+  exit;
+}
 
 $userManager = new UserManagement();
 $mailHandler = new MailHandler();
@@ -32,28 +36,24 @@ if (isset( $_POST[ 'add_user' ] )) {
 }
 
 if (isset( $_POST[ 'edit_user' ] )) {
+  $user = $userManager->getUserInfo($_POST['userId']);
+
+  if ($_POST[ 'admin_privileges' ] != $user['usr_privileges']) {
+    $mailHandler->userMadeAdmin( $_POST['userId'], $_SESSION['user_data']['usr_privileges'] );
+  } else {
+    $message = 'Your updated profile-info: '.$_POST[ 'userName' ].', '.$_POST[ 'firstName' ].', '.$_POST[ 'lastName' ].', '.$_POST[ 'email' ];
+    $mailHandler->userEdited( $_POST['userId'], $message, $_SESSION['user_data']['usr_privileges'] );
+  }
+
   $userManager->adminUpdateUser(
     $_POST[ 'userId' ],
     $_POST[ 'userName' ],
     $_POST[ 'firstName' ],
     $_POST[ 'lastName' ],
-    $_POST[ 'email' ]
-  );
+    $_POST[ 'email' ],
+    $_POST[ 'admin_privileges' ]);
 
-// TODO: Implement admin functionality
-  if (isset( $_POST[ 'adminPrivileges' ])) {
-    // Warning! Make admin is not a function
-    // do stuff if admin is set...
-    $userManager->makeAdmin(
-      $_POST[ 'userId' ],
-      $_POST[ 'userName' ],
-      $_POST[ 'firstName' ],
-      $_POST[ 'lastName' ],
-      $_POST[ 'email' ],
-      $_POST[ 'adminPrivileges' ]
-    );
-  }
-  // generate confirmation
+  // generate ui-confirmation
   $alert_message = 'Profile info for user <strong>'.$_POST['userName'].'</strong> was successfully updated.';
   $alert_type = 'success';
 }
@@ -61,7 +61,7 @@ if (isset( $_POST[ 'edit_user' ] )) {
 // TODO: MAIL instead. No pwd actually is mailed or changed atm
 if (isset( $_POST[ 'generate_new_password' ] )) {
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
-  
+  $mailHandler->userPasswordChanged( $_POST[ 'userId' ], $not_very_rnd_pwd, $_SESSION['user_data']['usr_id'] );
   $userManager->updateUser(
     $_POST[ 'userId' ],
     $_POST[ 'userName' ],
@@ -109,19 +109,68 @@ function generate_data() {
 function generate_user_list() {
   $userlist = '';
   foreach ( $_SESSION[ 'users' ] as $row ) {
+    $edit_cell = '';
+    $remove_cell = '';
+
+    // To prevent user (admin) from editing him-/herself and changing admin levels.
+    // or editing enyone with higher privileges
+    if ( ($row['usr_id'] != $_SESSION['user_data']['usr_id']) &&
+          ($row['usr_privileges'] < $_SESSION['user_data']['usr_privileges'] ) ) {
+      $edit_cell = '<a class="open-EditUserDialog" 
+                      data-userid="'.$row[ 'usr_id' ].'" 
+                      data-username="'.$row[ 'usr_usern' ].'" 
+                      data-firstname="'.$row[ 'usr_firstn' ].'" 
+                      data-lastname="'.$row[ 'usr_lastn' ].'" 
+                      data-email="'.$row[ 'usr_email' ].'"
+                      data-privileges="'.$row[ 'usr_privileges' ].'" 
+                      href="#editUserDialog" 
+                      data-toggle="modal" 
+                      data-backdrop="static">
+                        <i class="glyphicon glyphicon-pencil"></i>
+                    </a>';
+      $remove_cell = '<a class="open-RemoveUserDialog" 
+                      data-userid="'.$row[ 'usr_id' ].'" 
+                      data-username="'.$row[ 'usr_usern' ].'" 
+                      data-firstname="'.$row[ 'usr_firstn' ].'" 
+                      data-lastname="'.$row[ 'usr_lastn' ].'" 
+                      data-email="'.$row[ 'usr_email' ].'" 
+                      href="#removeUserDialog" 
+                      data-toggle="modal" 
+                      data-backdrop="static">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>';
+    }
+
     $userlist .= '
                   <tr>
                     <td>'.$row[ 'usr_usern' ].'</td>
                     <td>'.$row[ 'usr_firstn' ].'</td>
                     <td>'.$row[ 'usr_lastn' ].'</td>
                     <td>'.$row[ 'usr_email' ].'</td>
-
-                    <td><a class="open-EditUserDialog" data-userid="'.$row[ 'usr_id' ].'" data-username="'.$row[ 'usr_usern' ].'" data-firstname="'.$row[ 'usr_firstn' ].'" data-lastname="'.$row[ 'usr_lastn' ].'" data-email="'.$row[ 'usr_email' ].'" href="#editUserDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
-                    <td><a class="open-RemoveUserDialog" data-userid="'.$row[ 'usr_id' ].'" data-username="'.$row[ 'usr_usern' ].'" data-firstname="'.$row[ 'usr_firstn' ].'" data-lastname="'.$row[ 'usr_lastn' ].'" data-email="'.$row[ 'usr_email' ].'" href="#removeUserDialog" data-toggle="modal" data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a></td>
+                    <td>'.$edit_cell.'</td>
+                    <td>'.$remove_cell.'</td>
                   </tr>
     ';
   }
   return $userlist;
+}
+
+function privileges_options() {
+  $options_html = '';
+  if ( $_SESSION['user_data']['usr_privileges'] > 1 ) {
+    $options_html = '
+                <div class="form-group">
+                <label class="control-label" for="privileges">Admin privileges</label>
+                <div>
+                  <select id="privileges" class="form-control" name="admin_privileges">
+                    <option value="0">User (no privileges)</option>
+                    <option value="1">Admin (most options in admin view available)</option>
+                    <option value="2">Super Admin (system owner)</option>
+                  </select> 
+                </div>
+              </div>';
+  }
+  return $options_html;
 }
 
 $frame = new HTMLframe();
@@ -201,9 +250,7 @@ echo '
               <div class="form-group">
                 <input type="submit" name="generate_new_password" value="Generate and mail new password" class="btn btn-primary"/>
               </div>
-              <div class="form-group">
-                <input type="checkbox" name="adminPrivileges"> Check to give user Admin-privileges</input>
-              </div>
+              '.privileges_options().'
             
           </div>
           <div class="modal-footer">
@@ -267,10 +314,8 @@ $frame->doc_nav("Users", $_SESSION[ 'user_data' ][ 'usr_usern' ] );
 echo '
     <div class="container">
       <div class="row">
-        <div class="col-lg-offset-1 col-lg-8">
-          
+        <div class="col-lg-offset-1 col-lg-8">  
           '.$alert_html.'
-
           <div class="row">
             <div class="col-lg-12">
               <h3>Manage Users <i class="glyphicon glyphicon-user"></i></h3>
