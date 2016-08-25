@@ -1,8 +1,15 @@
 <?php
+ // always include this file first
+include_once('include/session.php');
 
-include_once('include/session.php'); # always include this file first
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
+include_once('include/mail_handler.php');
+
+if ($_SESSION['user_data']['usr_privileges'] < 2) {
+  header('Location: overview.php');
+  exit;
+}
 
 $nwManager = new NetworkManagement();
 
@@ -19,35 +26,32 @@ if (isset( $_POST['add_network'] )) {
   }    
 }
 
-// TODO
 if (isset( $_POST[ 'delete_and_notify' ] )) {
-  // generate mail
-  // input validation and error handling
-  // confirmation
 
-  //=====================
-  // TODO: Solve this with html5 instead
   $nwId = $_POST[ 'networkId' ];
   $nwInfo = $nwManager->getNetworkInfo( $nwId );
-  //=====================
+  
+  // NOTICE: Mailhandler have to be called before network is removed
+  $mail_handler = new MailHandler();
+  $mail_handler->notifyNetworkUsersDelete( $nwId, $nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $_POST['notificationMessage'], $_SESSION['user_data']['usr_id'] );
+
   $nwManager->removeNetwork($_POST[ 'networkId' ]);
 
   $alert_message = 'Network <strong>'.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ].'</strong> was succefully removed.';
   $alert_type = 'success';
 }
 
-// TODO
-if (isset( $_POST[ 'notify_only' ] )) {
-  // generate mail
-  // reload and generate popup-notification of action
-  $alert_message = 'Users of network <strong>'.$_POST[ 'networkBase' ].'/'.$_POST[ 'networkCidr' ].'</strong> was messaged about changes.';
+if ( !empty( $_POST[ 'notify_only' ] ) && !empty( $_POST[ 'notificationMessage' ] ) ) {
+  $nwId = $_POST[ 'networkId' ];
+  $nwInfo = $nwManager->getNetworkInfo( $nwId );
+  $mail_handler = new MailHandler();
+  $mail_handler->notifyNetworkUsers( $nwId, $nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $_POST['notificationMessage'], $_SESSION['user_data']['usr_id'] );
+
+  $alert_message = 'Users of network <strong>'.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ].'</strong> was messaged about changes.';
   $alert_type = 'success';
 }
 
-// TODO
 if (isset( $_POST[ 'edit_description' ] )) {
-  // edit nw_description
-  // reload and generate popupnotification of action
   $nwManager->updateNetwork($_POST[ 'networkId' ], $_POST[ 'networkDescription' ]);
 
   $alert_message = 'The description of network <strong>'.$_POST[ 'networkBase2' ].'/'.$_POST[ 'networkCidr2' ].'</strong> was updated.';
