@@ -25,7 +25,7 @@ if (isset( $_POST[ 'add_user' ] )) {
   $alert_message = 'Server generated pwd is <strong>'.$not_very_rnd_pwd.'</strong>. Testing only. Remove this alert and mail to user instead.';
   $alert_type = 'warning';
 
-  $userManager->addUser(
+  $user_id = $userManager->addUser(
       $_POST[ 'userName' ],
       $not_very_rnd_pwd, 
       1, //<- Server has set the pwd
@@ -33,6 +33,10 @@ if (isset( $_POST[ 'add_user' ] )) {
       $_POST[ 'lastName' ],
       $_POST[ 'email' ]
   );
+
+  $user = $userManager->getUserInfo($_POST['userId']);
+  $message = 'Here the details yo registred wif: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'];
+  $mailHandler->addUser( $user['usr_id'], $message, $_SESSION['user_data']['usr_id'] );
 }
 
 if (isset( $_POST[ 'edit_user' ] )) {

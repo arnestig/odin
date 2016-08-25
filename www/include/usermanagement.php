@@ -6,10 +6,24 @@ include_once( "odin.php" );
 class UserManagement extends Odin
 {
 
+    // Returns user id of added user
     public function addUser( $username, $password, $serverpwd, $firstname, $lastname, $email )
     {
+        $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $username, $password, $serverpwd, $firstname, $lastname, $email ) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['add_user'] .'";');
+        $results = $sth->fetch( PDO::FETCH_COLUMN, 0 );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results['usr_id'];
     }
 
     public function removeUser( $user_id )

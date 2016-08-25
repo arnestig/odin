@@ -36,10 +36,15 @@ create or replace function add_user(
     firstname varchar(45), 
     lastname varchar(45), 
     email varchar(128) )
-returns void as $$
+returns SETOF refcursor AS $$
+declare
+ref1 refcursor;
 begin
     --perform isSessionValid(ticket);
     insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email );
+open ref1 for
+    SELECT * FROM users WHERE usr_id = SCOPE_IDENTITY();
+return next ref1;
 end;
 $$ language plpgsql;
 alter function add_user(varchar,varchar,varchar,smallint,varchar,varchar,varchar) owner to dbaodin;
