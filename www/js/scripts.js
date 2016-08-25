@@ -155,12 +155,15 @@ $(document).ready(function() {
         var firstName = $(this).data('firstname');
         var lastName = $(this).data('lastname');
         var email = $(this).data('email');
+        var privileges = $(this).data('privileges');
 
         $(".form-group #userId").val( userId );
         $(".form-group #userName").val( userName );
         $(".form-group #firstName").val( firstName );
         $(".form-group #lastName").val( lastName );
         $(".form-group #email").val( email );
+        $(".form-group #privileges").val( privileges ).change();
+
     });    
 
     $(document).on("click", ".open-RemoveUserDialog", function () {
