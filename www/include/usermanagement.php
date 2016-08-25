@@ -24,10 +24,10 @@ class UserManagement extends Odin
         $sth->execute( array( $this->getTicket(), $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email ) );
     }
 
-    public function adminUpdateUser( $user_id, $username, $firstname, $lastname, $email )
+    public function adminUpdateUser( $user_id, $username, $firstname, $lastname, $email, $privileges )
     {
-        $sth = $this->dbcon->prepare( "SELECT admin_update_user( ?, ?, ?, ?, ?, ? )" );
-        $sth->execute( array( $this->getTicket(), $user_id, $username, $firstname, $lastname, $email ) );
+        $sth = $this->dbcon->prepare( "SELECT admin_update_user( ?, ?, ?, ?, ?, ?, ? )" );
+        $sth->execute( array( $this->getTicket(), $user_id, $username, $firstname, $lastname, $email, $privileges ) );
     }
     
     public function getUserInfo( $user_id )
