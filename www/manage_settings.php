@@ -4,6 +4,11 @@ include_once('include/session.php'); # always include this file first
 include_once('include/html_frame.php');
 include_once('include/settings.php');
 
+if ($_SESSION['user_data']['usr_privileges'] < 2) {
+  header('Location: overview.php');
+  exit;
+}
+
 $settings = new Settings();
 $available_groups = $settings->getSettingGroups();
 $cur_s_group = $available_groups[0];
