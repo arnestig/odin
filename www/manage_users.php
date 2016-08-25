@@ -115,7 +115,7 @@ function generate_user_list() {
     // To prevent user (admin) from editing him-/herself and changing admin levels.
     // or editing enyone with higher privileges
     if ( ($row['usr_id'] != $_SESSION['user_data']['usr_id']) &&
-          ($row['usr_privileges'] < $_SESSION['user_data']['usr_privileges'] ) ) {
+          ($row['usr_privileges'] <= $_SESSION['user_data']['usr_privileges'] ) ) {
       $edit_cell = '<a class="open-EditUserDialog" 
                       data-userid="'.$row[ 'usr_id' ].'" 
                       data-username="'.$row[ 'usr_usern' ].'" 
