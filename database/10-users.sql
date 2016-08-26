@@ -28,6 +28,7 @@ insert into users (usr_id,usr_usern,usr_pwd)values(0,'nobody','null');
 -- 'User' stored procedures
 --
 -- add_user
+DROP FUNCTION IF EXISTS add_user(varchar,varchar,varchar,smallint,varchar,varchar,varchar);
 create or replace function add_user(
     ticket varchar(255), 
     username varchar(45), 
@@ -36,15 +37,12 @@ create or replace function add_user(
     firstname varchar(45), 
     lastname varchar(45), 
     email varchar(128) )
-returns SETOF refcursor AS $$
-declare
-ref1 refcursor;
+returns smallint AS $$
+declare res smallint;
 begin
     --perform isSessionValid(ticket);
-    insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email );
-open ref1 for
-    SELECT * FROM users WHERE usr_id = SCOPE_IDENTITY();
-return next ref1;
+    insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email ) RETURNING usr_id into res;
+    return res;
 end;
 $$ language plpgsql;
 alter function add_user(varchar,varchar,varchar,smallint,varchar,varchar,varchar) owner to dbaodin;
