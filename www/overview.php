@@ -177,9 +177,13 @@ function show_host_row_view($row, $cur_reservations) {
     $checkbox .= '<i class="glyphicon glyphicon-exclamation-sign"></i>';
     $td_tooltip = ' title="Another user reserved the host."';
   }
+  if ($_SESSION[ 'user_data' ][ 'usr_id' ] == $row['usr_id']) {
+    $checkbox = '';
+  }
 
   $admin_rm_lease = '';
-  if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0 && ($row['status'] == 2 || $row['status'] == 8)) {
+  if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0 && 
+    ($row['status'] == 2 || $row['status'] == 8)) {
     $admin_rm_lease = '<td>
                         <form class="rm-lease" method="POST" action="overview.php">
                           <button class="btn btn-small btn-danger" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
@@ -188,6 +192,10 @@ function show_host_row_view($row, $cur_reservations) {
                           </button>
                         </form>
                       </td>';    
+  }
+  $user_email_html = '-';
+  if (!empty($row['usr_email'])) {
+    $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].' ('.$row['usr_firstn'].' '.$row['usr_lastn'].')</a>';
   }
 
 
@@ -240,8 +248,8 @@ function show_host_row_view($row, $cur_reservations) {
                             </div>
                             '.$row['host_description'].'
                             <div class="text-head-gutter"></div>
-                            <h5>User ID</h5>
-                            <a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].'</a>
+                            <h5>User</h5>
+                            '.$user_email_html.'
                           </div>
                           <div class="col-lg-3">
                             <h5>Last notified</h5>
