@@ -146,7 +146,7 @@ echo '
             </div>
             <div class="row">
               <div class="col-lg-1 form-group">
-                <input type="checkbox" name="terms_and_conditions" class="form-control">
+                <input type="checkbox" name="terms_and_conditions" class="form-control" style="width: auto; height: auto;">
               </div>
               <div class="col-lg-11 form-group">
                 <p>I have read, understood and agree to these <a href="#" data-toggle="modal" data-target="#termsAndConditionsModal">terms and conditions</a></p>
