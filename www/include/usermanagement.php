@@ -12,6 +12,7 @@ class UserManagement extends Odin
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $username, $password, $serverpwd, $firstname, $lastname, $email ) );
+
         $userid = $sth->fetch();
         $this->dbcon->commit();
         unset($sth);
