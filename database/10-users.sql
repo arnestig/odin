@@ -16,7 +16,8 @@ create table users (
         usr_email varchar(128),
         usr_privileges smallint default 0,
         usr_session_key varchar(255),
-        usr_last_touch timestamp
+        usr_last_touch timestamp,
+        usr_is_deleted boolean default false
         );
 create unique index uni_users_usern on users(usr_usern);
 create unique index uni_usr_session_key on users(usr_session_key);
@@ -114,7 +115,7 @@ begin
     host_last_notified = null
     WHERE usr_id = userid;
     
-    DELETE FROM users WHERE usr_id = userid;
+    UPDATE users SET usr_is_deleted = true WHERE usr_id = userid;
 end;
 $$ language plpgsql;
 alter function remove_user(varchar,smallint) owner to dbaodin;
