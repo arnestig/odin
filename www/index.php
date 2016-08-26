@@ -16,8 +16,10 @@ if ( isset($_POST[ 'submit' ]) && !empty($_POST[ 'submit' ]) ) {
     if ($user->login($name,$pwd)) {
       if ($_SESSION[ 'user_data' ][ 'server_gen_pwd' ] === true) {
         header('Location: change_password.php');
+        exit;
       } else {
         header('Location: overview.php');  
+        exit;
       }  
     } else {
       $alert_msg = 'No user with given credentials exist.';
@@ -88,11 +90,8 @@ echo '
             </div>'
             .alert($alert_msg, $alert_type).
             '<div class="form-group row">
-              <div class="col-lg-6">
-                <input type="checkbox" id="login-chkbx" name="login-chkbx">Remember me
-              </div>
-              <div class="col-lg-6">
-                <input type="submit" name="submit" value="Log in" class="btn btn-info pull-right">
+              <div class="col-lg-12">
+                <input type="submit" name="submit" value="LOG IN" class="btn btn-info btn-block">
               </div>
             </div>
           </form>
