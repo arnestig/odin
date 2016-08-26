@@ -34,8 +34,8 @@ if (isset( $_POST[ 'add_user' ] )) {
       $_POST[ 'email' ]
   );
 
-  $user = $userManager->getUserInfo($_POST['userId']);
-  $message = 'Here the details yo registred wif: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'];
+  $user = $userManager->getUserInfo($user_id);
+  $message = 'Here the details yo registred wif: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'].' and here is the temporary password: '.$not_very_rnd_pwd;
   $mailHandler->addUser( $user['usr_id'], $message, $_SESSION['user_data']['usr_id'] );
 }
 
