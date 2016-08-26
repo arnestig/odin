@@ -12,18 +12,11 @@ class UserManagement extends Odin
         $this->dbcon->beginTransaction();
         $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $username, $password, $serverpwd, $firstname, $lastname, $email ) );
-        $cursors = $sth->fetch();
-        $sth->closeCursor();
-
-        // get each result set
-        $results = array();
-        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['add_user'] .'";');
-        $results = $sth->fetch( PDO::FETCH_COLUMN, 0 );
-        $sth->closeCursor();
+        $userid = $sth->fetch();
         $this->dbcon->commit();
         unset($sth);
-
-        return $results['usr_id'];
+        
+        return $userid[ 0 ];
     }
 
     public function removeUser( $user_id )
