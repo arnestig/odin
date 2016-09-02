@@ -14,7 +14,7 @@ if ( isset($_POST[ 'submit' ]) && !empty($_POST[ 'submit' ]) ) {
     $name = $_POST['username'];
     $pwd = $_POST['password'];
     if ($user->login($name,$pwd)) {
-      if ($_SESSION[ 'user_data' ][ 'server_gen_pwd' ] === 1) {
+      if ($_SESSION[ 'user_data' ][ 'server_gen_pwd' ] === true) {
         header('Location: change_password.php');
       } else {
         header('Location: overview.php');  
