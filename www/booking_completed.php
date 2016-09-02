@@ -5,7 +5,7 @@ include_once('include/html_frame.php');
 
 $frame = new HTMLframe();
 $frame->doc_start("Booking completed");
-$frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_usern' ]);
+$frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 ?>
 

@@ -289,7 +289,7 @@ function basket() {
 $frame = new HTMLframe();
 //Starts generating html
 $frame->doc_start("Hosts");
-$frame->doc_nav("Overview", $_SESSION[ 'user_data' ][ 'usr_usern' ]);
+$frame->doc_nav("Overview", $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn']);
 
 
 

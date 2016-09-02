@@ -217,7 +217,7 @@ echo '
 <!-- Modal DELETE NETWORK code end -->
 ';
 
-$frame->doc_nav("Networks", $_SESSION[ 'user_data' ][ 'usr_usern' ]);
+$frame->doc_nav('Networks', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 echo '
     <div class="container">

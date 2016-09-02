@@ -59,7 +59,6 @@ class User
                 $user_data = $user;
             }
         }
-        //TODO: change username to fullname in navbar?
         $_SESSION[ 'user_data' ] = $user_data;
         $nw = $nwManager->getNetworks();
         $_SESSION[ 'cur_network_id' ] = $nw[0][ 'nw_id' ];

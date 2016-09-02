@@ -313,7 +313,7 @@ echo '
 <!-- Modal DELETE USER code end -->
 ';
 
-$frame->doc_nav("Users", $_SESSION[ 'user_data' ][ 'usr_usern' ] );
+$frame->doc_nav('Users', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 echo '
     <div class="container">

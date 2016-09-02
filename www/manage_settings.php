@@ -102,7 +102,7 @@ function displaySettings($s_group) {
 
 $frame = new HTMLframe();
 $frame->doc_start("Configure Settings");
-$frame->doc_nav("Settings", $_SESSION[ 'user_data' ][ 'usr_usern' ] );
+$frame->doc_nav('Settings', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 
 echo '

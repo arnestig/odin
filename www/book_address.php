@@ -30,8 +30,7 @@ if (isset($_POST[ 'book_addresses' ])) {
 
 $frame = new HTMLframe();
 $frame->doc_start("Book Address");
-$frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_usern' ]);
-
+$frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 
 function gen_address_form() {

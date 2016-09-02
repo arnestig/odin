@@ -62,7 +62,7 @@ function gen_host_table($user_hosts) {
 $frame = new HTMLframe();
 $frame->doc_start("My addresses");
 
-$frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_usern' ] );
+$frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 
 echo '
