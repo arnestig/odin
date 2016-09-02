@@ -83,11 +83,11 @@ alter function get_setting_groups(varchar) owner to dbaodin;
 
 -- add every odin settings_group here
 insert into settings_group( sg_name, sg_value, sg_description )
-values( 'notifications', 'Notifications', 'Make sure you configure this to have mail sent to yo peeps.' );
+values( 'notifications', 'Notifications', 'Notification (e-mail) configuration of Odin.' );
 insert into settings_group( sg_name, sg_value, sg_description )
-values( 'user_registration', 'User registration', 'Set this if you want users to be able to register themselves.' );
+values( 'user_registration', 'User registration', 'Set this if you want users to be able to register accounts themselves.' );
 insert into settings_group( sg_name, sg_value, sg_description )
-values( 'hosts', 'Hosts', 'All settings concerning lease times etc mm osv josåatte.' );
+values( 'hosts', 'Hosts', 'Settings for hosts, how long the hosts are leased, when expiry emails are sent, host scan interval (slave setting),  etc.' );
 
 -- add all odin settings here
 --- Notification settings
