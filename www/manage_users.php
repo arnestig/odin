@@ -206,7 +206,7 @@ echo '
             </div>
             <div class="form-group col-lg-12">
               <label for="userName">Username</label>
-              <input type="text" class="form-control" id="userName" name="userName" placeholder="Username">
+              <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" autofocus>
             </div>
             <div class="form-group col-lg-6">
               <label for="firstName">First name</label>
@@ -307,7 +307,7 @@ echo '
               </div>
               <div class="form-group" class="col-lg-12">
                 <label for="messageToUser">Message to user</label>
-                <textarea type="text" class="form-control col-lg-12" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent."></textarea>
+                <textarea type="text" class="form-control col-lg-12" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent." autofocus></textarea>
               </div>
           
           </div>
