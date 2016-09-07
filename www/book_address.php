@@ -4,11 +4,17 @@ include_once('include/session.php'); # always include this file first
 include_once('include/html_frame.php');
 include_once('include/nwmanagement.php');
 
-
+// Prohibits direct access to book address if no addresses are booked
+$nwmanagement = new NetworkManagement();
+$reserved = $nwmanagement->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
+if (empty($reserved)) {
+  header('Location: overview.php');
+  exit;
+}
 // The Booking Controller
 // TODO: check that posted IPs match those in sesh var
 if (isset($_POST[ 'book_addresses' ])) {
-  $nwmanagement = new NetworkManagement();
+ 
 
   $nbr_of_items = $_POST[ 'nbr_of_ips' ];
   $host_ip = '';
