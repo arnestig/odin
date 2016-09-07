@@ -16,10 +16,11 @@ $(document).ready(function() {
                 dataType: 'text',
                 data: 'host=' + host,
                 //very bad with async false....
+                // TODO: rewrite with callback
                 async: false,
                 success: function( response ) {
                     theLog = response;
-                    console.log(theLog);
+                    //console.log(theLog);
                 }
             });
             //console.log(theLog);
@@ -31,9 +32,15 @@ $(document).ready(function() {
     $('td.check-lease-opt').on('click', 'input:checkbox', function() {
         var ip = this.id.substr(8);
         if ($(this).is(':checked')) {
+            $('p[id="ciEmpty"]').remove();
             $('#leaseBasket').append('<p id="ci' + ip + '"">' + ip + '</p>');
+            $('input[id="leasesActionBtn"]').show(300);
         } else {
             $('p[id="ci' + ip + '"]').remove();
+        }
+        if ( $('#leaseBasket').children().length < 1 ) {
+            $('#leaseBasket').append('<p id="ciEmpty">Nothing selected</p>');
+            $('input[id="leasesActionBtn"]').hide(300);
         }
     });
 
@@ -51,20 +58,24 @@ $(document).ready(function() {
             },
             url: 'overview_handler.php',
             success : function(data){
-                console.log(data);
+                var ips = data.ipList;
                 if (action && !data.opStatus) {
                     alert("Another user reserved this host. The host might be available in a few minutes again if the user don't book the address.");
                     location.reload(true);
                     $element.prop('checked', false);
                 } else if (action && data.opStatus) {
-                    var ips = data.ipList;
                     var basketHtml = '';
                     for (i = 0; i < ips.length; i++) {
+                        $('a.bookAddrBtn').show();
                         basketHtml += '<p id="bi' + ips[i] + '" class="cart-item">' + ips[i] + '<span id="rm' + ips[i] + '" class="glyphicon glyphicon-remove cart-remove pull-right"></span><p>';
                     }
                     $('div#choosenAddr').html(basketHtml);
                 } else if (!action && data.opStatus) {
                     $('p[id="bi' + ip + '"]').remove();
+                    if (ips.length < 1) {
+                        $('a.bookAddrBtn').hide();
+                        $('div#choosenAddr').html('<p class="text-center">EMPTY</p>');
+                    }
                 }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -95,6 +106,10 @@ $(document).ready(function() {
                 var basketItem = 'p[id="bi' + ip + '"]';
                 $(checkbox).prop('checked', false);
                 $(basketItem).remove();
+                if (ips.length < 1) {
+                    $('a.bookAddrBtn').hide();
+                    $('div#choosenAddr').html('<p class="text-center">EMPTY</p>');
+                }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                 alert('Your request was not handled properly. Please try again.');
@@ -125,12 +140,23 @@ $(document).ready(function() {
                 $(target).hide('slow', function(){ 
                     $(target).remove(); 
                 });
+                if ( $(document).find('.book-address-container').length == 1 ) {
+                    var getUrl = window.location;
+                    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/";
+                    console.log(baseUrl);
+                    window.location.replace(baseUrl + 'overview.php');
+                }
             },
             error : function(XMLHttpRequest, textStatus, errorThrown) {
                 alert('Your request was not handled properly. Please try again.');
             }
         });
         
+    });
+
+    // Fix for autofocus in modals
+    $('.modal').on('shown.bs.modal', function() {
+        $(this).find('[autofocus]').focus();
     });
 
     // UserIPS
