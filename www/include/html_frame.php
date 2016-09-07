@@ -122,7 +122,6 @@ class HTMLframe {
           </button>  
         </div>
         <a class="navbar-brand" href="overview.php"><img src="logo.php?small" alt="Odin - Logo"></a>
-          
         <ul class="nav navbar-nav">
           <li';
     if ($active === 'Overview') echo ' class="active"'; 

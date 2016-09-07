@@ -7,6 +7,8 @@ body { padding-bottom: 40px; }
 	   		border-radius: 0 !important;
 }
 
+.logo-img { max-width: 80px; max-height: 20px; }
+
 .history h6 { cursor: pointer; padding: 2px; border: 1px solid black; }
 table .pop-table { width: 500px;}
 .pop-table tr th { padding: 3px; }
