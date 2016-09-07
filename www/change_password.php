@@ -63,7 +63,7 @@ echo '
               <label for="inputPasswordRepeat">Repeat Password</label>
               <input type="password" name="reg_password_repeat" class="form-control" id="inputPasswordRepeat" placeholder="Password">
             </div>
-            <input type="submit" name="change_password" value="Register and log in" class="btn btn-default"/>
+            <input type="submit" name="change_password" value="Continue" class="btn btn-default"/>
           </form>
         </div>
       </div>
