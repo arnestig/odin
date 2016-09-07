@@ -110,6 +110,7 @@ class HTMLframe {
           '.$this->userNav($active, $username).'
         </ul>
 
+        <!--
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <form class="navbar-form" role="search">
             <div class="input-group">
@@ -119,7 +120,7 @@ class HTMLframe {
               </div>
             </div>
           </form>
-        </div><!--/.nav-collapse -->
+        </div> -->
       </div>
     </nav>
     ';
