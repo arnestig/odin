@@ -34,9 +34,8 @@ if ( isset($_POST[ 'submit' ]) && !empty($_POST[ 'submit' ]) ) {
 
 function userRegistration() {
   $settings = new Settings();
-  $allsettings = $settings->getSettings('user_registration');
-  foreach ( $allsettings as $setting ) {
-    if ($setting[ 's_name' ] === 'allow_user_registration' && $setting[ 's_value' ] !== '') {
+  $userreg_setting = $settings->getSettingValue('user_registration');
+  if ( $userreg_setting === 'checked' ) {
         echo '
         <div class="row">
           <div class="col-lg-offset-4 col-lg-4">
@@ -44,7 +43,6 @@ function userRegistration() {
             <p class="text-center"><a href="user_registration.php">Register here</a></p>
           </div>
         </div>';
-      }
   }
 }
 

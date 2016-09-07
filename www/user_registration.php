@@ -8,8 +8,8 @@ include_once('include/user.php');
 include_once('include/settings.php');
 
 $settings = new Settings();
-$user_reg = $settings->getSettings('user_registration');
-if ($user_reg[0]['s_value'] != 'checked') {
+$user_reg = $settings->getSettingValue('user_registration');
+if ($user_reg != 'checked') {
   header('Location: index.php');
 }
 

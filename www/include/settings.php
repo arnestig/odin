@@ -53,6 +53,25 @@ class Settings
 
         return $results;
     }
+
+    public function getSettingValue( $settings_name )
+    {
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT get_settings( ?, ? )" );
+        $sth->execute( array( '', $settings_name) );
+        $cursors = $sth->fetch();
+        $sth->closeCursor();
+
+        // get each result set
+        $results = array();
+        $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_settings'] .'";');
+        $results = $sth->fetchAll( PDO::FETCH_COLUMN, 3 );
+        $sth->closeCursor();
+        $this->dbcon->commit();
+        unset($sth);
+
+        return $results[ 0 ];
+    }
 }
 
 ?>
