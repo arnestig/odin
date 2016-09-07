@@ -7,17 +7,21 @@ class UserManagement extends Odin
 {
 
     // Returns user id of added user
-    public function addUser( $username, $password, $serverpwd, $firstname, $lastname, $email )
+    public function addUser( $username, $password, $serverpwd, $firstname, $lastname, $email, &$errmsg, &$new_usr_id )
     {
         $this->dbcon->beginTransaction();
-        $sth = $this->dbcon->prepare( "SELECT add_user( ?, ?, ?, ?, ?, ?, ? )" );
+        $result = false;
+        $sth = $this->dbcon->prepare( "SELECT * FROM add_user( ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $username, $password, $serverpwd, $firstname, $lastname, $email ) );
+        $sth->bindColumn( 1, $result, PDO::PARAM_BOOL|PDO::PARAM_INPUT_OUTPUT );
+        $sth->bindColumn( 2, $errmsg, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT );
+        $sth->bindColumn( 3, $new_usr_id, PDO::PARAM_INT|PDO::PARAM_INPUT_OUTPUT );
 
-        $userid = $sth->fetch();
+        $sth->fetch( PDO::FETCH_BOUND );
         $this->dbcon->commit();
+
         unset($sth);
-        
-        return $userid[ 0 ];
+        return $result;
     }
 
     public function removeUser( $user_id )
@@ -26,16 +30,34 @@ class UserManagement extends Odin
         $sth->execute( array( $this->getTicket(), $user_id ) );
     }
 
-    public function updateUser( $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email )
+    public function updateUser( $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email, &$errmsg )
     {
-        $sth = $this->dbcon->prepare( "SELECT update_user( ?, ?, ?, ?, ?, ?, ?, ? )" );
+        $this->dbcon->beginTransaction();
+        $result = false;
+        $sth = $this->dbcon->prepare( "SELECT * FROM update_user( ?, ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $user_id, $username, $password, $serverpwd, $firstname, $lastname, $email ) );
+        $sth->bindColumn( 1, $result, PDO::PARAM_BOOL|PDO::PARAM_INPUT_OUTPUT );
+        $sth->bindColumn( 2, $errmsg, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT );
+        $sth->fetch( PDO::FETCH_BOUND );
+        $this->dbcon->commit();
+
+        unset($sth);
+        return $result;
     }
 
-    public function adminUpdateUser( $user_id, $username, $firstname, $lastname, $email, $privileges )
+    public function adminUpdateUser( $user_id, $username, $firstname, $lastname, $email, $privileges, &$errmsg )
     {
-        $sth = $this->dbcon->prepare( "SELECT admin_update_user( ?, ?, ?, ?, ?, ?, ? )" );
+        $this->dbcon->beginTransaction();
+        $result = false;
+        $sth = $this->dbcon->prepare( "SELECT * FROM admin_update_user( ?, ?, ?, ?, ?, ?, ? )" );
         $sth->execute( array( $this->getTicket(), $user_id, $username, $firstname, $lastname, $email, $privileges ) );
+        $sth->bindColumn( 1, $result, PDO::PARAM_BOOL|PDO::PARAM_INPUT_OUTPUT );
+        $sth->bindColumn( 2, $errmsg, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT );
+        $sth->fetch( PDO::FETCH_BOUND );
+        $this->dbcon->commit();
+
+        unset($sth);
+        return $result;
     }
     
     public function getUserInfo( $user_id )

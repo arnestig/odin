@@ -22,21 +22,26 @@ $alert_type = '';
 if (isset( $_POST[ 'add_user' ] )) {
   // TODO: Change pwd-gen to something safe and useful
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
-  $alert_message = 'Server generated pwd is <strong>'.$not_very_rnd_pwd.'</strong>. Testing only. Remove this alert and mail to user instead.';
-  $alert_type = 'warning';
 
-  $user_id = $userManager->addUser(
+  if ( $userManager->addUser(
       $_POST[ 'userName' ],
       $not_very_rnd_pwd, 
       1, //<- Server has set the pwd
       $_POST[ 'firstName' ],
       $_POST[ 'lastName' ],
-      $_POST[ 'email' ]
-  );
-
-  $user = $userManager->getUserInfo($user_id);
-  $message = 'Here the details yo registred wif: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'].' and here is the temporary password: '.$not_very_rnd_pwd;
-  $mailHandler->addUser( $user['usr_id'], $message, $_SESSION['user_data']['usr_id'] );
+      $_POST[ 'email' ],
+      $errmsg,
+      $user_id
+  ) == true ) {
+    $user = $userManager->getUserInfo($user_id);
+    $message = 'Here the details you registred with: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'].' and here is the temporary password: '.$not_very_rnd_pwd;
+    $mailHandler->addUser( $user['usr_id'], $message, $_SESSION['user_data']['usr_id'] );
+    $alert_message = 'Server generated pwd is <strong>'.$not_very_rnd_pwd.'</strong>. Testing only. Remove this alert and mail to user instead.';
+    $alert_type = 'warning';
+  } else {
+    $alert_message = 'Error when adding new user: '.$errmsg;
+    $alert_type = 'danger';
+  }
 }
 
 if (isset( $_POST[ 'edit_user' ] )) {
@@ -49,17 +54,21 @@ if (isset( $_POST[ 'edit_user' ] )) {
     $mailHandler->userEdited( $_POST['userId'], $message, $_SESSION['user_data']['usr_privileges'] );
   }
 
-  $userManager->adminUpdateUser(
+  if ( $userManager->adminUpdateUser(
     $_POST[ 'userId' ],
     $_POST[ 'userName' ],
     $_POST[ 'firstName' ],
     $_POST[ 'lastName' ],
     $_POST[ 'email' ],
-    $_POST[ 'admin_privileges' ]);
+    $_POST[ 'admin_privileges' ], $errmsg ) == true ) {
+      // generate ui-confirmation
+      $alert_message = 'Profile info for user <strong>'.$_POST['userName'].'</strong> was successfully updated.';
+      $alert_type = 'success';
+  } else {
+      $alert_message = 'Error when updating user: '.$errmsg;
+      $alert_type = 'danger';
+  }
 
-  // generate ui-confirmation
-  $alert_message = 'Profile info for user <strong>'.$_POST['userName'].'</strong> was successfully updated.';
-  $alert_type = 'success';
 }
 
 // TODO: MAIL instead. No pwd actually is mailed or changed atm

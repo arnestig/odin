@@ -37,13 +37,20 @@ create or replace function add_user(
     serverpwd boolean,
     firstname varchar(45), 
     lastname varchar(45), 
-    email varchar(128) )
-returns smallint AS $$
-declare res smallint;
+    email varchar(128),
+    OUT status boolean,
+    OUT errmsg varchar,
+    OUT new_usr_id smallint )
+returns record AS $$
 begin
+    status = true;
     --perform isSessionValid(ticket);
-    insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email ) RETURNING usr_id into res;
-    return res;
+    insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email ) RETURNING usr_id into new_usr_id;
+    EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'Username already in use';
+        errmsg = 'Username already in use';
+        status = false;
+        new_usr_id = 0;
 end;
 $$ language plpgsql;
 alter function add_user(varchar,varchar,varchar,boolean,varchar,varchar,varchar) owner to dbaodin;
@@ -73,10 +80,17 @@ create or replace function update_user(
     serverpwd boolean,
     firstname varchar(45),
     lastname varchar(45),
-    email varchar(128) )
-returns void as $$
+    email varchar(128),
+    OUT status boolean,
+    OUT errmsg varchar)
+returns record as $$
 begin
+    status = true;
     UPDATE users SET usr_usern = username, usr_pwd = crypt( password, gen_salt( 'md5' ) ), server_gen_pwd = serverpwd, usr_firstn = firstname, usr_lastn = lastname, usr_email = email WHERE usr_id = userid;
+    EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'Username already in use';
+        errmsg = 'Username already in use';
+        status = false;
 end;
 $$ language plpgsql;
 alter function update_user(varchar,smallint,varchar,varchar,boolean,varchar,varchar,varchar) owner to dbaodin;
@@ -89,10 +103,17 @@ create or replace function admin_update_user(
     firstname varchar(45),
     lastname varchar(45),
     email varchar(128),
-    privileges smallint )
-returns void as $$
+    privileges smallint,
+    OUT status boolean,
+    OUT errmsg varchar)
+returns record as $$
 begin
+    status = true;
     UPDATE users SET usr_usern = username, usr_firstn = firstname, usr_lastn = lastname, usr_email = email, usr_privileges = privileges WHERE usr_id = userid;
+    EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'Username already in use';
+        errmsg = 'Username already in use';
+        status = false;
 end;
 $$ language plpgsql;
 alter function admin_update_user(varchar,smallint,varchar,varchar,varchar,varchar,smallint) owner to dbaodin;
