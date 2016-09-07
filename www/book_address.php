@@ -14,6 +14,7 @@ if (isset($_POST[ 'book_addresses' ])) {
   $host_ip = '';
   $host_name = '';
   $host_desc = '';
+  $_SESSION['booking_success'] = array();
 
   for ($i = 0; $i < $nbr_of_items; $i++) {
 
@@ -22,10 +23,10 @@ if (isset($_POST[ 'book_addresses' ])) {
     $host_desc = $_POST[ 'hostDescription'.$i ];
 
     if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
-      header('Location: booking_completed.php');
-           //echo 'ouafsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddh';
+      $_SESSION['booking_success'][] = $host_ip;
     }
   }
+  header('Location: userIPs.php');
 }
 
 $frame = new HTMLframe();
@@ -79,7 +80,7 @@ function gen_form_footer($index) {
           <div class="col-lg-offset-2 col-lg-6 pull-right">
             <a class="btn btn-default" href="overview.php" role="button">Cancel</a>
             <input type="hidden" name="nbr_of_ips" value="'.$index.'">
-            <input type="submit" name="book_addresses" value="Book Addresses" class="btn btn-success">
+            <input type="submit" name="book_addresses" value="Book Addresses" class="btn btn-info">
           </div>
         </div>
   ';
