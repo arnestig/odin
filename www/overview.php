@@ -272,12 +272,11 @@ function show_host_row_view($row, $cur_reservations) {
                   </tr>';
 }
 
-// TODO: redo...
-$empty_basket = '';
 function basket() {
   $nw_manager = new NetworkManagement();
   $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
   $content = '';
+  $empty_basket = '';
   foreach ($cur_reservations as $ip) {
     //$content .= '<p class="basket-item" id="bi'.$ip.'">'.$ip.'</p>
     //';
@@ -288,7 +287,19 @@ function basket() {
     $empty_basket = ' style="display:none;"';
     $content = '<p class="text-center">EMPTY</p>';
   }
-  return $content;
+  $basket = '<div class="affix fixed-right" id="choosenAddrDiv">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <p>Choosen addresses</p>
+              </div>
+              <div class="panel-body" id="choosenAddr">
+                '.$content.'
+              </div>
+              <a href="book_address.php" role="button" class="btn btn-primary bookAddrBtn"'.$empty_basket.'>Book address(es)</a>
+            </div>
+          </div>
+        </div>';
+  return $basket;
 }
 
 //---------------------------------------------------
@@ -436,18 +447,7 @@ echo '
 
     <!-- FIXED RIGHT PANEL AND CHECKBOX FORM-BUTTON - START -->
         <div class="col-lg-3">
-          <div class="affix fixed-right" id="choosenAddrDiv">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <p>Choosen addresses</p>
-              </div>
-              <div class="panel-body" id="choosenAddr">
-                '.basket().'
-              </div>
-              <a href="book_address.php" role="button" class="btn btn-primary bookAddrBtn"'.$empty_basket.'>Book address(es)</a>
-            </div>
-          </div>
-        </div>
+          '.basket().'
     <!-- FIXED RIGHT PANEL AND FORM-BUTTON - END -->
 
       </div>
