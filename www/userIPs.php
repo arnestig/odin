@@ -7,6 +7,9 @@ include_once('include/nwmanagement.php');
 
 $nw_manager = new NetworkManagement();
 
+$alert_message = '';
+$alert_type = '';
+
 if (!empty($_POST[ 'edit_host' ])) {
   $nw_manager->updateHost( $_POST[ 'userHostIp2' ], 
                           $_SESSION[ 'user_data' ][ 'usr_id' ], 
@@ -15,17 +18,42 @@ if (!empty($_POST[ 'edit_host' ])) {
 }
 
 if (!empty( $_POST[ 'mod_leases' ] )) {
+  $alert_message = 'Your leases on host(s): <strong>';
   if ( $_POST[ 'lease_option' ] === 'extend' ) {
+    //TODO: check if lease was actually renewed or terminated...
     foreach ($_POST[ 'ip_list' ] as $k => $v) {
       $nw_manager->extendLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+      $alert_message .= $v.', ';
     }
+    $alert_message .= '</strong>was successfully extended.';
+    $alert_type = 'success';
   } else {
     foreach ($_POST[ 'ip_list' ] as $k => $v) {
       $nw_manager->terminateLease($v, $_SESSION[ 'user_data' ][ 'usr_id' ]);
+      $alert_message .= $v.', ';
     }
+    $alert_message .= '</strong>was successfully terminated.';
+    $alert_type = 'info';
   }
 }
 
+if (!empty($_SESSION['booking_success'])) {
+  $alert_message = 'The host(s): <strong>';
+  foreach ($_SESSION['booking_success'] as $ip) {
+    $alert_message .= $ip.', ';
+  }
+  $alert_message .= '</strong> was successfully booked.';
+  $alert_type = 'success';
+  unset($_SESSION['booking_success']);
+}
+
+$alert_html = '';
+if ($alert_message != '' && $alert_type != '') {
+  $alert_html = '<div class="alert alert-'.$alert_type.' fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            '.$alert_message.'
+          </div>';
+}
 
 $user_hosts = $nw_manager->getUserHosts( $_SESSION[ 'user_data' ][ 'usr_id' ] );
 
@@ -73,6 +101,7 @@ echo '
           
           <div class="row">
             <div class="col-lg-12">
+              '.$alert_html.'
               <h3>My reservations <i class="glyphicon glyphicon-th-list"></i></h3>
               <p>Here you can view the status for your reserved addresses, and extend lapsing reservations or terminate your lease.</p>
             </div>
@@ -109,6 +138,7 @@ echo '
                 <h4>Choosen addresses</h4>
               </div>
               <div class="panel-body" id="leaseBasket">
+                <p id="ciEmpty">Nothing selected</p>
               </div>
               <div class="panel-footer">
                 <div class="form-group">
@@ -121,7 +151,7 @@ echo '
                   </div>
                 </div>
                 <div class="form-group">
-                  <input role="button" type="submit" class="btn btn-info" name="mod_leases" value="Execute">
+                  <input id="leasesActionBtn" role="button" type="submit" class="btn btn-info btn-block" name="mod_leases" value="Execute" style="display:none;">
                 </div>
               </div>
             </div>
@@ -151,11 +181,11 @@ echo '
               </div>
               <div class="form-group">
                 <label for="userHostName">Host name</label>
-                <input type="text" class="form-control" id="userHostName" name="userHostName" value=""/>
+                <input type="text" class="form-control" id="userHostName" name="userHostName" value="" required pattern="\S"/>
               </div>
               <div class="form-group">
                 <label for="userHostDescription">Host description</label>
-                <textarea class="form-control" rows="3" id="userHostDescription" name="userHostDescription" value="" placeholder="Description of host"></textarea>
+                <textarea class="form-control" rows="3" id="userHostDescription" name="userHostDescription" value="" placeholder="Description of host" required pattern="\S"></textarea>
               </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
