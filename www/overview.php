@@ -272,7 +272,8 @@ function show_host_row_view($row, $cur_reservations) {
                   </tr>';
 }
 
-
+// TODO: redo...
+$empty_basket = '';
 function basket() {
   $nw_manager = new NetworkManagement();
   $cur_reservations = $nw_manager->getReserved( $_SESSION[ 'user_data' ][ 'usr_id' ] );
@@ -282,6 +283,10 @@ function basket() {
     //';
     $content .= '<p id="bi'.$ip.'" class="cart-item">'.$ip.'<span id="rm'.$ip.'" class="glyphicon glyphicon-remove cart-remove pull-right"></span><p>
     ';
+  }
+  if (sizeof($cur_reservations) == 0) {
+    $empty_basket = ' style="display:none;"';
+    $content = '<p class="text-center">EMPTY</p>';
   }
   return $content;
 }
@@ -439,7 +444,7 @@ echo '
               <div class="panel-body" id="choosenAddr">
                 '.basket().'
               </div>
-              <a href="book_address.php" role="button" class="btn btn-primary bookAddrBtn">Book address(es)</a>
+              <a href="book_address.php" role="button" class="btn btn-primary bookAddrBtn"'.$empty_basket.'>Book address(es)</a>
             </div>
           </div>
         </div>
