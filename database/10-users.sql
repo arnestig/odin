@@ -29,7 +29,6 @@ insert into users (usr_id,usr_usern,usr_pwd)values(0,'nobody','null');
 -- 'User' stored procedures
 --
 -- add_user
-DROP FUNCTION IF EXISTS add_user(varchar,varchar,varchar,boolean,varchar,varchar,varchar);
 create or replace function add_user(
     ticket varchar(255), 
     username varchar(45), 

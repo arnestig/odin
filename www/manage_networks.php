@@ -18,11 +18,17 @@ $alert_type = '';
 
 if (isset( $_POST['add_network'] )) {
   if ( $_POST[ 'add_network' ] === 'Add network' ) {
-    $nwManager->addNetwork(
+    if ( $nwManager->addNetwork(
         $_POST[ 'nw_base' ],
         $_POST[ 'nw_cidr' ],
-        $_POST[ 'nw_description' ]
-      );
+        $_POST[ 'nw_description' ],
+        $errmsg ) == false ) {
+            $alert_message = 'Error when adding new network: '.$errmsg;
+            $alert_type = 'danger';
+        } else {
+            $alert_message = 'Added network '.$_POST[ 'nw_base' ].'/'.$_POST[ 'nw_cidr' ];
+            $alert_type = 'success';
+        }
   }    
 }
 

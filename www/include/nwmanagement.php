@@ -11,12 +11,28 @@ class NetworkManagement
         $this->dbcon->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function addNetwork( $network, $cidr, $description )
+    public function addNetwork( $network, $cidr_mask, $description, &$errmsg )
     {
-        $base = $this->findBaseInNetwork( $network, $cidr );
-        $sth = $this->dbcon->prepare( "SELECT add_network( ?, ?, ?, ?, ? )" );
-        $hosts = $this->getHostsInNetwork( $base, $cidr );
-        $sth->execute( array( '', $base, $cidr, $description, "{" . implode( ', ', $hosts ) . "}" ) );
+        // check if we have gotten a CIDR or netmask
+        if ( $this->isCIDR( $cidr_mask ) == false ) {
+            if ( $this->isNetmask( $cidr_mask ) == false ) {
+                // TODO: Exception here, we can't add this since it's not a valid CIDR or netmask
+            } else {
+                $cidr_mask = $this->mask2cidr( $cidr_mask );
+            }
+        }
+
+        $this->dbcon->beginTransaction();
+        $sth = $this->dbcon->prepare( "SELECT * FROM add_network( ?, ?, ?, ? )" );
+        $sth->execute( array( '', $network, $cidr_mask, $description ) );
+        $sth->bindColumn( 1, $result, PDO::PARAM_BOOL|PDO::PARAM_INPUT_OUTPUT );
+        $sth->bindColumn( 2, $errmsg, PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT );
+
+        $sth->fetch( PDO::FETCH_BOUND );
+        $this->dbcon->commit();
+
+        unset($sth);
+        return $result;
     }
 
     public function updateNetwork( $network_id, $network_description )
@@ -208,31 +224,17 @@ class NetworkManagement
         $result = $sth->fetch();
     }
 
-    public function nHostsInNetwork( $cidr )
+    private function isCIDR( $cidr )
     {
-        return pow( 2, ( 32 - $cidr ) ) - 2;
-    }
-
-    private function getHostsInNetwork( $network, $cidr )
-    {
-        $retval = array();
-        $base = ip2long( $this->findBaseInNetwork( $network, $cidr ) );
-        for( $i = 0; $i < $this->nHostsInNetwork( $cidr ) + 2; $i++ ) {
-            # we only want hosts, not base networks or broadcasts
-            $last_octet = end( explode( ".", long2ip( $base ) ) );
-            if ( $last_octet != 255 && $last_octet != 0 ) {
-                # insert our host to the return array
-                array_push( $retval, long2ip( $base ) ); 
-            }
-            $base++;
+        if( is_numeric( $cidr ) == true ) {
+            return ( $cidr < 32 && $cidr > 0 );
         }
-        return $retval;
+        return false;
     }
 
-    private function findBaseInNetwork( $network, $cidr )
+    private function isNetmask( $mask )
     {
-        $firsthost = ip2long( $network ) & ip2long( $this->cidr2mask( $cidr ) );
-        return long2ip( $firsthost );
+        return ip2long($mask);
     }
 
     private function mask2cidr( $mask )

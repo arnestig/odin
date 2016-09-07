@@ -36,17 +36,25 @@ create or replace function add_network(
     network_base varchar(45),
     cidr numeric(2),
     network_description varchar(2000),
-    hosts varchar[] )
-returns void as $$
+    OUT status boolean,
+    OUT errmsg varchar)
+returns record as $$
 declare
     new_nw_id smallint;
+    network_cidr inet;
 begin
-    insert into networks( nw_base, nw_cidr, nw_description ) values( network_base, cidr, network_description );
+    status = true;
+    network_cidr = (network_base || '/' || cidr)::inet;
+    insert into networks( nw_base, nw_cidr, nw_description ) SELECT host(network(network_cidr))::varchar, cidr, network_description;
     select into new_nw_id currval('sq_networks_id');  
-    insert into hosts( host_ip, nw_id, usr_id, token_usr ) SELECT *, new_nw_id, 0, 0 FROM unnest(hosts);
+    insert into hosts( host_ip, nw_id, usr_id, token_usr ) SELECT *, new_nw_id, 0, 0 FROM get_hosts_in_network( inet( network_cidr ) );
+    EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'Hosts already allocated in another network';
+        errmsg = 'Hosts already allocated in another network';
+        status = false;
 end;
 $$ language plpgsql;
-alter function add_network(varchar,varchar,numeric,varchar,varchar[]) owner to dbaodin;
+alter function add_network(varchar,varchar,numeric,varchar) owner to dbaodin;
 
 -- remove_network
 create or replace function remove_network(
@@ -374,3 +382,29 @@ return next ref1;
 end;
 $$ language plpgsql;
 alter function get_network_users(varchar,smallint) owner to dbaodin;
+
+-- get_number_of_hosts_in_network
+create or replace function get_number_of_hosts_in_network(
+    network inet)
+returns integer as $$
+begin
+    RETURN pow( 2, ( 32 - masklen(network) ) ) - 2;
+end;
+$$ language plpgsql;
+
+-- get_hosts_in_network
+create or replace function get_hosts_in_network(
+    network inet)
+returns SETOF varchar as $$
+declare
+    nhosts integer;
+    retarray varchar[];
+begin
+    nhosts = pow( 2, ( 32 - masklen(network) ) ) - 2;
+    FOR i in 1..nhosts LOOP
+        RETURN QUERY SELECT host(host(network(network))::inet + i)::varchar;
+    END LOOP;
+end;
+$$ language plpgsql;
+
+
