@@ -79,7 +79,7 @@ echo '
             <div class="form-group row">
               <div class="col-lg-12">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="on">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="on" autofocus>
               </div>
             </div>
             <div class="form-group row">
