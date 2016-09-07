@@ -195,7 +195,7 @@ function show_host_row_view($row, $cur_reservations) {
   }
   $user_email_html = '-';
   if (!empty($row['usr_email'])) {
-    $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_usern'].' ('.$row['usr_firstn'].' '.$row['usr_lastn'].')</a>';
+    $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_firstn'].' '.$row['usr_lastn'].'</a>';
   }
 
 
