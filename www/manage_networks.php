@@ -117,7 +117,7 @@ echo '
             <div class="modal-body">
               <div class="form-group">
                 <label for="addNetworkBase">Network</label>
-                <input type="text" class="form-control" name="nw_base" id="addNetworkBase" placeholder="Network">
+                <input type="text" class="form-control" name="nw_base" id="addNetworkBase" placeholder="Network" autofocus>
               </div>
               <div class="form-group">
                 <label for="addCIDR">CIDR/Netmask</label>
