@@ -67,12 +67,12 @@ function gen_address_form_row($ip, $index) {
               <div class="panel-body">
                 <div class="form-group">
                   <label for="hostName'.$index.'">Host name</label>
-                  <input type="text" class="form-control" name="hostName'.$index.'" required id="hostName'.$index.'" placeholder="Host name">
+                  <input type="text" class="form-control" name="hostName'.$index.'" id="hostName'.$index.'" placeholder="Host name" required pattern="^(?!\s*$).+">
                   <input type="hidden" name="hostIP'.$index.'" value="'.$ip.'">
                 </div>
                 <div class="form-group">
                   <label for="hostDescription'.$index.'">Host description</label>
-                  <textarea class="form-control" rows="3" name="hostDescription'.$index.'" required id="hostDescription'.$index.'" placeholder="Host description"></textarea>
+                  <textarea class="form-control" rows="3" name="hostDescription'.$index.'" id="hostDescription'.$index.'" placeholder="Host description" required pattern="^(?!\s*$).+"></textarea>
                 </div>
               </div>
             </div>

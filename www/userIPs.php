@@ -181,11 +181,11 @@ echo '
               </div>
               <div class="form-group">
                 <label for="userHostName">Host name</label>
-                <input type="text" class="form-control" id="userHostName" name="userHostName" value="" required pattern="\S"/>
+                <input type="text" class="form-control" id="userHostName" name="userHostName" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="userHostDescription">Host description</label>
-                <textarea class="form-control" rows="3" id="userHostDescription" name="userHostDescription" value="" placeholder="Description of host" required pattern="\S"></textarea>
+                <textarea class="form-control" rows="3" id="userHostDescription" name="userHostDescription" value="" placeholder="Description of host" required pattern="^(?!\s*$).+"></textarea>
               </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
