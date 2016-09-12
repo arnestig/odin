@@ -34,7 +34,7 @@ if ( isset($_POST[ 'submit' ]) && !empty($_POST[ 'submit' ]) ) {
 
 function userRegistration() {
   $settings = new Settings();
-  $userreg_setting = $settings->getSettingValue('user_registration');
+  $userreg_setting = $settings->getSettingValue('allow_user_registration');
   if ( $userreg_setting === 'checked' ) {
         echo '
         <div class="row">
@@ -63,7 +63,7 @@ echo '
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4 login text-center">
-          <img src="images/ODIN-big.png" alt="Odin logo">
+          <img src="logo.php" alt="Odin logo">
         </div>
       </div>
       <div class="row">

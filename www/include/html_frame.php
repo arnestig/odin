@@ -98,7 +98,7 @@ class HTMLframe {
             <span class="icon-bar"></span>
           </button>  
         </div>
-        <a class="navbar-brand" href="overview.php"><img src="images/ODIN.png" alt="Odin - Logo"></a>
+        <a class="navbar-brand" href="overview.php"><img src="logo.php?small" alt="Odin - Logo"></a>
           
         <ul class="nav navbar-nav">
           <li';

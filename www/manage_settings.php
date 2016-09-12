@@ -30,12 +30,25 @@ if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
     $updateValue = $_POST[$i];
     $updateName = '';
     $updateType = '';
+    $okayToUpdate = true;
 
     // TODO: getSetting by id instead
     foreach ($cur_settings as $row) {
       if ( $row[ 's_id' ] == $i ) {
-        $updateName = $row[ 's_name' ];
-        $updateType = $row[ 's_type' ];
+          // special handling for logo uploads
+          if ( $row[ 's_name' ] === 'logo' ) {
+              if ( !empty( $_FILES[ $i ][ 'tmp_name' ] ) ) {
+                  // Read in a binary file
+                  $data = file_get_contents( $_FILES[ $i ][ 'tmp_name' ] );
+
+                  // Escape the binary data
+                  $updateValue = base64_encode( $data );
+              } else {
+                  $okayToUpdate = false;
+              }
+          }
+          $updateName = $row[ 's_name' ];
+          $updateType = $row[ 's_type' ];
       }
     }
     if ( $updateType === 'checkbox' ) {
@@ -45,7 +58,9 @@ if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
         $updateValue = '';
       }
     }      
-    $settings->changeSetting( $updateName, $updateValue );
+    if ( $okayToUpdate === true ) {
+        $settings->changeSetting( $updateName, $updateValue );
+    }
   }
 }
 
@@ -67,7 +82,7 @@ function genNavTabs($s_group,$all_groups) {
 function displaySettings($s_group) {
   $settings = new Settings();
   $allsettings = $settings->getSettings($s_group);
-  $form_html = '<form class="form-horizontal" method="post" action="manage_settings.php?group='.$s_group.'">';
+  $form_html = '<form enctype="multipart/form-data" class="form-horizontal" method="post" action="manage_settings.php?group='.$s_group.'">';
   $settingid = array();
 
   $minId = $allsettings[0][ 's_id' ];
@@ -76,10 +91,17 @@ function displaySettings($s_group) {
   foreach ( $allsettings as $cursetting ) {
     $form_html .= '<div class="form-group">
                     <label for="'.$cursetting[ 's_name' ].'" class="col-lg-6 control-label">'.$cursetting[ 's_fullname' ].'</label>
-                    <div class="col-lg-6">
-                      <input type="'.$cursetting[ 's_type' ].'" class="form-control" id="'.$cursetting[ 's_name' ].'" name="'.$cursetting[ 's_id' ].'" ';
+                    <div class="col-lg-6">';
+
+    if ( $cursetting[ 's_type' ] === 'file' ) {
+        $form_html .= '<img src="logo.php" alt="Odin logo">';
+    }
+
+    $form_html .= '<input type="'.$cursetting[ 's_type' ].'" class="form-control" id="'.$cursetting[ 's_name' ].'" name="'.$cursetting[ 's_id' ].'" ';
     if ($cursetting[ 's_type' ] === 'checkbox') {
       $form_html .= $cursetting[ 's_value' ];
+    } else if ( $cursetting[ 's_type' ] === 'file' ) {
+      $form_html .= 'value=""';
     } else {
       $form_html .= 'value="'.$cursetting[ 's_value' ].'"';
     }

@@ -1,6 +1,6 @@
 \c odin;
 
-CREATE TYPE setting_type AS ENUM ('text', 'bool', 'choice', 'number', 'email', 'checkbox');
+CREATE TYPE setting_type AS ENUM ('text', 'bool', 'choice', 'number', 'email', 'checkbox', 'file');
 
 create sequence sq_settings_id maxvalue 32700 start with 1;
 alter sequence sq_settings_id owner to dbaodin;
@@ -83,9 +83,9 @@ alter function get_setting_groups(varchar) owner to dbaodin;
 
 -- add every odin settings_group here
 insert into settings_group( sg_name, sg_value, sg_description )
-values( 'notifications', 'Notifications', 'Notification (e-mail) configuration of Odin.' );
+values( 'odin_generic', 'Odin', 'Odin base configuration settings' );
 insert into settings_group( sg_name, sg_value, sg_description )
-values( 'user_registration', 'User registration', 'Set this if you want users to be able to register accounts themselves.' );
+values( 'notifications', 'Notifications', 'Notification (e-mail) configuration of Odin.' );
 insert into settings_group( sg_name, sg_value, sg_description )
 values( 'hosts', 'Hosts', 'Settings for hosts, how long the hosts are leased, when expiry emails are sent, host scan interval (slave setting),  etc.' );
 
@@ -104,7 +104,10 @@ values( 'notifications', 'email_sender', 'email', 'no-reply@odin.valhalla', 'Sen
 
 --- User signup
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 
-values( 'user_registration', 'allow_user_registration', 'checkbox', '1', 'Allow user registration', 'Allows users to register on the Odin login page. If disabled only administrators will be able to add new users.' );
+values( 'odin_generic', 'allow_user_registration', 'checkbox', '1', 'Allow user registration', 'Allows users to register on the Odin login page. If disabled only administrators will be able to add new users.' );
+
+insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description )
+values( 'odin_generic', 'logo', 'file', 'iVBORw0KGgoAAAANSUhEUgAAAHYAAAAyCAYAAACJbi9rAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABCNJREFUeNrsXI1xmzAUVnIZwBuEThA2MJmgeILSCeJMEDIByQROJ7A7AWQC4wnsTmA6QYpy4qpyPElPSDKo+u50tvGPnr7v6b0nGSAkwEtcBQoGEbctZc+btu3admKvU/Y+YcfeAl3Tx6JtZds+BlretuPA8SMndMBEsQdElbXz1MS90vTqhA3kjr3u452FqYoLYTrhsOurA9QfDxo6Dxr9Z23bjOCShutV71jSe6S4bVuE+F0TXApBjdtqePOekYbBWnPmfAChslAgc2ugL56rs8Ex8GPJFZxbeeaUhoxKFPssLZDywWZkZLHPDrkl+/nQvx4jambBqOKCwnakZDMXlnfUSYiqalDpgJTCcPgvLyAsyOUNQGyqQH7NEvov9pywMEfbUhJ2M/a9HOls99z68QTUAd3jV0mlumY2vLDXdD36gCxseDwrfqbh+BriNO6lwTumx0LA5YEbh7DqPUs8U6W0j5hziLwtRs5YLFRsSHpE6hQ9/dCeG7Kf1ySXpBdpQSUiQidhpwKySsvCqthwHCgWzyNEtSGsim25zMNNisoTqzJjbAmLJUVVXGgZZ0tYUS1wFH2pQM4sDKDf3joSFkuKTFzR2tymsATY2hSlNvALiQFjRLl74UhY0RhThLiyDRfbwq4xUTUW7ByZwkaRVJvCZsglWF9clV0028JGmDGgvMBwri0cCks0clQs2Ni4hLAEkzI32Lht0SDbwtr+fRfClsCy5xPXvekNLZpNogZmhEu8C/7omDMWqsLWFjpvRAY5Qk3mD+EYZMI2npLaIGZszsJe1zYXcMQh/Ba9eTMhgyip1cRmBU0RTwPHdfa5neKaBCjlrLkhCOspgrBB2IAgbEAQNiAIGxCEDQjCBmEDgrB6OAU55i3scsLC1j4KWw28n3jq0NC4Gh+FhQYVOSC1cjzuW9/TAS/sAendOognQmgCzFYvha2QOVEHKXD84HDMMRCFKuIRVIQVXRCExTfg+M7hmB+A4z99roqHCKaimjgFNSPweVUnh7M1m4BzORf2FfjcExl3JiF1DuiC5x+OxkptgE4Kf/OpIh4SthKs5UpNcbtb7CyAguXNkaiQ/dSGZ+IZhjYoHiXkpMjqcy9wiGcHM0Vmwyv5j3a9oCvj+Ot51gBZXR6T3W5AdAXf2DP1I2bffoQNnVOgr0Ulbq4EEPYBnX76SP7eywkqQsbkXBruVxrfKxVnqE0bZgHRecX0fg9bYn5bsWa/rROCTdlCK+DvvhVMshzLFxX3hguL3QhRTaBh0Wjls6gyYflY/mVk9VoxQVUJNV3MnJiD0nG8IB1hlsDeSzFiVfGSwFtzHSE1283ZaQjVbYosuX4jpJC0vbP+x/wdV/TqiW7WnyQbIcVACno0vNkC9mHifsUL8u/9e10tHYbErkjAJ/4IMAABVYOjANw6RQAAAABJRU5ErkJggg', 'Custom Odin logo', 'Upload a new logo to be used by Odin. Optimal format width: x px, height: x px.' );
 
 --- Hosts leasing
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 

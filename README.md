@@ -9,7 +9,7 @@ For running and developing Odin you will need the following packages:
 
 Installing on a Debian-based system you can:
 ```
-apt-get install php5 perl postgresql postgresql-contrib-9.4
+apt-get install php5 php5-gd perl postgresql postgresql-contrib-9.4
 ```
 
 Update the file /etc/postgresql/9.4/main/pg_hba.conf and change 'peer' to 'md5' on the following line:
