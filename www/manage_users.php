@@ -241,6 +241,7 @@ echo '
             <h4 class="modal-title" id="myModalLabel">Edit user</h4>
           </div>
           <form action="manage_users.php" method="POST">
+          <input type="submit" name="edit_user" value="Save changes" class="hidden">
           <div class="modal-body">
             
               <div class="form-group">
