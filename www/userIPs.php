@@ -82,7 +82,14 @@ $user_hosts = $nw_manager->getUserHosts( $_SESSION[ 'user_data' ][ 'usr_id' ] );
 function gen_host_table($user_hosts) {
   $table = '';
   foreach ($user_hosts as $host) {
-    $table .= '<tr>
+    // default seen
+    $bootstrap_color_tag = ' warning';
+
+    // not seen
+    if ( $host[ 'status' ] == 8) {
+        $bootstrap_color_tag = ' info';
+    }
+    $table .= '<tr class="'.$bootstrap_color_tag.'">
                     <td>'.$host[ 'host_ip' ].'</td>
                     <td>'.$host[ 'host_name' ].'</td>
                     <td>'.substr($host[ 'host_description' ], 0, 30).' ...</td>
