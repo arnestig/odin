@@ -203,6 +203,12 @@ create or replace function update_host(
     host_desc varchar(2000))
 returns void as $$
 begin
+    IF ( host_new_name !~ '[a-zA-Z0-9]+') THEN
+        RAISE 'Hostname is empty!';
+    END IF;
+    IF ( host_desc !~ '[a-zA-Z0-9]+') THEN
+        RAISE 'Host description is empty!';
+    END IF;
     UPDATE hosts
     SET
         host_description = host_desc,
@@ -313,6 +319,12 @@ declare
     host_already_reserved text;
     max_lease_time smallint;
 begin
+    IF ( host_new_name !~ '[a-zA-Z0-9]+') THEN
+        RAISE 'Hostname is empty!';
+    END IF;
+    IF ( host_desc !~ '[a-zA-Z0-9]+') THEN
+        RAISE 'Host description is empty!';
+    END IF;
     SELECT s_value from settings WHERE s_name = 'host_max_lease_time' INTO max_lease_time;
     select host_ip into host_already_reserved from hosts where host_ip = host_to_lease AND token_timestamp > NOW() - interval '10 minutes' AND token_usr != cur_usr_id LIMIT 1;
     IF host_already_reserved <> '' THEN
