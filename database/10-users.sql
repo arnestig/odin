@@ -145,14 +145,18 @@ create or replace function remove_user(
     ticket varchar(255), 
     userid smallint )
 returns void as $$
+declare
+    c_host_ip record;
 begin
+    FOR host_result IN select host_ip FROM hosts WHERE usr_id = userid LOOP
+        PERFORM add_log_entry( ticket, userid, host_result.host_ip, 'User deleted, host lease terminated' );
+    END LOOP;
     UPDATE hosts 
     SET 
     usr_id = 0, 
     host_name = '', 
     host_data = '', 
     host_description = '',
-    host_last_seen = null,
     host_lease_expiry = null,
     host_last_notified = null
     WHERE usr_id = userid;
