@@ -45,8 +45,10 @@ $alert_type = '';
 if (isset( $_POST[ 'add_user' ] )) {
   // TODO: Change pwd-gen to something safe and useful
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
-
-  if ( $userManager->addUser(
+  if ( strpos( $_POST['username'], ' ') !== false ) {
+    $alert_message = 'The username cannot contain whitespace';
+    $alert_type = 'danger';
+  } else if ( $userManager->addUser(
       $_POST[ 'userName' ],
       $not_very_rnd_pwd, 
       1, //<- Server has set the pwd
@@ -229,15 +231,15 @@ echo '
             </div>
             <div class="form-group col-lg-12">
               <label for="userName">Username</label>
-              <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" autofocus>
+              <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" autofocus required pattern="[^\s]+">
             </div>
             <div class="form-group col-lg-6">
               <label for="firstName">First name</label>
-              <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name">
+              <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" required pattern="^(?!\s*$).+">
             </div>
             <div class="form-group col-lg-6">
               <label for="lastName">Last name</label>
-              <input type="text" class="form-control" id="lastName" name="lastName" placeholder="First name">
+              <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" required pattern="^(?!\s*$).+">
             </div>
             <div class="form-group col-lg-12">
               <label for="email">Email</label>
@@ -270,15 +272,15 @@ echo '
               <div class="form-group">
                 <input type="hidden" class="form-control" id="userId" name="userId" value=""/>
                 <label for="userName">Username</label>
-                <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" value=""/>
+                <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" value=""/>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="lastName">Last name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" value=""/>
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="email">Email</label>

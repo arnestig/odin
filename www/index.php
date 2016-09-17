@@ -100,13 +100,13 @@ echo '
             <div class="form-group row">
               <div class="col-lg-12">
                 <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="on" autofocus>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="on" autofocus required pattern="^(?!\s*$).+">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-lg-12">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required pattern="^(?!\s*$).+">
               </div>
             </div>'
             .alert($alert_msg, $alert_type).

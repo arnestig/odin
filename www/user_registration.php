@@ -54,6 +54,8 @@ if (!empty($_POST['register'])) {
               empty($_POST['reg_email']) ||
               empty($_POST['terms_and_conditions'])) {
     $alert_msg = 'You must fill out all the fields.';
+  } else if ( strpos( $_POST['reg_username'], ' ') !== false ) {
+    $alert_msg = 'Your username cannot contain white space.';
   } else {
     $user_man = new UserManagement();
     $userHandler = new User();
@@ -130,7 +132,7 @@ echo '
             <div class="row">
               <div class="col-lg-12 form-group">
                 <label for="inputUserName">Username</label>
-                <input type="text" name="reg_username" class="form-control" id="inputUserName" placeholder="Your desired username" value="'.$_POST['reg_username'].'">
+                <input type="text" name="reg_username" class="form-control" id="inputUserName" placeholder="Your desired username" value="'.$_POST['reg_username'].'" required pattern="^(?!\s*$).+">
               </div>
             </div>
             <div class="row">
@@ -159,11 +161,11 @@ echo '
             <div class="row">
               <div class="col-lg-6 form-group">
                 <label for="inputFirstName">First name</label>
-                <input type="text" name="reg_first_name" class="form-control" id="inputFirstName" placeholder="First name" value="'.$_POST['reg_first_name'].'">
+                <input type="text" name="reg_first_name" class="form-control" id="inputFirstName" placeholder="First name" value="'.$_POST['reg_first_name'].'" required pattern="^(?!\s*$).+">
               </div>
               <div class="col-lg-6 form-group">
                 <label for="inputLastName">Last name</label>
-                <input type="text" name="reg_last_name" class="form-control" id="inputLastName" placeholder="Last name" value="'.$_POST['reg_last_name'].'">
+                <input type="text" name="reg_last_name" class="form-control" id="inputLastName" placeholder="Last name" value="'.$_POST['reg_last_name'].'" required pattern="^(?!\s*$).+">
               </div>
             </div>
             <div class="row">

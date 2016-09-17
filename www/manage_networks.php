@@ -146,15 +146,15 @@ echo '
             <div class="modal-body">
               <div class="form-group">
                 <label for="addNetworkBase">Network</label>
-                <input type="text" class="form-control" name="nw_base" id="addNetworkBase" placeholder="Network" autofocus>
+                <input type="text" class="form-control" name="nw_base" id="addNetworkBase" placeholder="Network" autofocus required pattern="^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$">
               </div>
               <div class="form-group">
                 <label for="addCIDR">CIDR/Netmask</label>
-                <input type="text" class="form-control" name="nw_cidr" id="addCIDR" placeholder="Write subnet in CIDR or Netmask notation">
+                <input type="text" class="form-control" name="nw_cidr" id="addCIDR" placeholder="Write subnet in CIDR or Netmask notation" required pattern="^(?!\s*$).+">
               </div>
               <div class="form-group">
                 <label for="addNetworkDescription">Network description</label>
-                <textarea class="form-control" rows="3" name="nw_description" id="addNetworkDescription" placeholder="Network description"></textarea>
+                <textarea class="form-control" rows="3" name="nw_description" id="addNetworkDescription" placeholder="Network description" required pattern="^(?!\s*$).+"></textarea>
               </div>
             </div>
             <div class="modal-footer">
@@ -191,7 +191,7 @@ echo '
               </div>
               <div class="form-group">
                 <label for="networkDescription">Network description</label>
-                <textarea class="form-control" rows="3" id="networkDescription" name="networkDescription" value="" placeholder="Description of network"></textarea>
+                <textarea class="form-control" rows="3" id="networkDescription" name="networkDescription" value="" placeholder="Description of network" required pattern="^(?!\s*$).+"></textarea>
               </div>
             </div>
             <div class="modal-footer">

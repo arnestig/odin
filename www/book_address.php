@@ -94,7 +94,7 @@ function gen_address_form_row($ip, $index) {
                 </div>
                 <div class="form-group">
                   <label for="hostDescription'.$index.'">Host description</label>
-                  <textarea class="form-control" rows="3" name="hostDescription'.$index.'" id="hostDescription'.$index.'" placeholder="Host description" required pattern="(?=.*[a-zA-Z0-9]).{1,}"></textarea>
+                  <textarea class="form-control host-description" rows="3" name="hostDescription'.$index.'" id="hostDescription'.$index.'" placeholder="Host description" required pattern="(?=.*[a-zA-Z0-9]).{1,}"></textarea>
                 </div>
               </div>
             </div>
