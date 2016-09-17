@@ -1,11 +1,7 @@
 html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
-* {
-	-webkit-border-radius: 0 !important;
-	   -moz-border-radius: 0 !important;
-	   		border-radius: 0 !important;
-}
+
 
 .logo-img { max-width: 80px; max-height: 20px; }
 

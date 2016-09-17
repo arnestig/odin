@@ -45,9 +45,8 @@ class HTMLframe {
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Odin - '.$page_title.'</title>
 
-    <!-- Bootstrap -->
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/odin.css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">    
+    <link href="css/odin.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesnt work if you view the page via file:// -->
@@ -151,9 +150,11 @@ class HTMLframe {
 	public function doc_end() {
 		echo '    
     <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/jquery-1.12.4.min.js"></script>
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
     <script src="js/inputValidator.js"></script>
   </body>
