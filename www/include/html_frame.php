@@ -60,8 +60,18 @@ class HTMLframe {
 
   /* Helper to doc nav */
   private function adminNav($active) {
+
+    // Return empty string if user isn't admin
+    if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] < 1) return '';
+
     $admin_html = '';
     $is_active = '';
+
+    // Quickfix - links for network and settings disabled for lvl1 admin.
+    $disabled_links = array(' class="disabled"','',' class="disabled');
+    if ($_SESSION['user_data']['usr_privileges'] > 1) $disabled_links = array('','','');
+
+    //Check if menu-group is active
     foreach ($this->admin_nav as $li_row) {
       if (in_array($active, $li_row)) $is_active = ' active';
     }
@@ -69,18 +79,21 @@ class HTMLframe {
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Manage</strong><span class="caret"></span></a>
             <ul class="dropdown-menu">
             ';
+
+    // Generating admin-links
+    $i = 0;
     foreach ($this->admin_nav as $item) {
       $admin_html .= '<li';
       if ($active === $item[2]) {
         $admin_html .= ' class="active"';
       }
-      $admin_html .= '><a href="'.$item[0].'"><span class="glyphicon '.$item[1].'"></span>'.$item[2].'</a></li>
+      $admin_html .= '><a href="'.$item[0].'"'.$disabled_links[$i].'><span class="glyphicon '.$item[1].'"></span>'.$item[2].'</a></li>
       ';
+      $i++;
     }
     $admin_html .= '
             </ul>
           </li>';
-    if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] < 1) $admin_html = '';
     return $admin_html;
   }
 

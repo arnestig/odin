@@ -22,6 +22,10 @@
 
 $(document).ready(function() {
 
+    $('body').on('click', 'a.disabled', function(event) {
+        event.preventDefault();
+    });
+
     $('.history').popover({
         trigger: 'click',
         placement: 'right',
