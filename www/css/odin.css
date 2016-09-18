@@ -1,8 +1,6 @@
 html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
-
-
 .logo-img { max-width: 80px; max-height: 20px; }
 
 .history h6 { cursor: pointer; padding: 2px; border: 1px solid black; }
@@ -81,8 +79,8 @@ a.filter-link:hover { text-decoration: none; }
 /* Right fixed book address panel*/
 .fixed-right { margin-top: 40px;}
 .bookAddrBtn { text-align: center; margin: 7px; }
-/* To prevent showing the right affixed element after page load */
-/* #choosenAddrDiv { display: none; } */
+#choosenAddr { max-height: 350px; overflow-y: auto; overflow-x: hidden; }
+#choosenAddr p { font-size: 0.85em; }
 
 .form-group.textfield { padding:10px; }
 
