@@ -256,10 +256,18 @@ and you must not use our website for any other purposes.</li>
 edit or otherwise modify any material on our website.</li>
                   <li>Unless you own or control the relevant rights in the material, you must not:
                     <ol>
-                      <li></li>
-                      <li></li>
+                      <li>republish material from our website (including republication on another website);</li>
+                      <li>sell, rent or sub-license material from our website;</li>
+                      <li>show any material from our website in public;</li>
+                      <li>exploit material from our website for a commercial purpose; or</li>
+                      <li>redistribute material from our website.</li>
                     </ol>
                   </li>
+                  <li>Notwithstanding Section 4.5, you may redistribute [our newsletter] in [print and electronic form] to [any person].</li>
+                  <li>We reserve the right to restrict access to areas of our website, or indeed our
+whole website, at our discretion; you must not circumvent or bypass, or
+attempt to circumvent or bypass, any access restriction measures on our
+website.</li>
                 </ol>
               </li>
 
