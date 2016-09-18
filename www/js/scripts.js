@@ -209,12 +209,12 @@ $(document).ready(function() {
         var email = $(this).data('email');
         var privileges = $(this).data('privileges');
 
-        $(".form-group #userId").val( userId );
-        $(".form-group #userName").val( userName );
-        $(".form-group #firstName").val( firstName );
-        $(".form-group #lastName").val( lastName );
-        $(".form-group #email").val( email );
-        $(".form-group #privileges").val( privileges ).change();
+        $(".form-group #editUserId").val( userId );
+        $(".form-group #editUserName").val( userName );
+        $(".form-group #editFirstName").val( firstName );
+        $(".form-group #editLastName").val( lastName );
+        $(".form-group #editEmail").val( email );
+        $(".form-group #editPrivileges").val( privileges ).change();
 
     });    
 
@@ -226,11 +226,11 @@ $(document).ready(function() {
         var lastName = $(this).data('lastname');
         var email = $(this).data('email');
 
-        $(".form-group #userId").val( userId );
-        $(".form-group #userName").val( userName );
-        $(".form-group #firstName").val( firstName );
-        $(".form-group #lastName").val( lastName );
-        $(".form-group #email").val( email );
+        $(".form-group #removeUserId").val( userId );
+        $(".form-group #removeUserName").val( userName );
+        $(".form-group #removeFirstName").val( firstName );
+        $(".form-group #removeLastName").val( lastName );
+        $(".form-group #removeEmail").val( email );
     });
 
     // Manage Networks

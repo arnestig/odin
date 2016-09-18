@@ -149,6 +149,7 @@ function generate_user_list() {
   foreach ( $_SESSION[ 'users' ] as $row ) {
     $edit_cell = '';
     $remove_cell = '';
+    $mail_cell = '';
 
     // To prevent user (admin) from editing him-/herself and changing admin levels.
     // or editing enyone with higher privileges
@@ -177,6 +178,17 @@ function generate_user_list() {
                       data-backdrop="static">
                         <i class="glyphicon glyphicon-trash"></i>
                     </a>';
+      $mail_cell = '<a class="open-MailUserDialog" 
+                      data-userid="'.$row[ 'usr_id' ].'" 
+                      data-username="'.$row[ 'usr_usern' ].'" 
+                      data-firstname="'.$row[ 'usr_firstn' ].'" 
+                      data-lastname="'.$row[ 'usr_lastn' ].'" 
+                      data-email="'.$row[ 'usr_email' ].'" 
+                      href="#mailUserDialog" 
+                      data-toggle="modal" 
+                      data-backdrop="static">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                    </a>';
     }
 
     $userlist .= '
@@ -187,6 +199,7 @@ function generate_user_list() {
                     <td>'.$row[ 'usr_email' ].'</td>
                     <td>'.$edit_cell.'</td>
                     <td>'.$remove_cell.'</td>
+                    <td>'.$mail_cell.'</td>
                   </tr>
     ';
   }
@@ -223,25 +236,25 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Add user</h4>
           </div>
-          <form class="form" method="POST" action="manage_users.php">
+          <form action="manage_users.php" method="POST">
           <div class="modal-body">
             
-            <div class="form-group col-lg-12">
-              <p>When adding a new user in this modal, a password will be generated and mailed with other information about the users account to the user.</p>
+            <div class="form-group">
+              <p class="form-control-static">When adding a new user in this modal, a password will be generated and mailed with other information about the users account to the user.</p>
             </div>
-            <div class="form-group col-lg-12">
+            <div class="form-group">
               <label for="userName">Username</label>
               <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" autofocus required pattern="[^\s]+">
             </div>
-            <div class="form-group col-lg-6">
+            <div class="form-group">
               <label for="firstName">First name</label>
               <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" required pattern="^(?!\s*$).+">
             </div>
-            <div class="form-group col-lg-6">
+            <div class="form-group">
               <label for="lastName">Last name</label>
               <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" required pattern="^(?!\s*$).+">
             </div>
-            <div class="form-group col-lg-12">
+            <div class="form-group">
               <label for="email">Email</label>
               <input type="email" class="form-control" id="email" name="email" placeholder="Email"></input>
             </div>
@@ -249,7 +262,7 @@ echo '
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <input type="submit" class="btn btn-primary" name="add_user" value="Add user">
+            <input type="submit" name="add_user" value="Add user" class="btn btn-primary">
           </div>
           </form>
         </div>
@@ -270,21 +283,21 @@ echo '
           <div class="modal-body">
             
               <div class="form-group">
-                <input type="hidden" class="form-control" id="userId" name="userId" value=""/>
+                <input type="hidden" class="form-control" id="editUserId" name="userId" value=""/>
                 <label for="userName">Username</label>
-                <input type="text" class="form-control" id="userName" name="userName" placeholder="Username" value="" required pattern="^(?!\s*$).+"/>
+                <input type="text" class="form-control" id="editUserName" name="userName" placeholder="Username" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" value="" required pattern="^(?!\s*$).+"/>
+                <input type="text" class="form-control" id="editFirstName" name="firstName" placeholder="First name" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="lastName">Last name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" value="" required pattern="^(?!\s*$).+"/>
+                <input type="text" class="form-control" id="editLastName" name="lastName" placeholder="Last name" value="" required pattern="^(?!\s*$).+"/>
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value=""/>
+                <input type="email" class="form-control" id="editEmail" name="email" placeholder="Email" value=""/>
               </div>
               <div class="form-group">
                 <input type="submit" name="generate_new_password" value="Generate and mail new password" class="btn btn-primary"/>
@@ -310,30 +323,30 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Delete user</h4>
           </div>
-          <form class="form-horizontal" method="POST" action="manage_users.php">
+          <form method="POST" action="manage_users.php">
           <div class="modal-body">
             
               
               <div class="form-group">
-                <label for="userName" class="col-lg-6">Username</label>
-                <input class="form-control" type="text" id="userName" name="userName" value="" disabled>
-                <input type="hidden" id="userId" name="userId" value="">
+                <label for="userName">Username</label>
+                <input class="form-control" type="text" id="removeUserName" name="userName" value="" disabled>
+                <input type="hidden" id="userId" name="removeUserId" value="">
               </div>
               <div class="form-group">
-                <label for="firstName" class="col-lg-6">First name</label>
-                <input class="form-control" type="text" id="firstName" value="" disabled>
+                <label for="firstName">First name</label>
+                <input class="form-control" type="text" id="removeFirstName" value="" disabled>
               </div>
               <div class="form-group">
-                <label for="lastName" class="col-lg-6">Last name</label>
-                <input class="form-control" type="text" id="lastName" value="" disabled>
+                <label for="lastName">Last name</label>
+                <input class="form-control" type="text" id="removeLastName" value="" disabled>
               </div>
               <div class="form-group">
-                <label for="email" class="col-lg-6">Email</label>
-                <input class="form-control" type="email" id="email" value="" disabled>
+                <label for="email">Email</label>
+                <input class="form-control" type="email" id="removeEmail" value="" disabled>
               </div>
-              <div class="form-group" class="col-lg-12">
+              <div class="form-group">
                 <label for="messageToUser">Message to user</label>
-                <textarea type="text" class="form-control col-lg-12" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent." autofocus></textarea>
+                <textarea type="text" class="form-control" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent." autofocus></textarea>
               </div>
           
           </div>
@@ -377,6 +390,7 @@ echo '
                     <th>Email</th>
                     <th>Edit</th>
                     <th>Delete</th>
+                    <th>Mail</th>
                   </tr>
                 </thead>
                 <tbody>
