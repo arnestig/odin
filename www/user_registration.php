@@ -270,7 +270,49 @@ attempt to circumvent or bypass, any access restriction measures on our
 website.</li>
                 </ol>
               </li>
+              <li>Acceptable use
+                <ol>
+                  <li>You must not:
+                    <ol>
+                      <li>use our website in any way or take any action that causes, or may
+cause, damage to the website or impairment of the performance,
+availability or accessibility of the website;</li>
+                      <li>use our website in any way that is unlawful, illegal, fraudulent or
+harmful, or in connection with any unlawful, illegal, fraudulent or
+harmful purpose or activity;</li>
+                      <li>use our website to copy, store, host, transmit, send, use, publish or
+distribute any material which consists of (or is linked to) any spyware,
+computer virus, Trojan horse, worm, keystroke logger, rootkit or other
+malicious computer software;</li>
+                      <li>[conduct any systematic or automated data collection activities
+(including without limitation scraping, data mining, data extraction and
+data harvesting) on or in relation to our website without our express
+written consent];
+</li>
+                      <li>[access or otherwise interact with our website using any robot, spider or
+other automated means[, except for the purpose of [search engine
+indexing]]];</li>
 
+                      <li>[violate the directives set out in the robots.txt file for our website]; or
+</li>
+                      <li>[use data collected from our website for any direct marketing activity
+(including without limitation email marketing, SMS marketing,
+telemarketing and direct mailing)].
+</li>
+                      
+                    </ol>
+                  </li>
+                  <li>You must not use data collected from our website to contact individuals,
+companies or other persons or entities.</li>
+                  <li>You must ensure that all the information you supply to us through our website,
+or in relation to our website, is [true, accurate, current, complete and non-
+misleading].
+</li>
+                </ol>
+              </li>
+              <li></li>
+              <li></li>
+              <li></li>
             </ol>
           </div>
           <div class="modal-footer">
