@@ -68,7 +68,7 @@ class HTMLframe {
     $is_active = '';
 
     // Quickfix - links for network and settings disabled for lvl1 admin.
-    $disabled_links = array(' class="disabled"','',' class="disabled');
+    $disabled_links = array(' class="disabled"','',' class="disabled"');
     if ($_SESSION['user_data']['usr_privileges'] > 1) $disabled_links = array('','','');
 
     //Check if menu-group is active
@@ -83,7 +83,7 @@ class HTMLframe {
     // Generating admin-links
     $i = 0;
     foreach ($this->admin_nav as $item) {
-      $admin_html .= '<li';
+      $admin_html .= '<li'.$disabled_links[$i];
       if ($active === $item[2]) {
         $admin_html .= ' class="active"';
       }
