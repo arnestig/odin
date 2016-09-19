@@ -86,7 +86,7 @@ echo '
     <div class="container">
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4 login text-center">
-          <img src="images/logo/ODIN.png" alt="Odin logo">
+          <img src="logo.php" alt="Odin logo">
         </div>
       </div>
       <div class="row">

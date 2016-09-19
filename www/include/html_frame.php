@@ -133,8 +133,8 @@ class HTMLframe {
             <span class="icon-bar"></span>
           </button>  
         </div>
-        <!-- a class="navbar-brand" href="overview.php"><img src="logo.php?small" alt="Odin - Logo"></a -->
-        <a class="navbar-brand" href="overview.php"><img src="images/logo/ODIN.png" alt="Odin - Logo" class="logo-img"></a>
+        <a class="navbar-brand" href="overview.php"><img src="logo.php?small" alt="Odin - Logo"></a>
+        <!-- <a class="navbar-brand" href="overview.php"><img src="images/logo/ODIN.png" alt="Odin - Logo" class="logo-img"></a> -->
         <ul class="nav navbar-nav">
           <li';
     if ($active === 'Overview') echo ' class="active"'; 
