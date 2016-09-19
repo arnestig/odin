@@ -110,8 +110,7 @@ insert into settings_group( sg_name, sg_value, sg_description )
 values( 'notifications', 'Notifications', 'Notification (e-mail) configuration of Odin.' );
 insert into settings_group( sg_name, sg_value, sg_description )
 values( 'hosts', 'Hosts', 'Settings for hosts, how long the hosts are leased, when expiry emails are sent, host scan interval (slave setting),  etc.' );
-insert into settings_group( sg_name, sg_value, sg_description )
-values( 'general', 'General', 'General settings of Odin.' );
+
 
 -- add all odin settings here
 --- Notification settings
@@ -144,7 +143,3 @@ insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_descriptio
 values( 'hosts', 'host_not_seen_time_limit', 'number', '30', 'Host not seen time limit (days)', 'Defines when hosts are considered gone or not seen by the system any more.' );
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 
 values( 'hosts', 'host_scan_interval', 'number', '5', 'Host scan interval (minutes)', 'Time between host scans in minutes.' );
-
---- General settings
-insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 
-values( 'general', 'logo_upload', 'file', '365', 'Upload logo to Odin', 'The logo you upload will replace (overwrite) the default Odin logo.' );
