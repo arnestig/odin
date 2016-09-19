@@ -145,8 +145,14 @@ $(document).ready(function() {
     });
 
     
-    $(".rm-lease").click(function(event) {
+    $(".rm-lease").on('click', function(event) {
         if( !confirm('Are you sure that you want to terminate the lease?') ) {
+            event.preventDefault();
+        }
+    });
+
+    $("#saveSetting").on('click', function(event) {
+        if( !confirm('Are you sure that you save the settings?\nYou may need to logout first before certain settings are visible for you.') ) {
             event.preventDefault();
         }
     });

@@ -137,7 +137,7 @@ function displaySettings($s_group) {
                     <input type="hidden" name="settingsIdMin" value="'.$minId.'">
                     <input type="hidden" name="settingsIdMax" value="'.$maxId.'">
                     <button class="btn btn-default" href="manage_settings.php?group='.$s_group.'">Discard</button>
-                    <input type="submit" class="btn btn-info pull-right" name="submit" value="Save changes"> 
+                    <input type="submit" id="saveSetting" class="btn btn-info pull-right" name="submit" value="Save changes"> 
                   </div>
                 </div>
               </form>';
