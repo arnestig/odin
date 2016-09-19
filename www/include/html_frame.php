@@ -32,7 +32,7 @@ class HTMLframe {
 
   public function __construct() {
     $this->admin_nav = [ ["manage_networks.php","glyphicon-signal","Networks"], ["manage_users.php","glyphicon-user","Users"], ["manage_settings.php","glyphicon-cog","Settings"] ];
-    $this->user_nav = [ ["logout.php","glyphicon-log-out","Log out"],["userIPs.php","glyphicon-th-list","View your addresses"] ];
+    $this->user_nav = [ ["userIPs.php","glyphicon-th-list","View your addresses"], ["logout.php","glyphicon-log-out","Log out"] ];
   }
 
 	public function doc_start( $page_title ) {
