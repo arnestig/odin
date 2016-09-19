@@ -41,7 +41,7 @@ $settings = new Settings();
 $alert_message = '';
 $alert_type = '';
 
-// Sanitize, validate, crosscheck, confirm and ask pretty...
+
 if (isset( $_POST[ 'add_user' ] )) {
   // TODO: Change pwd-gen to something safe and useful
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
@@ -61,8 +61,8 @@ if (isset( $_POST[ 'add_user' ] )) {
     $user = $userManager->getUserInfo($user_id);
     $message = 'Here the details you registred with: '.$user['usr_usern'].', '.$user['usr_firstn'].', '.$user['usr_lastn'].', '.$user['usr_email'].' and here is the temporary password: '.$not_very_rnd_pwd;
     $mailHandler->addUser( $user['usr_id'], $message, $_SESSION['user_data']['usr_id'] );
-    $alert_message = 'Server generated pwd is <strong>'.$not_very_rnd_pwd.'</strong>. Testing only. Remove this alert and mail to user instead.';
-    $alert_type = 'warning';
+    $alert_message = 'User <strong>'.$user['usr_usern'].'</strong> was successfully added.';
+    $alert_type = 'success';
   } else {
     $alert_message = 'Error when adding new user: '.$errmsg;
     $alert_type = 'danger';
@@ -213,9 +213,9 @@ function privileges_options() {
                 <div class="form-group">
                 <label class="control-label" for="privileges">Admin privileges</label>
                 <div>
-                  <select id="privileges" class="form-control" name="admin_privileges">
+                  <select id="editPrivileges" class="form-control" name="admin_privileges">
                     <option value="0">User (no privileges)</option>
-                    <option value="1">Admin (most options in admin view available)</option>
+                    <option value="1">Admin (Manage users and removing hosts available)</option>
                     <option value="2">Super Admin (system owner)</option>
                   </select> 
                 </div>
