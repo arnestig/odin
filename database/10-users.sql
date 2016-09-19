@@ -146,7 +146,7 @@ create or replace function remove_user(
     userid smallint )
 returns void as $$
 declare
-    c_host_ip record;
+    host_result record;
 begin
     FOR host_result IN select host_ip FROM hosts WHERE usr_id = userid LOOP
         PERFORM add_log_entry( ticket, userid, host_result.host_ip, 'User deleted, host lease terminated' );

@@ -436,7 +436,6 @@ create or replace function get_hosts_in_network(
 returns SETOF varchar as $$
 declare
     nhosts integer;
-    retarray varchar[];
 begin
     nhosts = pow( 2, ( 32 - masklen(network) ) ) - 2;
     FOR i in 1..nhosts LOOP
