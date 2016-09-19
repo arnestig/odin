@@ -128,6 +128,10 @@ if (isset( $_POST[ 'delete_user' ])) {
   $alert_type = 'success';
 }
 
+if (isset( $_POST['mail_user'] )) {
+  sendMail( $user_id, $subject, $message, $sender );
+}
+
 $alert_html = '';
 if ($alert_message != '' && $alert_type != '') {
   $alert_html = '<div class="alert alert-'.$alert_type.' fade in">
@@ -359,6 +363,51 @@ echo '
       </div>
     </div>
 <!-- Modal DELETE USER code end -->
+
+<!-- Modal TODO MAIL USER code start -->
+    <div class="modal fade" id="mailUserDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Delete user</h4>
+          </div>
+          <form method="POST" action="manage_users.php">
+          <div class="modal-body">
+            
+              
+              <div class="form-group">
+                <label for="userName">Username</label>
+                <input class="form-control" type="text" id="mailUserName" name="userName" value="" disabled>
+                <input type="hidden" id="mailUserId" name="userId" value="">
+              </div>
+              <div class="form-group">
+                <label for="firstName">First name</label>
+                <input class="form-control" type="text" id="removeFirstName" value="" disabled>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last name</label>
+                <input class="form-control" type="text" id="removeLastName" value="" disabled>
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input class="form-control" type="email" id="removeEmail" value="" disabled>
+              </div>
+              <div class="form-group">
+                <label for="messageToUser">Message to user</label>
+                <textarea type="text" class="form-control" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent." autofocus></textarea>
+              </div>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <input type="submit" name="delete_user" value="Delete user" class="btn btn-primary">
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<!-- Modal MAIL USER code end -->
 ';
 
 $frame->doc_nav('Users', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
