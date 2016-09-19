@@ -178,6 +178,11 @@ function show_hosts() {
   return $generated_table;
 }
 
+function delete_option() {
+  if ($_SESSION['user_data']['usr_privileges'] > 0) return '<th>Delete</th>';
+  return '';
+}
+
 function show_host_row_view($row, $cur_reservations) {
   // ====================================
   // ALL POSSIBLE TAGS IN THE <INPUT> FOR CHECKBOX BELOW
@@ -205,7 +210,7 @@ function show_host_row_view($row, $cur_reservations) {
 
   $admin_rm_lease = '';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0 && 
-    ($row['status'] == 2 || $row['status'] == 8)) {
+    ($row['status'] == 4 || $row['status'] == 8)) {
     $admin_rm_lease = '<td>
                         <form class="rm-lease" method="POST" action="overview.php">
                           <button class="btn btn-small btn-danger" type="submit" name="admin-rm-lease" value="'.$row[ 'host_ip' ].'" style="padding:0px;">
@@ -431,8 +436,9 @@ echo '
                     <th>Host name</th>
                     <th colspan="2">Host description</th>
                     <th>Last seen</th>
-                    <th>Reserve</th>
-                  </tr>
+                    <th>Reserve</th>'
+                    .delete_option().
+                  '</tr>
                 </thead>
                 <tbody>
 
