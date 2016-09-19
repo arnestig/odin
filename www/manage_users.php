@@ -285,7 +285,7 @@ echo '
               <div class="form-group">
                 <input type="hidden" class="form-control" id="editUserId" name="userId" value=""/>
                 <label for="userName">Username</label>
-                <input type="text" class="form-control" id="editUserName" name="userName" placeholder="Username" value="" required pattern="^(?!\s*$).+"/>
+                <input type="text" class="form-control" id="editUserName" name="userName" placeholder="Username" value="" required pattern="[^\s]+"/>
               </div>
               <div class="form-group">
                 <label for="firstName">First name</label>
