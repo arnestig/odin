@@ -35,7 +35,7 @@ if (empty($reserved)) {
 }
 // The Booking Controller
 // TODO: check that posted IPs match those in sesh var
-if (isset($_POST[ 'book_addresses' ])) {
+if (!empty($_POST[ 'book_addresses' ])) {
  
 
   $nbr_of_items = $_POST[ 'nbr_of_ips' ];
@@ -45,13 +45,13 @@ if (isset($_POST[ 'book_addresses' ])) {
   $_SESSION['booking_success'] = array();
 
   for ($i = 0; $i < $nbr_of_items; $i++) {
-
     $host_ip = $_POST[ 'hostIP'.$i ];
     $host_name = $_POST[ 'hostName'.$i ];
     $host_desc = $_POST[ 'hostDescription'.$i ];
-
-    if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
-      $_SESSION['booking_success'][] = $host_ip;
+    if ($host_ip != '') {
+      if ( $nwmanagement->leaseHost( $host_ip, $_SESSION[ 'user_data' ][ 'usr_id' ], $host_name, $host_desc ) == true ) {
+        $_SESSION['booking_success'][] = $host_ip;
+      }
     }
   }
   header('Location: user_pages.php');
