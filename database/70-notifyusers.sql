@@ -85,7 +85,7 @@ open ref1 for
     ON
         (ru.usr_id = n.nu_usr_id)
     WHERE
-        ();
+        (n.nu_notification_sent = false);
 
 return next ref1;
 end;
