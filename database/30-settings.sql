@@ -123,6 +123,8 @@ values( 'notifications', 'email_hostname', 'text', '', 'Mail server hostname', '
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 
 values( 'notifications', 'email_port', 'number', '25', 'Mail server port', '' );
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description ) 
+values( 'notifications', 'email_server_timeout', 'number', '10', 'Mail server timeout', '' );
+insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description )
 values( 'notifications', 'email_sender', 'email', 'no-reply@odin.valhalla', 'Sender email address', 'Most servers will atleast require the domain to be valid' );
 
 --- User signup

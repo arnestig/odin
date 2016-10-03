@@ -29,9 +29,9 @@ declare
     host_scan_interval smallint;
     ref1 refcursor;
 begin
+    SELECT s_value FROM settings WHERE s_name = 'host_scan_interval' INTO host_scan_interval;
 open ref1 for
-    SELECT s_value INTO host_scan_interval from settings WHERE s_name = 'host_scan_interval';
-    SELECT host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - host_scan_interval * interval '1 minute'); 
+    SELECT host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - host_scan_interval * interval '1 minute') ORDER BY random();
 return next ref1;
 end;
 $$ language plpgsql;
@@ -65,8 +65,8 @@ declare
     ref1 refcursor;
 begin
 open ref1 for
-    SELECT nu.nu_id, nu.nu_message, u.usr_email, u.usr_firstn, u.usr_lastn
-    FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.usr_id)
+    SELECT nu.nu_id, nu.nu_message, u.usr_email, u.usr_firstn, u.usr_lastn, u.usr_usern
+    FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.nu_usr_id)
     WHERE
         nu.nu_notification_sent = false;
 return next ref1;
