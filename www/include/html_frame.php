@@ -139,7 +139,7 @@ class HTMLframe {
           <li';
     if ($active === 'Overview') echo ' class="active"'; 
     echo '>
-            <a href="overview.php">HOSTS<span class="glyphicon glyphicon-th"></span></a>  
+            <a href="overview.php"><strong>Hosts</strong><span class="glyphicon glyphicon-th"></span></a>  
           </li>
           '.$this->adminNav($active).'
           '.$this->userNav($active, $username).'
