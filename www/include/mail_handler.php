@@ -35,10 +35,10 @@ class MailHandler {
     }
 
     // Default return true. Add error handling to do other things
-    private function sendMail( $user_id, $subject, $message, $sender ) 
+    public function sendMailToUser( $user_id, $subject, $message, $sender_id ) 
     {
         $sth = $this->dbcon->prepare( "SELECT notify_user( ?, ?, ?, ?, ? )" );
-        $sth->execute( array( '', $user_id, $subject, $message, $sender ) );
+        $sth->execute( array( '', $user_id, $subject, $message, $sender_id ) );
         return true;
     }
 
@@ -51,7 +51,7 @@ class MailHandler {
 		$nw_users = $nw_management->getNetworkUsers( $nw_id );
 
 		foreach ($nw_users as $user) {
-			$this->sendMail( $user, $subject, $message, $sender );
+			$this->sendMailToUser( $user, $subject, $message, $sender );
 		}
 		return true;
 	}
@@ -66,31 +66,31 @@ class MailHandler {
 		$nw_users = $nw_management->getNetworkUsers( $nw_id );
 
 		foreach ($nw_users as $user) {
-			$this->sendMail( $user, $network.' has been deleted.', $message, $sender );
+			$this->sendMailToUser( $user, $network.' has been deleted.', $message, $sender );
 		}
 		return true;	
 	}
 
 	public function userMadeAdmin( $user_id, $sender_id ) 
 	{
-		$this->sendMail( $user_id, 'Admin in ODIN', 'You are now the baws of ODIN. With great power blabla.', $sender_id );
+		$this->sendMailToUser( $user_id, 'Admin in ODIN', 'You have now been made admin of ODIN. Log in to ODIN and see your new responsibilities under "Manage" in the menu.', $sender_id );
 	}
 
 	public function userEdited( $user_id, $message, $sender_id ) 
 	{
-		$this->sendMail( $user_id, 'Changed user details ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Changed user details ODIN', $message, $sender_id );
 	}
 
 	public function userPasswordChanged( $user_id, $password, $sender_id ) 
 	{
 		$message = 'Here is your new password which needs to be changed: ';
 		$message .= $password;
-		$this->sendMail( $user_id, 'Changed password ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Changed password ODIN', $message, $sender_id );
 	}	
 
 	public function addUser( $user_id, $message, $sender_id ) 
 	{
-		$this->sendMail( $user_id, 'Welcome to ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Welcome to ODIN', $message, $sender_id );
 	}
 
 	// When user gets deleted. If message is left blank, default message is sent
@@ -99,7 +99,7 @@ class MailHandler {
 		if (empty($message)) {
 			$message = 'Your profile and host-reservations has now been deleted from ODIN.';
 		}
-		$this->sendMail( $user_id, 'Goodbye from ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Goodbye from ODIN', $message, $sender_id );
 	}
 }
 
