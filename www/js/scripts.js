@@ -175,7 +175,6 @@ $(document).ready(function() {
                 if ( $(document).find('.book-address-container').length == 1 ) {
                     var getUrl = window.location;
                     var baseUrl = getUrl .protocol + "//" + getUrl.host + "/";
-                    console.log(baseUrl);
                     window.location.replace(baseUrl + 'overview.php');
                 }
             },
@@ -237,6 +236,21 @@ $(document).ready(function() {
         $(".form-group #removeFirstName").val( firstName );
         $(".form-group #removeLastName").val( lastName );
         $(".form-group #removeEmail").val( email );
+    });
+
+    $(document).on("click", ".open-MailUserDialog", function () {
+        
+        var userId = $(this).data('userid');
+        var userName = $(this).data('username');
+        var firstName = $(this).data('firstname');
+        var lastName = $(this).data('lastname');
+        var email = $(this).data('email');
+
+        $(".form-group #mailUserId").val( userId );
+        $(".form-group #mailUserName").val( userName );
+        $(".form-group #mailFirstName").val( firstName );
+        $(".form-group #mailLastName").val( lastName );
+        $(".form-group #mailEmail").val( email );
     });
 
     // Manage Networks
