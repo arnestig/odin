@@ -32,6 +32,9 @@ $nw_manager = new NetworkManagement();
 $alert_message = '';
 $alert_type = '';
 
+// Default landing section "addresses"
+
+
 if (!empty($_POST[ 'edit_host' ])) {
   $nw_manager->updateHost( $_POST[ 'userHostIp2' ], 
                           $_SESSION[ 'user_data' ][ 'usr_id' ], 
@@ -106,26 +109,30 @@ function gen_host_table($user_hosts) {
                         <span class="glyphicon glyphicon-edit"></span>
                       </a>
                     </td>
-                    <td class="check-lease-opt"><input type="checkbox" 
-                                                      id="userhost'.$host[ 'host_ip' ].'" 
-                                                      name="ip_list[]"
-                                                      value="'.$host[ 'host_ip' ].'"></td>
+                    <td class="check-lease-opt">
+                      <input type="checkbox" 
+                            id="userhost'.$host[ 'host_ip' ].'" 
+                            name="ip_list[]"
+                            value="'.$host[ 'host_ip' ].'">
+                    </td>
                   </tr>
                   ';
   }
   return $table;
 }
 
-$frame = new HTMLframe();
-$frame->doc_start("My addresses");
 
-$frame->doc_nav('View your addresses', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
+$frame = new HTMLframe();
+$frame->doc_start("My Pages");
+
+$frame->doc_nav('My Pages', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
 
 
 echo '
-    <form method="POST" name="host_leases" action="userIPs.php">
+    
     <div class="container">
       <div class="row">
+      <form method="POST" name="host_leases" action="user_pages.php">
         <div class="col-lg-9">
           
           <div class="row">
@@ -189,9 +196,11 @@ echo '
 
         <!-- FIXED RIGHT PANEL - END -->
 
-      </div>  
+      </form>
+      </div>
+
     </div>
-    </form>
+    
 
     <!-- Modal EDIT HOST code start -->
     <div class="modal fade" id="editHostDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -201,7 +210,7 @@ echo '
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="myModalLabel">Edit Host</h4>
           </div>
-          <form class="form" method="POST" action="userIPs.php">
+          <form class="form" method="POST" action="user_pages.php">
             <div class="modal-body">
               <div class="form-group">
                 <label for="userHostIp">Host IP</label>
