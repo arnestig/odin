@@ -1,7 +1,7 @@
 // In manage_networks
 $('#addNetworkDescription').keyup(validateInput);
 $('#networkDescription').keyup(validateInput);
-// In userIPs
+// In user_pages
 $('#userHostDescription').keyup(validateInput);
 // In book_address
 $('.host-description').keyup(validateInput);
