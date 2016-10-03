@@ -90,3 +90,9 @@ a.filter-link:hover { text-decoration: none; }
 .cart-remove:hover { color:red; cursor: pointer; background-color: #ddd; }
 
 .book-address-remove:hover { cursor: pointer; color:red;}
+
+#t-o-c ol { counter-reset: item; list-style-type: none; margin: 0; padding: 0; }
+#t-o-c ol > li { display: table; counter-increment: item; margin-bottom: 0.6em; }
+#t-o-c ol > li:before { content: counters(item, '.') ' '; display: table-cell; padding-right: 0.6em; }
+#t-o-c li ol > li { margin: 0; font-size: 1.0em; }
+#t-o-c li ol > li:before { content: counters(item, '.') ' '; }
