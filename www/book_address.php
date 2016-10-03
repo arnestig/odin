@@ -54,7 +54,7 @@ if (isset($_POST[ 'book_addresses' ])) {
       $_SESSION['booking_success'][] = $host_ip;
     }
   }
-  header('Location: userIPs.php');
+  header('Location: user_pages.php');
 }
 
 $frame = new HTMLframe();
