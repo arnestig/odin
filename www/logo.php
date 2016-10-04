@@ -31,9 +31,6 @@ $imagedata = base64_decode($settingshandler->getSettingValue( 'logo' ));
 $im = imagecreatefromstring($imagedata);
 $imageinfo = getimagesizefromstring( $imagedata );
 if ( $im !== false ) {
-    if ( isset( $_REQUEST[ 'small' ] ) ) {
-        $im = imagescale( $im, 70 ); 
-    }
     imagesavealpha($im, true);
     header('Content-Type: '.$imageinfo[ 'mime' ]);
 
