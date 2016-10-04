@@ -24,6 +24,10 @@
 
 session_start();
 
+if ( isset( $_SESSION[ 'user_data' ] ) ) {
+    header('Location: overview.php');
+}
+
 include_once( "include/user.php" );
 include_once( "include/settings.php" );
 include_once( "include/html_frame.php" );
