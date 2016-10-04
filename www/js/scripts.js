@@ -282,6 +282,17 @@ $(document).ready(function() {
         $(".form-group #networkCidr").val( networkCidr );
         $(".form-group #networkDescription").val( networkDescription );
     });
+
+    $(document).on("click", ".open-MailNetworkUsersDialog", function () {
+        
+        var networkId = $(this).data('networkid');
+        var networkBase = $(this).data('networkbase');
+        var networkCidr = $(this).data('networkcidr');
+
+        $(".form-group #mailNetworkId").val( networkId );
+        $(".form-group #mailNetworkBase").val( networkBase );
+        $(".form-group #mailNetworkCidr").val( networkCidr );
+    });
     
 
     //Submit page number when hitting enter

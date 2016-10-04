@@ -35,6 +35,7 @@ if ($_SESSION['user_data']['usr_privileges'] < 2) {
 }
 
 $nwManager = new NetworkManagement();
+$mail_handler = new MailHandler();
 
 $alert_message = '';
 $alert_type = '';
@@ -73,7 +74,7 @@ if (isset( $_POST[ 'delete_and_notify' ] )) {
 if ( !empty( $_POST[ 'notify_only' ] ) && !empty( $_POST[ 'notificationMessage' ] ) ) {
   $nwId = $_POST[ 'networkId' ];
   $nwInfo = $nwManager->getNetworkInfo( $nwId );
-  $mail_handler = new MailHandler();
+  
   $mail_handler->notifyNetworkUsers( $nwId, $nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $_POST['notificationMessage'], $_SESSION['user_data']['usr_id'] );
 
   $alert_message = 'Users of network <strong>'.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ].'</strong> was messaged about changes.';
@@ -85,6 +86,21 @@ if (isset( $_POST[ 'edit_description' ] )) {
 
   $alert_message = 'The description of network <strong>'.$_POST[ 'networkBase2' ].'/'.$_POST[ 'networkCidr2' ].'</strong> was updated.';
   $alert_type = 'success';
+}
+
+if (!empty($_POST['notify_users'])) {
+  
+  $network_id = $_POST[ 'mailNetworkId' ];
+  $network_message = $_POST['mailNetworkMessage'];
+  
+
+  if (!empty($network_id) && !empty($network_message)) {
+    $nwInfo = $nwManager->getNetworkInfo( $network_id );
+    $mail_handler->notifyNetworkUsers( $network_id, 'ODIN, about: '.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $network_message, $_SESSION['user_data']['usr_id'] );
+  } else {
+    $alert_message = 'You have to fill out all the fields.';
+    $alert_type = 'danger';
+  }
 }
 
 generate_data();
@@ -106,17 +122,23 @@ function generate_nw_list() {
                           data-networkcidr="'.$row[ 'nw_cidr' ].'" 
                           data-networkdescription="'.$row[ 'nw_description' ].'" 
                           href="#editNetworkDialog" data-toggle="modal" 
-                          data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                          data-backdrop="static"><i class="glyphicon glyphicon-pencil"></i></a>
+                    </td>
                     <td><a class="open-RemoveNetworkDialog" 
                           data-networkid="'.$row[ 'nw_id' ].'" 
                           data-networkbase="'.$row[ 'nw_base' ].'" 
                           data-networkcidr="'.$row[ 'nw_cidr' ].'" 
                           data-networkdescription="'.$row[ 'nw_description' ].'" 
                           href="#removeNetworkDialog" data-toggle="modal" 
-                          data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a></td>
-                  
-
-
+                          data-backdrop="static"><i class="glyphicon glyphicon-trash"></i></a>
+                    </td>
+                    <td><a class="open-MailNetworkUsersDialog" 
+                          data-networkid="'.$row[ 'nw_id' ].'" 
+                          data-networkbase="'.$row[ 'nw_base' ].'" 
+                          data-networkcidr="'.$row[ 'nw_cidr' ].'" 
+                          href="#mailNetworkUsersDialog" data-toggle="modal" 
+                          data-backdrop="static"><i class="glyphicon glyphicon-envelope"></i></a>
+                    </td>
                   </tr>
     ';
   }
@@ -244,6 +266,45 @@ echo '
       </div>
     </div>
 <!-- Modal DELETE NETWORK code end -->
+
+<!-- Modal MAIL NETWORK USERS code start -->
+    <div class="modal fade" id="mailNetworkUsersDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Mail Network Users</h4>
+          </div>
+          <form class="form" action="manage_networks.php" method="POST">
+            <div class="modal-body">
+            
+              <div class="form-group">
+                <label for="mailNetworkBase">Base</label>
+                <input type="text" class="form-control" id="mailNetworkBase" name="mailNetworkBase" value="" disabled/>
+                <input type="hidden" class="form-control" id="mailNetworkId" name="mailNetworkId" value=""/>
+              </div>
+              <div class="form-group">
+                <label for="mailNetworkCidr">CIDR</label>
+                <input type="text" class="form-control" id="mailNetworkCidr" name="mailNetworkCidr" value="" disabled/>
+              </div>
+              <div class="form-group">
+                <p>The message below will be sent to all users with a valid lease on this network.</p>
+              </div>
+              <div class="form-group">
+                <label for="mailNetworkMessage">Notification message</label>
+                <textarea class="form-control" rows="3" id="mailNetworkMessage" name="mailNetworkMessage" value="" placeholder="Mail message"></textarea>
+              </div>
+     
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" name="notify_users" value="Send Mail(s)"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<!-- Modal MAIL NETWORK USERS code end -->
 ';
 
 $frame->doc_nav('Networks', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn'] );
@@ -272,8 +333,9 @@ echo '
                   <tr>
                     <th>Scope</th>
                     <th>Description</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th title="Edit network description">Edit</th>
+                    <th title="Delete network">Delete</th>
+                    <th title="Mail users of network">Mail</th>
                   </tr>
                 </thead>
                 <tbody>
