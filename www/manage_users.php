@@ -100,7 +100,7 @@ if (!empty( $_POST['mail_user'] )) {
   if ($mailHandler->sendMailToUser( $_POST[ 'mailUserID' ], 
                                 $_POST[ 'mailSubject' ], 
                                 $_POST[ 'mailMessage' ], 
-                                $_SESSION[ 'user_data' ][ 'usr_id' ]) {
+                                $_SESSION[ 'user_data' ][ 'usr_id' ]) == true) {
     $alert_message = 'Message sent to user: <strong>'.$_POST['mailUserName2'].'</strong>.';
     $alert_type = 'success';
   } else {
