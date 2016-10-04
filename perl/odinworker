@@ -109,10 +109,10 @@ sub notification_sender
                     $smtp->mail( $settings{ email_sender } );
                     $smtp->to( $mail_item->{ usr_email } );
                     $smtp->data();
-                    $smtp->datasend( 'To: '.$mail_item->{ usr_email } );
-                    $smtp->datasend( 'Subject: '.$mail_item->{ nu_subject } );
-                    $smtp->datasend( '\n' );
-                    $smtp->datasend( $mail_item->{ nu_message } );
+                    $smtp->datasend( "To: ".$mail_item->{ usr_email }."\n" );
+                    $smtp->datasend( "Subject: ".$mail_item->{ nu_subject }."\n" );
+                    $smtp->datasend( "\n" );
+                    $smtp->datasend( $mail_item->{ nu_message }."\n" );
                     $smtp->dataend();
                     $smtp->quit();
                     olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }."), subject '".$mail_item->{ nu_subject }."'");
