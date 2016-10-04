@@ -103,17 +103,21 @@ sub notification_sender
             my $nu_hashref = $sth->fetchall_hashref( 'nu_id' );
             foreach my $nu_id ( keys %{ $nu_hashref } ) {
                 my $mail_item = $nu_hashref->{ $nu_id };
-
-                my $smtp = Net::SMTP->new( $settings{ email_server_hostname }.':'.$settings{ email_server_port },
-                    Timeout => $settings{ email_server_timeout } ) or olog( "Mailer", "ERROR! ".$!. ". Check your notification settings." );
-                $smtp->mail( $settings{ email_sender } );
-                $smtp->to( $mail_item->{ usr_email } );
-                $smtp->data();
-                $smtp->datasend( $mail_item->{ nu_message } );
-                $smtp->dataend();
-                $smtp->quit();
-                olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }.")");
-                push( @mails_sent, $nu_id );
+                if ( ! $mail_item->{ usr_email } eq "" ) {
+                    my $smtp = Net::SMTP->new( $settings{ email_server_hostname }.':'.$settings{ email_server_port },
+                            Timeout => $settings{ email_server_timeout } ) or olog( "Mailer", "ERROR! ".$!. ". Check your notification settings." );
+                    $smtp->mail( $settings{ email_sender } );
+                    $smtp->to( $mail_item->{ usr_email } );
+                    $smtp->data();
+                    $smtp->datasend( 'To: '.$mail_item->{ usr_email } );
+                    $smtp->datasend( 'Subject: '.$mail_item->{ nu_subject } );
+                    $smtp->datasend( '\n' );
+                    $smtp->datasend( $mail_item->{ nu_message } );
+                    $smtp->dataend();
+                    $smtp->quit();
+                    olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }."), subject '".$mail_item->{ nu_subject }."'");
+                    push( @mails_sent, $nu_id );
+                }
             }
 
             # cleanup database transaction

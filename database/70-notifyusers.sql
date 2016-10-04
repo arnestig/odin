@@ -46,7 +46,9 @@ create or replace function notify_user(
     from_usr_id smallint default 0)
 returns void AS $$
 begin
-    INSERT INTO notifyusers( nu_usr_id, nu_sent_by_id, nu_subject, nu_message ) VALUES ( usr_id, from_usr_id, subject, message );
+    IF usr_id <> 0 THEN
+        INSERT INTO notifyusers( nu_usr_id, nu_sent_by_id, nu_subject, nu_message ) VALUES ( usr_id, from_usr_id, subject, message );
+    END IF;
 end;
 $$ language plpgsql;
 alter function notify_user(varchar,smallint,text,text,smallint) owner to dbaodin;

@@ -65,7 +65,7 @@ declare
     ref1 refcursor;
 begin
 open ref1 for
-    SELECT nu.nu_id, nu.nu_message, u.usr_email, u.usr_firstn, u.usr_lastn, u.usr_usern
+    SELECT nu.nu_id, nu.nu_message, nu.nu_subject, u.usr_email, u.usr_firstn, u.usr_lastn, u.usr_usern
     FROM notifyusers nu LEFT OUTER JOIN users u ON(u.usr_id = nu.nu_usr_id)
     WHERE
         nu.nu_notification_sent = false;
