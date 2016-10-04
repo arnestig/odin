@@ -96,3 +96,5 @@ a.filter-link:hover { text-decoration: none; }
 #t-o-c ol > li:before { content: counters(item, '.') ' '; display: table-cell; padding-right: 0.6em; }
 #t-o-c li ol > li { margin: 0; font-size: 1.0em; }
 #t-o-c li ol > li:before { content: counters(item, '.') ' '; }
+
+#mail-dialog { background-color: #ddd; }

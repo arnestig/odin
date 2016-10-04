@@ -141,6 +141,17 @@ if (isset( $_POST[ 'delete_user' ])) {
   $alert_type = 'success';
 }
 
+if (!empty( $_POST['mailAllUsers'] )) {
+  if (!empty( $_POST['mailToUsers'] ) && $mailHandler->notifyAllUsers($_POST['mailToUsers'], $_SESSION['user_data']['usr_id'])) {
+    $alert_message = "Messages sent!";
+    $alert_type = "success";
+    unset($_POST);
+  } else {
+    $alert_message = "Could not send Mails.";
+    $alert_type = "danger";
+  }
+}
+
 $alert_html = '';
 if ($alert_message != '' && $alert_type != '') {
   $alert_html = '<div class="alert alert-'.$alert_type.' fade in">
@@ -442,6 +453,30 @@ echo '
               </a>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <button data-toggle="collapse" data-target="#mail-dialog">
+                <span class="glyphicon glyphicon-envelope"></span>Mail All Users
+              </button>
+            </div>
+          </div>
+          <div class="row spacer-row"></div>
+          <div id="mail-dialog" class="row collapse">
+            <div class="col-lg-12">
+
+              <form method="POST" action="manage_users.php">
+              <div class="row spacer-row"></div>
+                <div class="form-group">
+                  <label for="mailToUsers">The message below will be sent to all users</label>
+                  <textarea class="form-control" id="mailToUsers" name="mailToUsers" placeholder="Write your mail" rows="5"></textarea>
+                </div>
+                <input type="submit" class="btn btn-info pull-right" name="mailAllUsers" value="Send mail">
+                <div class="row spacer-row"></div>
+              </form>
+
+            </div>
+          </div>
+          <div class="row spacer-row"></div>
           <div class="row">
             <div class="col-lg-12">
               <table class="table table-condensed table-hover">

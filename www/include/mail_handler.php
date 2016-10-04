@@ -24,6 +24,7 @@
 
 include_once('settings.php');
 include_once('nwmanagement.php');
+include_once('usermanagement.php');
 
 class MailHandler {
 	private $dbcon;
@@ -40,6 +41,17 @@ class MailHandler {
         $sth = $this->dbcon->prepare( "SELECT notify_user( ?, ?, ?, ?, ? )" );
         $sth->execute( array( '', $user_id, $subject, $message, $sender_id ) );
         return true;
+    }
+
+    // Notify all active users in Odin
+    public function notifyAllUsers($message, $sender_id) 
+    {
+    	$user_management = new UserManagement();
+    	$all_users = $user_management->getUsers();
+    	foreach ($all_users as $user) {
+    		$this->sendMailToUser($user['usr_id'], 'About ODIN', $message, $sender_id);
+    	}
+    	return true;
     }
 
     // Notify all users of network for various reasons
