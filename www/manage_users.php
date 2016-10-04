@@ -96,6 +96,19 @@ if (isset( $_POST[ 'edit_user' ] )) {
 
 }
 
+if (!empty( $_POST['mail_user'] )) {
+  if ($mailHandler->sendMailToUser( $_POST[ 'mailUserID' ], 
+                                $_POST[ 'mailSubject' ], 
+                                $_POST[ 'mailMessage' ], 
+                                $_SESSION[ 'user_data' ][ 'usr_id' ]) {
+    $alert_message = 'Message sent to user: <strong>'.$_POST['mailUserName2'].'</strong>.';
+    $alert_type = 'success';
+  } else {
+    $alert_message = 'ERROR: Message not sent to user: <strong>'.$_POST['mailUserName2'].'</strong>.';
+    $alert_type = 'danger';
+  }
+}
+
 // TODO: MAIL instead. No pwd actually is mailed or changed atm
 if (isset( $_POST[ 'generate_new_password' ] )) {
   $not_very_rnd_pwd = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') , 0 , 10 );
@@ -126,10 +139,6 @@ if (isset( $_POST[ 'delete_user' ])) {
   }
   $alert_message = 'User <strong>'.$user_info[ 'usr_usern' ].'</strong> was successfully deleted.';
   $alert_type = 'success';
-}
-
-if (isset( $_POST['mail_user'] )) {
-  sendMail( $user_id, $subject, $message, $sender );
 }
 
 $alert_html = '';
@@ -364,44 +373,49 @@ echo '
     </div>
 <!-- Modal DELETE USER code end -->
 
-<!-- Modal TODO MAIL USER code start -->
+<!-- Modal MAIL USER code start -->
     <div class="modal fade" id="mailUserDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Delete user</h4>
+            <h4 class="modal-title" id="myModalLabel">Mail user</h4>
           </div>
           <form method="POST" action="manage_users.php">
           <div class="modal-body">
             
               
               <div class="form-group">
-                <label for="userName">Username</label>
-                <input class="form-control" type="text" id="mailUserName" name="userName" value="" disabled>
-                <input type="hidden" id="mailUserId" name="userId" value="">
+                <label for="mailUserName">Username</label>
+                <input class="form-control" type="text" id="mailUserName" name="mailUserName" value="" disabled>
+                <input type="hidden" id="mailUserID" name="mailUserID" value="">
+                <input type="hidden" id="mailUserName2" name="mailUserName2" value="">
               </div>
               <div class="form-group">
-                <label for="firstName">First name</label>
-                <input class="form-control" type="text" id="removeFirstName" value="" disabled>
+                <label for="mailFirstName">First name</label>
+                <input class="form-control" type="text" id="mailFirstName" value="" disabled>
               </div>
               <div class="form-group">
-                <label for="lastName">Last name</label>
-                <input class="form-control" type="text" id="removeLastName" value="" disabled>
+                <label for="mailLastName">Last name</label>
+                <input class="form-control" type="text" id="mailLastName" value="" disabled>
               </div>
               <div class="form-group">
-                <label for="email">Email</label>
-                <input class="form-control" type="email" id="removeEmail" value="" disabled>
+                <label for="mailEmail">Email</label>
+                <input class="form-control" type="email" id="mailEmail" value="" disabled>
               </div>
               <div class="form-group">
-                <label for="messageToUser">Message to user</label>
-                <textarea type="text" class="form-control" rows="3" name="messageToUser" id="messageToUser" placeholder="If left empty a default message will be sent." autofocus></textarea>
+                <label for="mailSubject">Subject</label>
+                <input class="form-control" type="text" id="mailSubject" name="mailSubject" value="" placeholder="Write your subject here" autofocus required pattern="^(?!\s*$).+">
+              </div>
+              <div class="form-group">
+                <label for="mailMessage">Message to user</label>
+                <textarea type="text" class="form-control" rows="3" name="mailMessage" id="mailMessage" placeholder="Write your message here." required pattern="^(?!\s*$).+"></textarea>
               </div>
           
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <input type="submit" name="delete_user" value="Delete user" class="btn btn-primary">
+            <input type="submit" name="mail_user" value="Send Mail" class="btn btn-primary">
           </div>
           </form>
         </div>

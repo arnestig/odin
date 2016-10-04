@@ -240,14 +240,15 @@ $(document).ready(function() {
 
     $(document).on("click", ".open-MailUserDialog", function () {
         
-        var userId = $(this).data('userid');
+        var userID = $(this).data('userid');
         var userName = $(this).data('username');
         var firstName = $(this).data('firstname');
         var lastName = $(this).data('lastname');
         var email = $(this).data('email');
 
-        $(".form-group #mailUserId").val( userId );
+        $(".form-group #mailUserID").val( userID );
         $(".form-group #mailUserName").val( userName );
+        $(".form-group #mailUserName2").val( userName );
         $(".form-group #mailFirstName").val( firstName );
         $(".form-group #mailLastName").val( lastName );
         $(".form-group #mailEmail").val( email );
