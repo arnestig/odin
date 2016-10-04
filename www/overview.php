@@ -208,7 +208,7 @@ function show_host_row_view($row, $cur_reservations) {
     $checkbox = '';
   }
 
-  $admin_rm_lease = '';
+  $admin_rm_lease = '<td>&nbsp</td>';
   if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0 && 
     ($row['status'] == 4 || $row['status'] == 8)) {
     $admin_rm_lease = '<td>
@@ -219,7 +219,10 @@ function show_host_row_view($row, $cur_reservations) {
                           </button>
                         </form>
                       </td>';    
+  } else if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] < 1) {
+    $admin_rm_lease = '';
   }
+
   $user_email_html = '-';
   if (!empty($row['usr_email'])) {
     $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_firstn'].' '.$row['usr_lastn'].'</a>';
