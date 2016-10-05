@@ -1,7 +1,8 @@
 html { overflow-y: scroll; }
 body { padding-bottom: 40px; }
 
-.logo-img { max-width: 80px; max-height: 20px; }
+.logo-big { max-width: 300px; max-height: 100px; }
+.logo-small { max-width: 80px; max-height: 20px; }
 
 .history h6 { cursor: pointer; padding: 2px; border: 1px solid black; }
 table .pop-table { width: 500px;}
