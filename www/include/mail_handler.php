@@ -63,7 +63,7 @@ class MailHandler {
 		$nw_users = $nw_management->getNetworkUsers( $nw_id );
 
 		foreach ($nw_users as $user) {
-			$this->sendMailToUser( $user, $subject, $message, $sender );
+			$this->sendMailToUser( $user[ 'usr_id' ], $subject, $message, $sender );
 		}
 		return true;
 	}
@@ -78,7 +78,7 @@ class MailHandler {
 		$nw_users = $nw_management->getNetworkUsers( $nw_id );
 
 		foreach ($nw_users as $user) {
-			$this->sendMailToUser( $user, $network.' has been deleted.', $message, $sender );
+			$this->sendMailToUser( $user[ 'usr_id' ], $network.' has been deleted.', $message, $sender );
 		}
 		return true;	
 	}

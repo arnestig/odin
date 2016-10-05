@@ -415,7 +415,7 @@ declare
 ref1 refcursor;
 begin
 open ref1 for
-    SELECT DISTINCT usr_id FROM hosts WHERE nw_id = get_nw_id; 
+    SELECT DISTINCT u.usr_id,u.usr_firstn,u.usr_lastn,u.usr_usern FROM hosts h LEFT OUTER JOIN users u ON ( h.usr_id = u.usr_id ) WHERE nw_id = get_nw_id AND h.usr_id <> 0;
 return next ref1;
 end;
 $$ language plpgsql;

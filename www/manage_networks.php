@@ -40,6 +40,18 @@ $mail_handler = new MailHandler();
 $alert_message = '';
 $alert_type = '';
 
+if (!empty($_GET[ 'mailnetworkid' ])) {
+    $network_id = $_GET[ 'mailnetworkid' ];
+    $users = $nwManager->getNetworkUsers( $network_id );
+    $html_res = '<table class="pop-table"><tr><th></th></tr>';
+    foreach ($users as $user) {
+        $html_res .= '<tr><td style="white-space: nowrap">'.$user[ 'usr_firstn' ].' '.$user[ 'usr_lastn'].'</td></tr>';
+    }
+    $html_res .= '</table>';
+    echo $html_res;
+    exit;
+}
+
 if (isset( $_POST['add_network'] )) {
   if ( $_POST[ 'add_network' ] === 'Add network' ) {
     if ( $nwManager->addNetwork(
@@ -111,7 +123,9 @@ function generate_data() {
 }
 
 function generate_nw_list() {
+  $nwManager = new NetworkManagement();
   foreach ( $_SESSION[ 'networks' ] as $row ) {
+    $users = $nwManager->getNetworkUsers( $row[ 'nw_id' ] );
     echo '
                  <tr>
                     <td>'.$row[ 'nw_base' ].'/'.$row['nw_cidr'].'</td>
@@ -136,6 +150,8 @@ function generate_nw_list() {
                           data-networkid="'.$row[ 'nw_id' ].'" 
                           data-networkbase="'.$row[ 'nw_base' ].'" 
                           data-networkcidr="'.$row[ 'nw_cidr' ].'" 
+                          data-mailnetworkidusers="'.$row[ 'nw_id' ].'"
+                          data-usersinnw="'.count($users).'"
                           href="#mailNetworkUsersDialog" data-toggle="modal" 
                           data-backdrop="static"><i class="glyphicon glyphicon-envelope"></i></a>
                     </td>
@@ -288,7 +304,8 @@ echo '
                 <input type="text" class="form-control" id="mailNetworkCidr" name="mailNetworkCidr" value="" disabled/>
               </div>
               <div class="form-group">
-                <p>The message below will be sent to all users with a valid lease on this network.</p>
+                <input type="hidden" class="form-control" id="mailNetworkIdUsers" name="mailNetworkIdUsers" value=""/>
+                <p>The message below will be sent to <a id="mailNetworkIdUsersLink" class="mailusersinnetwork"></a>.</p>
               </div>
               <div class="form-group">
                 <label for="mailNetworkMessage">Notification message</label>

@@ -118,7 +118,7 @@ class NetworkManagement
         // get each result set
         $results = array();
         $sth = $this->dbcon->query('FETCH ALL IN "'. $cursors['get_network_users'] .'";');
-        $results = $sth->fetchAll( PDO::FETCH_COLUMN, 0 );
+        $results = $sth->fetchAll( PDO::FETCH_ASSOC );
         $sth->closeCursor();
         $this->dbcon->commit();
         unset($sth);

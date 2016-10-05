@@ -26,6 +26,34 @@ $(document).ready(function() {
         event.preventDefault();
     });
 
+    $('.mailusersinnetwork').popover({
+        trigger: 'click',
+        placement: 'right',
+        title: 'Users',
+        container: 'body',
+        html: true,
+        content: function() {
+            var theLog = '<p>No users leasing on this network</p>' + this.val;
+            var nwid = $(".form-group #mailNetworkIdUsers").val();
+            var heyhey = 'alhd';
+            $.ajax({
+                url: 'manage_networks.php',
+                type: 'GET',
+                dataType: 'text',
+                data: 'mailnetworkid=' + nwid,
+                //very bad with async false....
+                // TODO: rewrite with callback
+                async: false,
+                success: function( response ) {
+                    theLog = response;
+                    //console.log(theLog);
+                }
+            });
+            //console.log(theLog);
+            return theLog;
+        }
+    });
+
     $('.history').popover({
         trigger: 'click',
         placement: 'right',
@@ -288,10 +316,18 @@ $(document).ready(function() {
         var networkId = $(this).data('networkid');
         var networkBase = $(this).data('networkbase');
         var networkCidr = $(this).data('networkcidr');
+        var numberOfUsersInNw = $(this).data('usersinnw');
+        if ( numberOfUsersInNw == 1 ) {
+            numberOfUsersInNw += " user";
+        } else {
+            numberOfUsersInNw += " users";
+        }
 
         $(".form-group #mailNetworkId").val( networkId );
         $(".form-group #mailNetworkBase").val( networkBase );
         $(".form-group #mailNetworkCidr").val( networkCidr );
+        $(".form-group #mailNetworkIdUsers").val( networkId );
+        $("#mailNetworkIdUsersLink").text( numberOfUsersInNw );
     });
     
 
