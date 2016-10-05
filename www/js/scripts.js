@@ -303,14 +303,15 @@ $(document).ready(function() {
          }
     });
 
-    $('.accordion-toggle').click(function() {
-
-        console.log($('td#' + this.id + ' i'));
-        console.log($('td#' + this.id + '>i').hasClass('glyphicon-triangle-right'));
-
-        if ($(this.id + ' i').hasClass('glyphicon-triangle-right')) {
-            return console.log('yis - glyphicon-triangle-right');
+    /*
+    $('.accordion-toggle').on('click', function() {
+        var id = $(this).prop('id').split('.').join('');
+        console.log(id);
+        if ($('#acc' + id + ' > i').hasClass('glyphicon-triangle-right')) {
+            console.log('yes');
+            $(this + '> i.glyphicon-triangle-right').hide();
+            $(this + '> i.glyphicon-triangle-down').display('block');
         }
-
     });
+    */
 });

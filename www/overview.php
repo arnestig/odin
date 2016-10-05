@@ -253,7 +253,7 @@ function show_host_row_view($row, $cur_reservations) {
 
   return '
                   <tr class="'.$bootstrap_color_tag.'">
-                    <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i></td>
+                    <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i><i class="glyphicon glyphicon-triangle-down" style="display: none;"></i></td>
                     <td>'.$row['host_ip'].'</td>
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>
