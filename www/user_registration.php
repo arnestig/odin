@@ -31,6 +31,10 @@ include_once('include/settings.php');
 
 $settings = new Settings();
 $user_reg = $settings->getSettingValue('allow_user_registration');
+$system_operator = $settings->getSettingValue('system_operator');
+$country = $settings->getSettingValue('country');
+$contact_mail = $settings->getSettingValue('contact_mail');
+
 if ($user_reg != 'checked') {
   header('Location: index.php');
 }
@@ -99,7 +103,7 @@ echo '
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php"><img src="logo.php?small" alt="Odin - Logo"></a>
+          <a class="navbar-brand" href="index.php"><img src="logo.php?small" alt="Odin - Logo" class="logo-small"></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
@@ -732,17 +736,18 @@ echo '
                 <ol>
                   <li>
                     These terms and conditions shall be governed by and construed in accordance with the law
-                    of the country where the server implementing ODIN is located.
+                    of '.$country.'.
                   </li>
                   <li>
                     Any disputes relating to these terms and conditions shall be subject to the jurisdiction 
-                    of the courts of the country where the server implementing ODIN is located.
+                    of the courts of '.$country.'.
                   </li>
                 </ol>
               </li>
               <li>Our details
                 <ol>
-                  This website is owned and operated by {{ individual/organisation from settings }}.
+                  This website is owned and operated by '.$system_operator.', '.$country.'. Contact us
+                  by email at '.$contact_mail.'.
                 </ol>
               </li>
             </ol>
