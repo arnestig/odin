@@ -60,7 +60,7 @@ echo '
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php"><img src="logo.php?small" alt="Odin - Logo"></a>
+          <a class="navbar-brand" href="index.php"><img src="logo.php?small" alt="Odin - Logo" class="logo-small"></a>
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
