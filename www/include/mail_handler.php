@@ -38,8 +38,12 @@ class MailHandler {
     // Default return true. Add error handling to do other things
     public function sendMailToUser( $user_id, $subject, $message, $sender_id ) 
     {
+        $newmessage = "The following message was sent from Odin by ".
+        $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".
+        $_SESSION[ 'user_data' ][ 'usr_lastn' ]." (".
+        $_SESSION[ 'user_data' ][ 'usr_email' ]."):\n\n".$message;
         $sth = $this->dbcon->prepare( "SELECT notify_user( ?, ?, ?, ?, ? )" );
-        $sth->execute( array( '', $user_id, $subject, $message, $sender_id ) );
+        $sth->execute( array( '', $user_id, $subject, $newmessage, $sender_id ) );
         return true;
     }
 
