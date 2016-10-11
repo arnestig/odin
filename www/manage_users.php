@@ -97,6 +97,10 @@ if (isset( $_POST[ 'edit_user' ] )) {
 }
 
 if (!empty( $_POST['mail_user'] )) {
+    $newmessage = "The following message was sent from Odin by ".
+    $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".
+    $_SESSION[ 'user_data' ][ 'usr_lastn' ]." (".
+    $_SESSION[ 'user_data' ][ 'usr_email' ]."):\n\n";
   if ($mailHandler->sendMailToUser( $_POST[ 'mailUserID' ], 
                                 $_POST[ 'mailSubject' ], 
                                 $_POST[ 'mailMessage' ], 
