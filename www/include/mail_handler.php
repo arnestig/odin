@@ -40,8 +40,11 @@ class MailHandler {
     {
         $newmessage = "The following message was sent from Odin by ".
         $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".
-        $_SESSION[ 'user_data' ][ 'usr_lastn' ]." (".
-        $_SESSION[ 'user_data' ][ 'usr_email' ]."):\n\n".$message;
+        $_SESSION[ 'user_data' ][ 'usr_lastn' ];
+        if ( !empty( $_SESSION[ 'user_data' ][ 'usr_email' ] ) ) {
+            $newmessage .= " (".$_SESSION[ 'user_data' ][ 'usr_email' ].")";
+        }
+        $newmessage .= ":\n\n".$message;
         $sth = $this->dbcon->prepare( "SELECT notify_user( ?, ?, ?, ?, ? )" );
         $sth->execute( array( '', $user_id, $subject, $newmessage, $sender_id ) );
         return true;
