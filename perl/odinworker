@@ -71,6 +71,32 @@ sub get_setting
     return $setting_value;
 }
 
+sub expire_leases
+{
+    # connect to our database
+    my $dbh = DBI->connect("DBI:Pg:dbname=odin;host=localhost", "dbaodin", "gresen", {'RaiseError' => 1});
+    $dbh->{ AutoCommit } = 0;
+
+    while ( $::running ) {
+        # collect all settings needed
+        # select our stored procedure for emails to send
+        my $sth = $dbh->prepare( 'SELECT * FROM expire_leases();' );
+        $sth->execute();
+        $sth->finish();
+        $dbh->commit();
+
+        # sleep until next time we're checking the hosts
+        for ( 1..60 ) {
+            if ( $::running ) {
+                sleep( 1 );
+            }
+        }
+    }
+    # clean up
+    $dbh->disconnect();
+
+}
+
 sub notification_sender
 {
     # connect to our database
@@ -111,6 +137,8 @@ sub notification_sender
                     $smtp->data();
                     $smtp->datasend( "To: ".$mail_item->{ usr_email }."\n" );
                     $smtp->datasend( "Subject: ".$mail_item->{ nu_subject }."\n" );
+                    $smtp->datasend( "MIME-Version: 1.0\n" );
+                    $smtp->datasend( "Content-Type: text/html; charset=\"UTF-8\" \n" );
                     $smtp->datasend( "\n" );
                     $smtp->datasend( $mail_item->{ nu_message }."\n" );
                     $smtp->dataend();
@@ -141,15 +169,6 @@ sub notification_sender
     }
     # clean up
     $dbh->disconnect();
-}
-
-# thread function for sending emails to users
-sub send_email
-{
-    my($email_address,$fullname,$reenable_key,$host_ip,$host_description,$host_last_seen) = @_;
-    while ( $::running ) {
-        sleep( 5 );
-    }
 }
 
 # function for scanning a host
@@ -279,11 +298,17 @@ sub scan_host_master
     $dbh->disconnect();
 }
 
+# check if we got root
+if ( $> != 0 ) {
+    print "This application needs to run as root\n";
+    exit 1;
+}
+
 # setup our signal handler
 $SIG{ INT } = \&signal_handler;
 
 # create our two main threads for scanning hosts and sending emails
-push( @mThreadPool, threads->new(\&scan_host_master), threads->new(\&notification_sender) );
+push( @mThreadPool, threads->new(\&scan_host_master), threads->new(\&notification_sender), threads->new(\&expire_leases) );
 
 while( $::running ) {
     sleep 1;

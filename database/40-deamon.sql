@@ -58,6 +58,52 @@ end;
 $$ language plpgsql;
 alter function update_host_status(varchar,boolean,timestamp) owner to dbaodin;
 
+-- expire_leases
+create or replace function expire_leases()
+returns void as $$
+declare
+    host_expiry_warning_time smallint;
+    host_expiry_warning_interval smallint;
+    host_expired record;
+    host_about_to_expire record;
+    odin_site_url varchar;
+begin
+    SELECT s_value FROM settings WHERE s_name = 'host_expiry_warning_time' INTO host_expiry_warning_time;
+    SELECT s_value FROM settings WHERE s_name = 'odin_site_url' INTO odin_site_url;
+    -- Here the host has expired
+    FOR host_expired IN SELECT host_ip,usr_id,host_name,host_description,host_last_seen FROM hosts WHERE host_lease_expiry < NOW() LOOP
+        -- terminate the lease
+        PERFORM terminate_lease( ''::varchar, host_expired.host_ip, host_expired.usr_id );
+        -- add host log entry
+        PERFORM add_log_entry( ''::varchar, 1::smallint, host_expired.host_ip, 'Host lease expired. Lease terminated and user notified.' );
+        -- send notification to user
+        PERFORM notify_user( ''::varchar, host_expired.usr_id, 'Host ' || host_expired.host_ip || ' lease expired', 'Host lease expired' || 'Your lease of host '' || host_expired.host_ip || '' expired and is now available for booking again.
+
+Host details
+Hostname: ' || host_expired.host_name || '
+Description: ' || host_expired.host_description || '
+Last seen: ' || host_expired.host_last_seen, 1::smallint );
+    END LOOP;
+
+    -- Here the host has not yet expired and we haven't sent a notification to the user
+    FOR host_about_to_expire IN SELECT host_ip,usr_id,host_name,host_description,host_last_seen,host_lease_expiry FROM hosts WHERE host_lease_expiry < NOW() + host_expiry_warning_time * interval '1 day' and (host_last_notified + host_expiry_warning_interval * interval '1 day' < NOW() or host_last_notified is null) LOOP
+        -- update hosts table
+        UPDATE hosts SET host_last_notified = NOW() WHERE host_ip = host_about_to_expire.host_ip;
+        -- add host log entry
+        PERFORM add_log_entry( ''::varchar, 1::smallint, host_about_to_expire.host_ip, 'Host lease about to expire. User notified.' );
+        -- send notification to user
+        PERFORM notify_user( ''::varchar, host_about_to_expire.usr_id, 'Host ' || host_about_to_expire.host_ip || ' about to expire', 'Your lease of host ''' || host_about_to_expire.host_ip || ''' will expire at ' || to_char(host_about_to_expire.host_lease_expiry, 'YYYY-MM-DD HH24:MI:SS') || '.
+Visit <a href="' || odin_site_url || '/user_pages.php"> to extend or terminate this lease.
+
+Host details
+Hostname: ' || host_about_to_expire.host_name || '
+Description: ' || host_about_to_expire.host_description || '
+Last seen: ' || host_about_to_expire.host_last_seen, 1::smallint );
+    END LOOP;
+end;
+$$ language plpgsql;
+alter function expire_leases() owner to dbaodin;
+
 -- get_emails_to_send
 create or replace function get_emails_to_send()
 returns SETOF refcursor AS $$
@@ -83,3 +129,4 @@ begin
 end;
 $$ language plpgsql;
 alter function remove_notifyuser_message(integer) owner to dbaodin;
+

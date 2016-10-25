@@ -22,7 +22,8 @@
 
 \c odin;
 
-create extension "uuid-ossp";
+
+create extension IF NOT EXISTS "uuid-ossp";
 
 -- authenticate
 create or replace function authenticate (
