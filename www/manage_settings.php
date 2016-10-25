@@ -46,44 +46,36 @@ if ( isset($_GET[ 'group' ]) && !empty($_GET[ 'group' ]) ) {
 $cur_settings = $settings->getSettings($cur_s_group['sg_name']);
 
 if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
-  $settingsmax = $_POST[ 'settingsIdMax' ];
-  $settingsmin = $_POST[ 'settingsIdMin' ];
-  for ( $i = $settingsmin; $i <= $settingsmax; $i++ ) {
-    $updateValue = $_POST[$i];
-    $updateName = '';
-    $updateType = '';
-    $okayToUpdate = true;
-
-    // TODO: getSetting by id instead
+    echo '<pre>';
+    var_dump( $_POST );
+    echo '</pre>';
     foreach ($cur_settings as $row) {
-      if ( $row[ 's_id' ] == $i ) {
-          // special handling for logo uploads
-          if ( $row[ 's_name' ] === 'logo' ) {
-              if ( !empty( $_FILES[ $i ][ 'tmp_name' ] ) ) {
-                  // Read in a binary file
-                  $data = file_get_contents( $_FILES[ $i ][ 'tmp_name' ] );
+        $updateName = $row[ 's_name' ];
+        $updateType = $row[ 's_type' ];
+        $okayToUpdate = true;
+        if ( $updateType === 'checkbox' ) {
+            if ( $_POST[ 'setting_'.$row[ 's_name' ] ]  === 'on' ) {
+                $updateValue = 'checked';
+            } else {
+                $updateValue = '';
+            }
+        } else if ( $updateType === 'file' ) {
+            if ( !empty( $_FILES[ 'setting_'.$row[ 's_name'] ][ 'tmp_name' ] ) ) {
+                // Read in a binary file
+                $data = file_get_contents( $_FILES[ 'setting_'.$row[ 's_name' ] ][ 'tmp_name' ] );
+                // Escape the binary data
+                $updateValue = base64_encode( $data );
+            } else {
+                $okayToUpdate = false;
+            }
+        } else {
+            $updateValue = $_POST[ 'setting_'.$row[ 's_name' ] ];
+        }
 
-                  // Escape the binary data
-                  $updateValue = base64_encode( $data );
-              } else {
-                  $okayToUpdate = false;
-              }
-          }
-          $updateName = $row[ 's_name' ];
-          $updateType = $row[ 's_type' ];
-      }
+        if ( $okayToUpdate === true ) {
+            $settings->changeSetting( $updateName, $updateValue );
+        }
     }
-    if ( $updateType === 'checkbox' ) {
-      if ( $updateValue === 'on' ) {
-        $updateValue = 'checked';
-      } else {
-        $updateValue = '';
-      }
-    }      
-    if ( $okayToUpdate === true ) {
-        $settings->changeSetting( $updateName, $updateValue );
-    }
-  }
 }
 
 function genNavTabs($s_group,$all_groups) {
@@ -104,11 +96,8 @@ function genNavTabs($s_group,$all_groups) {
 function displaySettings($s_group) {
   $settings = new Settings();
   $allsettings = $settings->getSettings($s_group);
-  $form_html = '<form enctype="multipart/form-data" class="form-horizontal" method="post" action="manage_settings.php?group='.$s_group.'">';
+  $form_html = '<form enctype="multipart/form-data" id="updateSettingsForm" class="form-horizontal" method="post" action="manage_settings.php?group='.$s_group.'"><input type="submit" name="submit" value="Save changes" class="hidden">';
   $settingid = array();
-
-  $minId = $allsettings[0][ 's_id' ];
-  $maxId = $minId + sizeof($allsettings) - 1;
 
   foreach ( $allsettings as $cursetting ) {
     $form_html .= '<div class="form-group">
@@ -119,7 +108,7 @@ function displaySettings($s_group) {
         $form_html .= '<img src="logo.php" alt="Odin logo">';
     }
 
-    $form_html .= '<input type="'.$cursetting[ 's_type' ].'" class="form-control" id="'.$cursetting[ 's_name' ].'" name="'.$cursetting[ 's_id' ].'" ';
+    $form_html .= '<input type="'.$cursetting[ 's_type' ].'" class="form-control" id="'.$cursetting[ 's_name' ].'" name="setting_'.$cursetting[ 's_name' ].'" ';
     if ($cursetting[ 's_type' ] === 'checkbox') {
       $form_html .= $cursetting[ 's_value' ];
     } else if ( $cursetting[ 's_type' ] === 'file' ) {
@@ -134,10 +123,8 @@ function displaySettings($s_group) {
 
   $form_html .= '<div class="form_group">
                   <div class="col-lg-6 col-lg-offset-6">
-                    <input type="hidden" name="settingsIdMin" value="'.$minId.'">
-                    <input type="hidden" name="settingsIdMax" value="'.$maxId.'">
                     <button class="btn btn-default" href="manage_settings.php?group='.$s_group.'">Discard</button>
-                    <input type="submit" id="saveSetting" class="btn btn-info pull-right" name="submit" value="Save changes"> 
+                    <input type="submit" id="saveSettingClick" class="btn btn-info pull-right" name="submit" value="Save changes"> 
                   </div>
                 </div>
               </form>';

@@ -179,7 +179,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#saveSetting").on('click', function(event) {
+    $("#updateSettingsForm").submit(function(event) {
         if( !confirm('Are you sure that you save the settings?\nYou may need to logout first before certain settings are visible for you.') ) {
             event.preventDefault();
         }
