@@ -51,10 +51,11 @@ if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
         $updateType = $row[ 's_type' ];
         $okayToUpdate = true;
         if ( $updateType === 'checkbox' ) {
-            if ( $_POST[ 'setting_'.$row[ 's_name' ] ]  === 'on' ) {
-                $updateValue = 'checked';
-            } else {
-                $updateValue = '';
+            $updateValue = '';
+            if ( isset( $_POST[ 'setting_'.$row[ 's_name' ] ] ) ) {
+                if ( $_POST[ 'setting_'.$row[ 's_name' ] ]  === 'on' ) {
+                    $updateValue = 'checked';
+                }
             }
         } else if ( $updateType === 'file' ) {
             if ( !empty( $_FILES[ 'setting_'.$row[ 's_name'] ][ 'tmp_name' ] ) ) {
