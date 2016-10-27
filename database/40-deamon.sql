@@ -77,7 +77,7 @@ begin
         -- add host log entry
         PERFORM add_log_entry( ''::varchar, 1::smallint, host_expired.host_ip, 'Host lease expired. Lease terminated and user notified.' );
         -- send notification to user
-        PERFORM notify_user( ''::varchar, host_expired.usr_id, 'Host ' || host_expired.host_ip || ' lease expired', 'Host lease expired' || 'Your lease of host '' || host_expired.host_ip || '' expired and is now available for booking again.
+        PERFORM notify_user( ''::varchar, host_expired.usr_id, 'Host ' || host_expired.host_ip || ' lease expired', 'Host lease expired' || 'Your lease of host ''' || host_expired.host_ip || ''' expired and is now available for booking again.
 
 Host details
 Hostname: ' || host_expired.host_name || '

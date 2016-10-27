@@ -130,6 +130,8 @@ sub notification_sender
             foreach my $nu_id ( keys %{ $nu_hashref } ) {
                 my $mail_item = $nu_hashref->{ $nu_id };
                 if ( ! $mail_item->{ usr_email } eq "" ) {
+                    my $mail_body = $mail_item->{ nu_message };
+                    $mail_body =~ s/\n/<br\/>/g;
                     my $smtp = Net::SMTP->new( $settings{ email_server_hostname }.':'.$settings{ email_server_port },
                             Timeout => $settings{ email_server_timeout } ) or olog( "Mailer", "ERROR! ".$!. ". Check your notification settings." );
                     $smtp->mail( $settings{ email_sender } );
@@ -140,7 +142,7 @@ sub notification_sender
                     $smtp->datasend( "MIME-Version: 1.0\n" );
                     $smtp->datasend( "Content-Type: text/html; charset=\"UTF-8\" \n" );
                     $smtp->datasend( "\n" );
-                    $smtp->datasend( $mail_item->{ nu_message }."\n" );
+                    $smtp->datasend( $mailbody );
                     $smtp->dataend();
                     $smtp->quit();
                     olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }."), subject '".$mail_item->{ nu_subject }."'");
