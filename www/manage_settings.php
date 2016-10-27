@@ -46,9 +46,6 @@ if ( isset($_GET[ 'group' ]) && !empty($_GET[ 'group' ]) ) {
 $cur_settings = $settings->getSettings($cur_s_group['sg_name']);
 
 if ( isset( $_POST[ 'submit' ] ) && $_POST[ 'submit' ] === 'Save changes' ) {
-    echo '<pre>';
-    var_dump( $_POST );
-    echo '</pre>';
     foreach ($cur_settings as $row) {
         $updateName = $row[ 's_name' ];
         $updateType = $row[ 's_type' ];
