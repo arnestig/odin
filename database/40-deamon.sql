@@ -80,9 +80,9 @@ begin
         PERFORM notify_user( ''::varchar, host_expired.usr_id, 'Host ' || host_expired.host_ip || ' lease expired', 'Host lease expired' || 'Your lease of host ''' || host_expired.host_ip || ''' expired and is now available for booking again.
 
 Host details
-Hostname: ' || host_expired.host_name || '
-Description: ' || host_expired.host_description || '
-Last seen: ' || host_expired.host_last_seen, 1::smallint );
+<b>Hostname:</b> ' || host_expired.host_name || '
+<b>Description:</b> ' || host_expired.host_description || '
+<b>Last seen:</b> ' || host_expired.host_last_seen, 1::smallint );
     END LOOP;
 
     -- Here the host has not yet expired and we haven't sent a notification to the user
@@ -93,12 +93,12 @@ Last seen: ' || host_expired.host_last_seen, 1::smallint );
         PERFORM add_log_entry( ''::varchar, 1::smallint, host_about_to_expire.host_ip, 'Host lease about to expire. User notified.' );
         -- send notification to user
         PERFORM notify_user( ''::varchar, host_about_to_expire.usr_id, 'Host ' || host_about_to_expire.host_ip || ' about to expire', 'Your lease of host ''' || host_about_to_expire.host_ip || ''' will expire at ' || to_char(host_about_to_expire.host_lease_expiry, 'YYYY-MM-DD HH24:MI:SS') || '.
-Visit <a href="' || odin_site_url || '/user_pages.php"> to extend or terminate this lease.
+Visit <a href="' || odin_site_url || '/user_pages.php">' || odin_site_url || '/user_pages.php</a> to extend or terminate this lease.
 
 Host details
-Hostname: ' || host_about_to_expire.host_name || '
-Description: ' || host_about_to_expire.host_description || '
-Last seen: ' || host_about_to_expire.host_last_seen, 1::smallint );
+<b>Hostname:</b> ' || host_about_to_expire.host_name || '
+<b>Description:</b> ' || host_about_to_expire.host_description || '
+<b>Last seen:</b> ' || host_about_to_expire.host_last_seen, 1::smallint );
     END LOOP;
 end;
 $$ language plpgsql;
