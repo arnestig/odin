@@ -236,6 +236,16 @@ $(document).ready(function() {
 
     });
 
+
+    // admin transfer lease
+    $(document).on("click", ".open-AdminChangeLeaseDialog", function () {
+        var curUserId = $(this).data('curusrid');
+        var hostIP = $(this).data('hostip');
+        $(".form-group select").val(curUserId);
+        $(".form-group #changeLeaseHostip").val( hostIP );
+        $(".form-group #currentLeaseUserId").val( curUserId );
+    });
+
     // Manage Users
     $(document).on("click", ".open-EditUserDialog", function () {
 

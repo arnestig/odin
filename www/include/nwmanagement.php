@@ -246,6 +246,13 @@ class NetworkManagement
         $result = $sth->fetch();
     }
 
+    public function transferLease( $host_ip, $cur_usr_id, $new_usr_id, $admin_usr_id )
+    {
+        $sth = $this->dbcon->prepare( "SELECT transfer_lease( ?, ?, ?, ?, ? )" );
+        $sth->execute( array( '', $host_ip, $cur_usr_id, $new_usr_id, $admin_usr_id ) );
+        $result = $sth->fetch();
+    }
+
     private function isCIDR( $cidr )
     {
         if( is_numeric( $cidr ) == true ) {

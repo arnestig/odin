@@ -24,6 +24,7 @@
 
 include_once('include/session.php'); # always include this file first
 include_once('include/nwmanagement.php');
+include_once('include/usermanagement.php');
 include_once('include/html_frame.php');
 
 //Default range-view (TODO: delete init after implemented as user-default)
@@ -76,12 +77,21 @@ if ( isset( $_REQUEST[ 'result_page' ] )) {
   }
 }
 
+// Handle POST from admin removing lease
 if (!empty($_POST['admin-rm-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
   if ($_POST['lease_holder'] != 0) {
     $ip = $_POST['admin-rm-lease'];
     $nwManager = new NetworkManagement();
     $nwManager->terminateLease($ip,$_POST['lease_holder']);
   }
+}
+
+if (!empty($_POST['admin-change-lease']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0 ) {
+    $newuser = $_POST[ 'changeLeaseUserId' ];
+    $hostip = $_POST[ 'changeLeaseHostip' ];
+    $currentuser = $_POST[ 'currentLeaseUserId' ];
+    $nwManager = new NetworkManagement();
+    $nwManager->transferLease( $hostip, $currentuser, $newuser, $_SESSION[ 'user_data' ][ 'usr_id' ] );
 }
 
 update_meta_data();
@@ -107,6 +117,18 @@ function update_meta_data() {
   $_SESSION[ 'host_rows' ] = $first_row['total_rows'];
   $_SESSION[ 'max_pages' ] = $first_row['total_pages'];
 
+}
+
+function user_select_list() {
+    $userManager = new UserManagement();
+    $ret_html = '';
+    if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
+        $users = $userManager->getUsers();
+        foreach ( $users as $user ) {
+            $ret_html .= '<option value="'.$user[ 'usr_id'].'">'.$user[ 'usr_firstn' ].' '.$user[ 'usr_lastn'].'</option>';
+        }
+    }
+    return $ret_html;
 }
 
 function network_ranges() {
@@ -227,9 +249,10 @@ function show_host_row_view($row, $cur_reservations) {
   if (!empty($row['usr_email'])) {
     $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_firstn'].' '.$row['usr_lastn'].'</a>';
   }
-  if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
+  if (!empty($row['usr_id']) && $_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
       $user_email_html .= ' <br><a class="open-AdminChangeLeaseDialog"
                           data-hostip="'.$row[ 'host_ip' ].'"
+                          data-curusrid="'.$row[ 'usr_id' ].'"
                           href="#adminChangeLeaseDialog" data-toggle="modal"
                           data-backdrop="static"><i class="glyphicon glyphicon glyphicon-wrench"></i>Transfer lease</a>';
   }
@@ -349,6 +372,36 @@ function basket() {
 $frame = new HTMLframe();
 //Starts generating html
 $frame->doc_start("Hosts");
+
+echo '<!-- Modal CHANGE LEASE code start -->
+    <div class="modal fade" id="adminChangeLeaseDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Transfer lease to user</h4>
+          </div>
+          <form class="form" method="POST" action="overview.php">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="user">User</label>
+                <select id="action" class="form-control" name="changeLeaseUserId">
+                    '.user_select_list().'
+                </select>
+                <input type="hidden" value="" id="changeLeaseHostip" name="changeLeaseHostip"/>
+                <input type="hidden" value="" id="currentLeaseUserId" name="currentLeaseUserId"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" name="admin-change-lease" value="Transfer"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<!-- Modal CHANGE LEASE code end -->';
+
 $frame->doc_nav("Overview", $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'user_data' ][ 'usr_lastn']);
 
 

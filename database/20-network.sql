@@ -406,6 +406,32 @@ end;
 $$ language plpgsql;
 alter function terminate_lease(varchar,varchar,smallint) owner to dbaodin;
 
+-- transfer_lease
+-- This function will transfer an existing lease from one user to another (only available to admins)
+create or replace function transfer_lease(
+    ticket varchar(255),
+    host_to_transfer varchar(36),
+    cur_usr_id smallint,
+    new_usr_id smallint,
+    admin_usr_id smallint)
+returns void as $$
+declare
+    from_user varchar;
+    to_user varchar;
+begin
+    SELECT usr_firstn || ' ' || usr_lastn FROM users WHERE usr_id = cur_usr_id INTO from_user;
+    SELECT usr_firstn || ' ' || usr_lastn FROM users WHERE usr_id = new_usr_id INTO to_user;
+    UPDATE hosts
+    SET
+        usr_id = new_usr_id
+    WHERE
+        host_ip = host_to_transfer AND
+        usr_id = cur_usr_id;
+    PERFORM add_log_entry( ticket, admin_usr_id, host_to_transfer, 'Host transfered from user ' || from_user || ' to ' || to_user );
+end;
+$$ language plpgsql;
+alter function transfer_lease(varchar,varchar,smallint,smallint,smallint) owner to dbaodin;
+
 -- get_network_users
 create or replace function get_network_users(
     ticket varchar(255),
