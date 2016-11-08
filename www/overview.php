@@ -227,6 +227,12 @@ function show_host_row_view($row, $cur_reservations) {
   if (!empty($row['usr_email'])) {
     $user_email_html = '<a href="mailto:'.$row['usr_email'].'"><i class="glyphicon glyphicon-envelope"></i>'.$row['usr_firstn'].' '.$row['usr_lastn'].'</a>';
   }
+  if ($_SESSION[ 'user_data' ][ 'usr_privileges' ] > 0) {
+      $user_email_html .= ' <br><a class="open-AdminChangeLeaseDialog"
+                          data-hostip="'.$row[ 'host_ip' ].'"
+                          href="#adminChangeLeaseDialog" data-toggle="modal"
+                          data-backdrop="static"><i class="glyphicon glyphicon glyphicon-wrench"></i>Transfer lease</a>';
+  }
 
 
   // ====================================
@@ -253,7 +259,7 @@ function show_host_row_view($row, $cur_reservations) {
 
   return '
                   <tr class="'.$bootstrap_color_tag.'">
-                    <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i><i class="glyphicon glyphicon-triangle-down" style="display: none;"></i></td>
+                    <td data-toggle="collapse" data-target="#acc'.str_replace('.', '', $row['host_ip']).'" class="accordion-toggle host-toggle" id="'.$row['host_ip'].'"><i class="glyphicon glyphicon-triangle-right"></i></td>
                     <td>'.$row['host_ip'].'</td>
                     <td>'.$row['host_name'].'</td>
                     <td colspan="2">'.substr($row['host_description'], 0, 30).' ...</td>

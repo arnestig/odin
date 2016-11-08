@@ -172,6 +172,10 @@ $(document).ready(function() {
         console.log('#bi' +ip);
     });
 
+    $('.host-toggle').on('click', function (event) {
+            /* Toggle the host triangle icon down or right */
+            $(this).children().toggleClass("glyphicon-triangle-right").toggleClass("glyphicon-triangle-bottom");
+    });
     
     $(".rm-lease").on('click', function(event) {
         if( !confirm('Are you sure that you want to terminate the lease?') ) {
@@ -338,16 +342,4 @@ $(document).ready(function() {
             return false;
          }
     });
-
-    /*
-    $('.accordion-toggle').on('click', function() {
-        var id = $(this).prop('id').split('.').join('');
-        console.log(id);
-        if ($('#acc' + id + ' > i').hasClass('glyphicon-triangle-right')) {
-            console.log('yes');
-            $(this + '> i.glyphicon-triangle-right').hide();
-            $(this + '> i.glyphicon-triangle-down').display('block');
-        }
-    });
-    */
 });
