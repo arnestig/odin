@@ -68,6 +68,7 @@ declare
     host_about_to_expire record;
     odin_site_url varchar;
 begin
+    SELECT s_value FROM settings WHERE s_name = 'host_expiry_warning_interval' INTO host_expiry_warning_interval;
     SELECT s_value FROM settings WHERE s_name = 'host_expiry_warning_time' INTO host_expiry_warning_time;
     SELECT s_value FROM settings WHERE s_name = 'odin_site_url' INTO odin_site_url;
     -- Here the host has expired
