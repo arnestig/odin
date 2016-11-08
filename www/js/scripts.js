@@ -82,6 +82,24 @@ $(document).ready(function() {
         }   
     });
 
+    $(".forceScan").on('click', function () {
+        var ip = this.id;
+        $.ajax({
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                forceScan: ip
+            },
+            url: 'overview_handler.php',
+            success : function(data){
+                $('<div class="alert alert-success fade in"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Host added to prioritized scan queue</div>').insertBefore('#acc' + ip.replace(/\./g,''));
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('Your request was not handled properly. Please try again.');
+            }
+        });
+    });
+
 
     $('td.check-lease-opt').on('click', 'input:checkbox', function() {
         var ip = this.id.substr(8);

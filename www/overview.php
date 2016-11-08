@@ -323,6 +323,7 @@ function show_host_row_view($row, $cur_reservations) {
                             <div class="text-head-gutter"></div>
                             <h5>Last scanned</h5>
                             '.$row['last_scanned'].'
+                            <br/><a class="forceScan" id="'.$row[ 'host_ip' ].'" href="#forceScan">Force scan<span class="glyphicon glyphicon-refresh"></span></a>
                           </div>
                         </div>
                         <div class="row spacer-row"></div>

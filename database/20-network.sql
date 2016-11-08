@@ -45,6 +45,7 @@ create table hosts (
         host_last_seen timestamp null,
         host_last_scanned timestamp null,
         host_last_notified timestamp null,
+        next_scan_prioritized boolean default false,
         token_usr smallint not null references users default 0,
         token_timestamp timestamp null
         );
@@ -338,7 +339,8 @@ begin
             host_name  = host_new_name,
             host_description = host_desc,
             token_timestamp = NULL,
-            token_usr = DEFAULT
+            token_usr = DEFAULT,
+            next_scan_prioritized = true
         WHERE
             host_ip = host_to_lease AND
             token_usr = cur_usr_id AND
@@ -431,6 +433,22 @@ begin
 end;
 $$ language plpgsql;
 alter function transfer_lease(varchar,varchar,smallint,smallint,smallint) owner to dbaodin;
+
+-- force_host_scan
+-- This function, available by all users, will force a scan of the target host, regardless of when it was scanned last
+create or replace function force_host_scan(
+    ticket varchar(255),
+    host_to_scan varchar(36))
+returns void as $$
+begin
+    UPDATE hosts
+    SET
+        next_scan_prioritized = true
+    WHERE
+        host_ip = host_to_scan;
+end;
+$$ language plpgsql;
+alter function force_host_scan(varchar,varchar) owner to dbaodin;
 
 -- get_network_users
 create or replace function get_network_users(

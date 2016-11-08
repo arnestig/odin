@@ -83,4 +83,10 @@ if (isset($_POST[ 'getReserved' ]) && !empty($_POST[ 'getReserved' ])) {
     print json_encode( $cur_reservations );
 }
 
+if (!empty($_POST[ 'forceScan' ] ) ) {
+    $ip = $_POST[ 'forceScan' ];
+    $nw_manager = new NetworkManagement();
+    $nw_manager->forceScan( $ip );
+}
+
 ?>

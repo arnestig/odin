@@ -23,16 +23,25 @@
 \c odin;
 
 -- get_hosts_to_scan
-create or replace function get_hosts_to_scan()
+create or replace function get_hosts_to_scan(
+    prio_scan boolean )
 returns SETOF refcursor AS $$
 declare
     host_scan_interval smallint;
     ref1 refcursor;
 begin
     SELECT s_value FROM settings WHERE s_name = 'host_scan_interval' INTO host_scan_interval;
-open ref1 for
-    SELECT host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - host_scan_interval * interval '1 minute') ORDER BY random();
-return next ref1;
+    IF (prio_scan = true) THEN
+        open ref1 for
+        SELECT
+            host_ip FROM hosts WHERE next_scan_prioritized = true ORDER BY random();
+        return next ref1;
+    ELSE
+        open ref1 for
+        SELECT
+            host_ip FROM hosts WHERE host_last_scanned IS NULL or host_last_scanned < (NOW() - host_scan_interval * interval '1 minute') ORDER BY random();
+        return next ref1;
+    END IF;
 end;
 $$ language plpgsql;
 alter function get_hosts_to_scan() owner to dbaodin;
@@ -47,6 +56,7 @@ declare
 begin
     UPDATE hosts SET 
         host_last_scanned = update_host_timestamp, 
+        next_scan_prioritized = false,
         host_last_seen = ( 
             CASE WHEN update_host_online = true THEN 
                 update_host_timestamp

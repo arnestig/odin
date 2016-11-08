@@ -204,6 +204,64 @@ sub olog
 
 }
 
+sub scan_host_master_prioritized
+{
+    # connect to our database
+    my $dbh = DBI->connect("DBI:Pg:dbname=odin;host=localhost", "dbaodin", "gresen", {'RaiseError' => 1});
+
+    while ( $::running ) {
+        my %hostinfo;
+        my @hosts_to_scan;
+        $dbh->{ AutoCommit } = 1;
+
+        # select our stored procedure for hosts to scan
+        my $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan( ? );' );
+        $sth->bind_param( 1, 1 );
+        $sth->execute();
+
+        # fetch our reference cursor
+        my $cursor = $sth->fetch;
+        $sth = $dbh->prepare( 'FETCH ALL IN "'.@{ $cursor }[ 0 ].'";' );
+        $sth->execute();
+
+        # get all objects to scan
+        my $array_dump = $sth->fetchall_arrayref();
+        foreach ( @{ $array_dump } ) {
+            push( @hosts_to_scan, @{ $_ }[ 0 ] );
+        }
+
+        # cleanup database transaction
+        $sth = $dbh->prepare( 'COMMIT;' );
+        $sth->execute();
+        $sth->finish();
+
+        $dbh->{ AutoCommit } = 0;
+
+        # iterate over all hosts to scan, 20 at a time
+        foreach my $target_ip ( @hosts_to_scan ) {
+            my %res = %{ scan_host_slave( $target_ip ) };
+            olog( "Scanner (prio)", "Received status on $res{ ip_address } ($res{ online },$res{ proto })" );
+            my $sth = $dbh->prepare( 'SELECT update_host_status( ?, ?, ? )' );
+            $sth->bind_param( 1, $res{ ip_address } );
+            $sth->bind_param( 2, $res{ online } );
+            $sth->bind_param( 3, $res{ timestamp } );
+            $sth->execute();
+            $sth->finish();
+            last if ! $::running;
+        }
+        $dbh->commit();
+
+        # sleep until next time we're checking the hosts
+        for ( 1..5 ) {
+            if ( $::running ) {
+                sleep( 1 );
+            }
+        }
+    }
+    # clean up
+    $dbh->disconnect();
+}
+
 # master for the scan_host_slave threads
 sub scan_host_master
 {
@@ -221,7 +279,8 @@ sub scan_host_master
         $dbh->{ AutoCommit } = 1;
 
         # select our stored procedure for hosts to scan
-        my $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan();' );
+        my $sth = $dbh->prepare( 'BEGIN; SELECT * FROM get_hosts_to_scan( ? );' );
+        $sth->bind_param( 1, 0 );
         $sth->execute();
 
         # fetch our reference cursor
@@ -310,7 +369,7 @@ if ( $> != 0 ) {
 $SIG{ INT } = \&signal_handler;
 
 # create our two main threads for scanning hosts and sending emails
-push( @mThreadPool, threads->new(\&scan_host_master), threads->new(\&notification_sender), threads->new(\&expire_leases) );
+push( @mThreadPool, threads->new(\&scan_host_master), threads->new(\&scan_host_master_prioritized), threads->new(\&notification_sender), threads->new(\&expire_leases) );
 
 while( $::running ) {
     sleep 1;

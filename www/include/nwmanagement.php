@@ -253,6 +253,13 @@ class NetworkManagement
         $result = $sth->fetch();
     }
 
+    public function forceScan( $host_ip )
+    {
+        $sth = $this->dbcon->prepare( "SELECT force_host_scan( ?, ? )" );
+        $sth->execute( array( '', $host_ip ) );
+        $result = $sth->fetch();
+    }
+
     private function isCIDR( $cidr )
     {
         if( is_numeric( $cidr ) == true ) {
