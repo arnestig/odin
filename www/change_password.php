@@ -64,7 +64,7 @@ echo '
         </div>
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">About ODIN</a></li>
+            <li class="active"><a href="#">About Odin</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

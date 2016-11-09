@@ -95,7 +95,7 @@ echo '
       </div>
       <div class="row">
         <div class="col-lg-offset-4 col-lg-4">
-          <h4 class="text-center">ODIN - IP-address Manager</h4><br>
+          <h4 class="text-center">Odin - IP-address Manager</h4><br>
         </div>
       </div>
       <div class="row">

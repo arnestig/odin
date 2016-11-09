@@ -35,7 +35,7 @@ $frame->doc_nav('', $_SESSION[ 'user_data' ][ 'usr_firstn' ]." ".$_SESSION[ 'use
 	<div class="row">
 		<div class="col-lg-offset-2 col-lg-10">
 			<h1>Booking completed</h1>
-			<h2>Thank you for using ODIN</h2>
+			<h2>Thank you for using Odin</h2>
 			<a href="overview.php" class="btn btn-default" role="button">Back to hosts</a>
 		</div>
 	</div>

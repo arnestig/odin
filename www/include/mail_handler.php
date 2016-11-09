@@ -56,7 +56,7 @@ class MailHandler {
     	$user_management = new UserManagement();
     	$all_users = $user_management->getUsers();
     	foreach ($all_users as $user) {
-    		$this->sendMailToUser($user['usr_id'], 'About ODIN', $message, $sender_id);
+    		$this->sendMailToUser($user['usr_id'], 'Message from Odin', $message, $sender_id);
     	}
     	return true;
     }
@@ -92,33 +92,33 @@ class MailHandler {
 
 	public function userMadeAdmin( $user_id, $sender_id ) 
 	{
-		$this->sendMailToUser( $user_id, 'Admin in ODIN', 'You have now been made admin of ODIN. Log in to ODIN and see your new responsibilities under "Manage" in the menu.', $sender_id );
+		$this->sendMailToUser( $user_id, 'Admin in Odin', 'You have now been made admin of Odin. Log in to Odin and see your new responsibilities under "Manage" in the menu.', $sender_id );
 	}
 
 	public function userEdited( $user_id, $message, $sender_id ) 
 	{
-		$this->sendMailToUser( $user_id, 'Changed user details ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Changed user details Odin', $message, $sender_id );
 	}
 
 	public function userPasswordChanged( $user_id, $password, $sender_id ) 
 	{
 		$message = 'Here is your new password which needs to be changed: ';
 		$message .= $password;
-		$this->sendMailToUser( $user_id, 'Changed password ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Changed password Odin', $message, $sender_id );
 	}	
 
 	public function addUser( $user_id, $message, $sender_id ) 
 	{
-		$this->sendMailToUser( $user_id, 'Welcome to ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Welcome to Odin', $message, $sender_id );
 	}
 
 	// When user gets deleted. If message is left blank, default message is sent
 	public function deleteUser( $user_id, $subject, $message, $sender ) 
 	{
 		if (empty($message)) {
-			$message = 'Your profile and host-reservations has now been deleted from ODIN.';
+			$message = 'Your profile and host-reservations has now been deleted from Odin.';
 		}
-		$this->sendMailToUser( $user_id, 'Goodbye from ODIN', $message, $sender_id );
+		$this->sendMailToUser( $user_id, 'Goodbye from Odin', $message, $sender_id );
 	}
 }
 

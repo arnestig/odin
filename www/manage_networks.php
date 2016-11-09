@@ -108,7 +108,7 @@ if (!empty($_POST['notify_users'])) {
 
   if (!empty($network_id) && !empty($network_message)) {
     $nwInfo = $nwManager->getNetworkInfo( $network_id );
-    $mail_handler->notifyNetworkUsers( $network_id, 'ODIN, about: '.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $network_message, $_SESSION['user_data']['usr_id'] );
+    $mail_handler->notifyNetworkUsers( $network_id, 'Odin, about: '.$nwInfo[ 'nw_base' ].'/'.$nwInfo[ 'nw_cidr' ], $network_message, $_SESSION['user_data']['usr_id'] );
   } else {
     $alert_message = 'You have to fill out all the fields.';
     $alert_type = 'danger';
