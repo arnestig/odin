@@ -45,7 +45,13 @@ if ( isset($_POST[ 'submit' ]) && !empty($_POST[ 'submit' ]) ) {
         header('Location: change_password.php');
         exit;
       } else {
-        header('Location: overview.php');  
+        if ( isset( $_SESSION['redirecturl'] ) ) {
+            $redirecturl = $_SESSION['redirecturl'];
+            unset($_SESSION['redirecturl']);
+            header('Location: '.$redirecturl);
+        } else {
+            header('Location: overview.php');  
+        }
         exit;
       }  
     } else {

@@ -25,6 +25,7 @@
 # (almost) always include this file first
 session_start();
 if ( ! isset( $_SESSION[ 'user_data' ] ) ) {
+    $_SESSION['redirecturl'] = $_SERVER['REQUEST_URI'];
     header('Location: index.php');
     exit;
 }
