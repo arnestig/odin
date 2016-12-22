@@ -58,7 +58,7 @@ begin
 
     -- query for checking when the scanner daemon was last connected
     SELECT CASE WHEN a.s_value = 'checked' AND b.s_value = '' THEN false ELSE true END as status FROM settings a, settings b WHERE a.s_name = 'email_notification' AND b.s_name = 'email_hostname' into tStatus;
-    IF status = false THEN
+    IF tStatus = false THEN
         RAISE NOTICE 'Incorrect notification configuration, Odin will not be able to send email to users';
         errmsgs = array_append(errmsgs,'Incorrect notification configuration, Odin will not be able to send email to users');
         status = false;
