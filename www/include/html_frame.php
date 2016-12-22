@@ -26,6 +26,8 @@
 * class intended for scaffolding the sites main theme
 */
 
+include("odininfo.php");
+
 class HTMLframe {
   private $user_nav;
   private $admin_nav;
@@ -57,6 +59,22 @@ class HTMLframe {
   </head>
   <body>';
 	}
+
+  /* Helper to doc nav */
+  private function errorNav($active) {
+      $html_ret = '';
+      $odinInfo = new OdinInfo();
+      if ( ! $odinInfo->getOdinStatus($odinErrors) ) {
+          foreach ( json_decode($odinErrors) as $curError ) {
+              $errmsg .= $curError.'<br>';
+          }
+          $html_ret .= '<li class="active">
+              <a href="#" data-placement="bottom" data-html="true" title="'.$errmsg.'" data-toggle="tooltip"><span class="glyphicon glyphicon-th glyphicon-exclamation-sign" style="font-size:initial;color:red;"></span></a>
+              </li>';
+      }
+
+      return $html_ret;
+  }
 
   /* Helper to doc nav */
   private function adminNav($active) {
@@ -143,8 +161,8 @@ class HTMLframe {
           </li>
           '.$this->adminNav($active).'
           '.$this->userNav($active, $username).'
+          '.$this->errorNav($active).'
         </ul>
-
         <!--
         <div id="navbar" class="collapse navbar-collapse navbar-right">
           <form class="navbar-form" role="search">

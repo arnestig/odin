@@ -34,3 +34,36 @@ create TYPE sp_result AS (
     result boolean,
     errormsg varchar
 );
+
+-- get_odin_status
+-- This function returns the current running status of odin, any issues with the setup, parameters, running state
+-- Input: session key
+-- Output: false if any errors/issues were detected
+create or replace function get_odin_status(
+    ticket varchar(255), 
+    OUT status boolean,
+    OUT errmsg varchar )
+returns record AS $$
+declare
+    st1 boolean;
+    errmsgs varchar[];
+begin
+    -- query for checking when the scanner daemon was last connected
+    SELECT CASE WHEN to_timestamp(si_value,'YYYY-MM-DD HH24:MI:SS') + interval '1 hour' < NOW() THEN false ELSE true END as status FROM scanner_info WHERE si_name = 'last_slave_activity' into status;
+    IF status = false THEN
+        RAISE NOTICE 'Last status update too old, check scanner status';
+        errmsgs = array_append(errmsgs,'Last status update too old, check scanner status');
+    END IF;
+
+    -- query for checking when the scanner daemon was last connected
+    SELECT CASE WHEN a.s_value = 'checked' AND b.s_value = '' THEN false ELSE true END as status FROM settings a, settings b WHERE a.s_name = 'email_notification' AND b.s_name = 'email_hostname' into status;
+    IF status = false THEN
+        RAISE NOTICE 'Incorrect notification configuration, Odin will not be able to send email to users';
+        errmsgs = array_append(errmsgs,'Incorrect notification configuration, Odin will not be able to send email to users');
+    END IF;
+
+   errmsg = array_to_json(errmsgs);
+end;
+$$ language plpgsql;
+alter function get_odin_status(varchar) owner to dbaodin;
+

@@ -22,6 +22,18 @@
 
 \c odin;
 
+--- Table for managing/configuring scanner slaves.
+--- For now only to keep track on last scan time
+create table scanner_info (
+        si_name varchar not null primary key,
+        si_value varchar not null
+        );
+alter table scanner_info owner to dbaodin;
+
+-- Populate scanner_info table
+insert into scanner_info( si_name, si_value )
+values ( 'last_slave_activity', '' );
+
 -- get_hosts_to_scan
 create or replace function get_hosts_to_scan(
     prio_scan boolean )
@@ -30,6 +42,7 @@ declare
     host_scan_interval smallint;
     ref1 refcursor;
 begin
+    UPDATE scanner_info SET si_value = NOW() WHERE si_name = 'last_slave_activity';
     SELECT s_value FROM settings WHERE s_name = 'host_scan_interval' INTO host_scan_interval;
     IF (prio_scan = true) THEN
         open ref1 for

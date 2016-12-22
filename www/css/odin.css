@@ -99,3 +99,11 @@ a.filter-link:hover { text-decoration: none; }
 #t-o-c li ol > li:before { content: counters(item, '.') ' '; }
 
 #mail-dialog { background-color: #ddd; }
+
+.tooltip-inner {
+    min-width: 200px;
+    max-width: 100%; 
+    white-space:pre;
+    max-width: none;
+}
+

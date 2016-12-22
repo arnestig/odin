@@ -22,6 +22,8 @@
 
 $(document).ready(function() {
 
+    $('[data-toggle="tooltip"]').tooltip();
+
     $('body').on('click', 'a.disabled', function(event) {
         event.preventDefault();
     });
