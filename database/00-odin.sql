@@ -45,21 +45,23 @@ create or replace function get_odin_status(
     OUT errmsg varchar )
 returns record AS $$
 declare
-    st1 boolean;
+    tStatus boolean;
     errmsgs varchar[];
 begin
     -- query for checking when the scanner daemon was last connected
-    SELECT CASE WHEN to_timestamp(si_value,'YYYY-MM-DD HH24:MI:SS') + interval '1 hour' < NOW() THEN false ELSE true END as status FROM scanner_info WHERE si_name = 'last_slave_activity' into status;
-    IF status = false THEN
+    SELECT CASE WHEN to_timestamp(si_value,'YYYY-MM-DD HH24:MI:SS') + interval '1 hour' < NOW() THEN false ELSE true END as status FROM scanner_info WHERE si_name = 'last_slave_activity' into tStatus;
+    IF tStatus = false THEN
         RAISE NOTICE 'Last status update too old, check scanner status';
         errmsgs = array_append(errmsgs,'Last status update too old, check scanner status');
+        status = false;
     END IF;
 
     -- query for checking when the scanner daemon was last connected
-    SELECT CASE WHEN a.s_value = 'checked' AND b.s_value = '' THEN false ELSE true END as status FROM settings a, settings b WHERE a.s_name = 'email_notification' AND b.s_name = 'email_hostname' into status;
+    SELECT CASE WHEN a.s_value = 'checked' AND b.s_value = '' THEN false ELSE true END as status FROM settings a, settings b WHERE a.s_name = 'email_notification' AND b.s_name = 'email_hostname' into tStatus;
     IF status = false THEN
         RAISE NOTICE 'Incorrect notification configuration, Odin will not be able to send email to users';
         errmsgs = array_append(errmsgs,'Incorrect notification configuration, Odin will not be able to send email to users');
+        status = false;
     END IF;
 
    errmsg = array_to_json(errmsgs);
