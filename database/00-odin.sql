@@ -48,6 +48,7 @@ declare
     tStatus boolean;
     errmsgs varchar[];
 begin
+    status = true;
     -- query for checking when the scanner daemon was last connected
     SELECT CASE WHEN to_timestamp(si_value,'YYYY-MM-DD HH24:MI:SS') + interval '1 hour' < NOW() THEN false ELSE true END as status FROM scanner_info WHERE si_name = 'last_slave_activity' into tStatus;
     IF tStatus = false THEN
