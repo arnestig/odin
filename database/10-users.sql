@@ -41,7 +41,8 @@ create table users (
         usr_last_touch timestamp,
         usr_is_deleted boolean default false
         );
-create unique index uni_users_usern on users(usr_usern);
+create unique index uni_users_usern on users(lower(usr_usern));
+create unique index uni_users_email on users(usr_email);
 create unique index uni_usr_session_key on users(usr_session_key);
 alter table users owner to dbaodin;
 
