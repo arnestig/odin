@@ -219,7 +219,7 @@ function show_host_row_view($row, $cur_reservations) {
   // Set the disabled tag if other user owns lock
   $disabled = '';
   $td_tooltip = '';
-  if ( $row[ 'reserved_by_usern' ] !== 'nobody' && $row[ 'reserved_by_usern' ] !== $_SESSION[ 'user_data' ][ 'usr_usern' ] ) $disabled = ' disabled';
+  if ( $row[ 'reserved_status' ] === true && $row[ 'reserved_by_usern' ] !== $_SESSION[ 'user_data' ][ 'usr_usern' ] ) $disabled = ' disabled';
  
   $checkbox = '<input type="checkbox" id="cb'.$row['host_ip'].'" name="Kbook_ip" value="'.$row['host_ip'].'"'.$ticked_box.' '.$disabled.'>';
   if ( $disabled === ' disabled' ) {
