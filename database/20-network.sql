@@ -151,8 +151,8 @@ open ref1 for
             rcu.usr_usern,
             rcu.usr_email,
             CASE
-                WHEN rch.usr_id <> 0 AND (token_timestamp > NOW() - interval '10 minutes') THEN true
-                WHEN rch.usr_id = 0 OR token_timestamp < NOW() - interval '10 minutes' THEN false
+                WHEN rch.token_usr <> 0 AND (token_timestamp > NOW() - interval '10 minutes') THEN true
+                WHEN rch.token_usr = 0 OR token_timestamp < NOW() - interval '10 minutes' THEN false
             END as reserved_status FROM hosts rch LEFT OUTER JOIN users rcu ON ( rch.token_usr = rcu.usr_id ) )
     SELECT
         h.host_ip,
