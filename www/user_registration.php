@@ -63,19 +63,21 @@ if (!empty($_POST['register'])) {
   } else {
     $user_man = new UserManagement();
     $userHandler = new User();
-    try {
-      $user_man->addUser(
-        $_POST[ 'reg_username' ],
-        $_POST[ 'reg_password' ],
-        0,
-        $_POST[ 'reg_first_name' ],
-        $_POST[ 'reg_last_name' ],
-        $_POST[ 'reg_email' ]);
-      if ($userHandler->login($_POST[ 'reg_username' ],$_POST[ 'reg_password' ])) {
-        header('Location: overview.php');
-      }
-    } catch (PDOException $e) {
-      $alert_msg = 'Your registration could not be completed because the desired username is already taken.';
+    $err_msg;
+    if ( $user_man->addUser(
+      $_POST[ 'reg_username' ],
+      $_POST[ 'reg_password' ],
+      0,
+      $_POST[ 'reg_first_name' ],
+      $_POST[ 'reg_last_name' ],
+      $_POST[ 'reg_email' ],
+      $err_msg,
+      $new_usr_id) ) {
+        if ($userHandler->login($_POST[ 'reg_username' ],$_POST[ 'reg_password' ])) {
+          header('Location: overview.php');
+        }
+    } else {
+      $alert_msg = 'Registration failed. '.$err_msg;
     }
   }
 }
