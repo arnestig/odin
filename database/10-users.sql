@@ -69,8 +69,8 @@ begin
     --perform isSessionValid(ticket);
     insert into users( usr_usern, usr_pwd, server_gen_pwd, usr_firstn, usr_lastn, usr_email ) values( username, crypt( password, gen_salt('md5') ), serverpwd, firstname, lastname, email ) RETURNING usr_id into new_usr_id;
     EXCEPTION WHEN unique_violation THEN
-        RAISE NOTICE 'Username already in use';
-        errmsg = 'Username already in use';
+        RAISE NOTICE 'Username or email already in use';
+        errmsg = 'Username or email already in use';
         status = false;
         new_usr_id = 0;
 end;
