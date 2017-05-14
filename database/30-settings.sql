@@ -115,7 +115,7 @@ values( 'hosts', 'Hosts', 'Settings for hosts, how long the hosts are leased, wh
 -- add all odin settings here
 --- Notification settings
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description )
-values( 'notifications', 'email_notification', 'checkbox', '1', 'Enable notification mails', '' );
+values( 'notifications', 'email_notification', 'checkbox', '', 'Enable notification mails', '' );
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description )
 values( 'notifications', 'email_notification_type', 'text', 'smtp', 'Mail server type', 'Only SMTP supported for now' );
 insert into settings( sg_name, s_name, s_type, s_value, s_fullname, s_description )
