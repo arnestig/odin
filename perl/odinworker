@@ -113,6 +113,7 @@ sub notification_sender
         $settings{ 'email_sender' } = get_setting( 'email_sender', $dbh );
         $settings{ 'email_server_timeout' } = get_setting( 'email_server_timeout', $dbh );
         if ( $settings{ 'email_notification_enabled' } ) {
+            print Dumper( %settings );
             $dbh->{ AutoCommit } = 1;
 
             # select our stored procedure for emails to send
@@ -134,19 +135,23 @@ sub notification_sender
                     $mail_body =~ s/\n/<br\/>/g;
                     my $smtp = Net::SMTP->new( $settings{ email_server_hostname }.':'.$settings{ email_server_port },
                             Timeout => $settings{ email_server_timeout } ) or olog( "Mailer", "ERROR! ".$!. ". Check your notification settings." );
-                    $smtp->mail( $settings{ email_sender } );
-                    $smtp->to( $mail_item->{ usr_email } );
-                    $smtp->data();
-                    $smtp->datasend( "To: ".$mail_item->{ usr_email }."\n" );
-                    $smtp->datasend( "Subject: ".$mail_item->{ nu_subject }."\n" );
-                    $smtp->datasend( "MIME-Version: 1.0\n" );
-                    $smtp->datasend( "Content-Type: text/html; charset=\"UTF-8\" \n" );
-                    $smtp->datasend( "\n" );
-                    $smtp->datasend( $mail_body );
-                    $smtp->dataend();
-                    $smtp->quit();
-                    olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }."), subject '".$mail_item->{ nu_subject }."'");
-                    push( @mails_sent, $nu_id );
+                    if ( $smtp ) {
+                        $smtp->mail( $settings{ email_sender } );
+                        $smtp->to( $mail_item->{ usr_email } );
+                        $smtp->data();
+                        $smtp->datasend( "To: ".$mail_item->{ usr_email }."\n" );
+                        $smtp->datasend( "Subject: ".$mail_item->{ nu_subject }."\n" );
+                        $smtp->datasend( "MIME-Version: 1.0\n" );
+                        $smtp->datasend( "Content-Type: text/html; charset=\"UTF-8\" \n" );
+                        $smtp->datasend( "\n" );
+                        $smtp->datasend( $mail_body );
+                        $smtp->dataend();
+                        $smtp->quit();
+                        olog( "Mailer", "Mail notification sent to ".$mail_item->{ usr_firstn }." ".$mail_item->{ usr_lastn }." <".$mail_item->{ usr_email }."> (".$mail_item->{ usr_usern }."), subject '".$mail_item->{ nu_subject }."'");
+                        push( @mails_sent, $nu_id );
+                    } else {
+                        olog( "Mailer", "Error connecting to SMTP server: '$settings{ email_server_hostname }:$settings{ email_server_port }'" );
+                    }
                 }
             }
 
