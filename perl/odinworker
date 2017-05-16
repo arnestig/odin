@@ -113,7 +113,6 @@ sub notification_sender
         $settings{ 'email_sender' } = get_setting( 'email_sender', $dbh );
         $settings{ 'email_server_timeout' } = get_setting( 'email_server_timeout', $dbh );
         if ( $settings{ 'email_notification_enabled' } ) {
-            print Dumper( %settings );
             $dbh->{ AutoCommit } = 1;
 
             # select our stored procedure for emails to send
