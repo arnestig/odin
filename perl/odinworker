@@ -53,7 +53,7 @@ sub signal_handler
 sub seconds_to_dhms 
 {
     my ($secs) = @_;
-    return sprintf( "%dd, %dh, %dm, %ds\n", reverse ($secs % 60, ($secs /= 60) % 60, ($secs /= 60) % 24, int ($secs / 24)));
+    return sprintf( "%dd, %dh, %dm, %ds", reverse ($secs % 60, ($secs /= 60) % 60, ($secs /= 60) % 24, int ($secs / 24)));
 }
 
 # function for returning a setting based on setting name
@@ -132,8 +132,13 @@ sub notification_sender
                 if ( ! $mail_item->{ usr_email } eq "" ) {
                     my $mail_body = $mail_item->{ nu_message };
                     $mail_body =~ s/\n/<br\/>/g;
+                    if ( $settings{ email_server_hostname } eq "" or $settings{ email_server_port } eq "" ) {
+                        olog( "Mailer", "Invalid mailserver or port, check your notification settings." );
+                        next;
+                    }
+
                     my $smtp = Net::SMTP->new( $settings{ email_server_hostname }.':'.$settings{ email_server_port },
-                            Timeout => $settings{ email_server_timeout } ) or olog( "Mailer", "ERROR! ".$!. ". Check your notification settings." );
+                            Timeout => $settings{ email_server_timeout } );
                     if ( $smtp ) {
                         $smtp->mail( $settings{ email_sender } );
                         $smtp->to( $mail_item->{ usr_email } );
