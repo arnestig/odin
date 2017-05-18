@@ -76,7 +76,7 @@ if (isset( $_POST[ 'edit_user' ] )) {
     $mailHandler->userMadeAdmin( $_POST['userId'], $_SESSION['user_data']['usr_privileges'] );
   } else {
     $message = 'Your updated profile-info: '.$_POST[ 'userName' ].', '.$_POST[ 'firstName' ].', '.$_POST[ 'lastName' ].', '.$_POST[ 'email' ];
-    $mailHandler->userEdited( $_POST['userId'], $message, $_SESSION['user_data']['usr_privileges'] );
+    $mailHandler->userEdited( $_POST['userId'], $message, $_SESSION['user_data']['usr_id'] );
   }
 
   if ( $userManager->adminUpdateUser(
