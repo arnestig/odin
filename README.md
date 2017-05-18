@@ -12,7 +12,7 @@ Installing on a Debian-based system you can:
 apt-get install php php-pgsql php-gd perl libdbd-pg-perl libdbi-perl libhttp-date-perl postgresql postgresql-contrib
 ```
 
-Update the file /etc/postgresql/9.4/main/pg_hba.conf and change 'peer' to 'md5' on the following line:
+Update the file /etc/postgresql/9.9/main/pg_hba.conf and change 'peer' to 'md5' on the following line:
 ```
 "local   all             all                                peer"
 ```
