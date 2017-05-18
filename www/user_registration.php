@@ -2,7 +2,7 @@
 
 /*
    Odin - IP plan management and tracker
-   Copyright (C) 2015-2016  Tobias Eliasson <arnestig@gmail.com>
+   Copyright (C) 2015-2017  Tobias Eliasson <arnestig@gmail.com>
                             Jonas Berglund <jonas.jberglund@gmail.com>
                             Martin Rydin <martin.rydin@gmail.com>
 
@@ -238,7 +238,7 @@ echo '
               <li>Copyright notice
                 <ol>
                   <li>
-                    Copyright (C) 2015-2016  Tobias Eliasson, Jonas Berglund, Martin Rydin
+                    Copyright (C) 2015-2017  Tobias Eliasson, Jonas Berglund, Martin Rydin
                   </li>
                   <li>Subject to the express provisions of these terms and conditions:
                     <ol>
