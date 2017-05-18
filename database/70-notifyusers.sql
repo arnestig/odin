@@ -46,7 +46,7 @@ create or replace function notify_user(
     from_usr_id smallint default 0)
 returns void AS $$
 begin
-    IF usr_id <> 0 THEN
+    IF usr_id > 1 THEN
         INSERT INTO notifyusers( nu_usr_id, nu_sent_by_id, nu_subject, nu_message ) VALUES ( usr_id, from_usr_id, subject, message );
     END IF;
 end;
