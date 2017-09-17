@@ -37,7 +37,6 @@ $(document).ready(function() {
         content: function() {
             var theLog = '<p>No users leasing on this network</p>' + this.val;
             var nwid = $(".form-group #mailNetworkIdUsers").val();
-            var heyhey = 'alhd';
             $.ajax({
                 url: 'manage_networks.php',
                 type: 'GET',
@@ -65,7 +64,6 @@ $(document).ready(function() {
         content: function() {
             var theLog = '<p>No history for this ip yet</p>';
             var host = this.id.substr(3);
-            var heyhey = 'alhd';
             $.ajax({
                 url: 'overview_handler.php',
                 type: 'GET',

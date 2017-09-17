@@ -300,7 +300,7 @@ function show_host_row_view($row, $cur_reservations) {
                                 <h5>Host description</h5>
                               </div>
                               <div class="col-lg-3">
-                                <a id="log'.$row['host_ip'].'" class="history">
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="manual" id="log'.$row['host_ip'].'" class="history">
                                   <h6>Host log<span class="glyphicon glyphicon-list-alt"></span></h6>
                                 </a>
                               </div>
