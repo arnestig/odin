@@ -41,7 +41,8 @@ if (isset($_POST['change_password'])) {
       0,
       $userdata[ 'usr_firstn' ],
       $userdata[ 'usr_lastn' ],
-      $userdata[ 'usr_email' ]
+      $userdata[ 'usr_email' ],
+      $userdata[ 'usr_errmsg' ]
     );
     header('Location: overview.php');
   }
