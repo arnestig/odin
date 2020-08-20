@@ -1,15 +1,16 @@
-Source: odin
-Section: unknown
+Source: odinip
+Section: web
 Priority: optional
 Maintainer: Tobias Eliasson <arnestig@gmail.com>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 9), dh-apache2
 Standards-Version: 3.9.8
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: https://anonscm.debian.org/collab-maint/odin.git
-#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/odin.git
+Homepage: https://github.com/arnestig/odin
+Vcs-Git: https://github.com/arnestig/odin.git
+Vcs-Browser: https://github.com/arnestig/odin.git
 
-Package: odin
+Package: odinip
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Recommends: apache2 | httpd
+Depends: php, php-pgsql, php-gd, perl, libdbd-pg-perl, libdbi-perl, libhttp-date-perl, postgresql, postgresql-contrib
+Description: IP plan management and tracker
+ IP plan management and tracker

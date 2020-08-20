@@ -39,3 +39,6 @@ purge the database and re-populate:
 ```
 for sql in $(ls database/*.sql); do sudo -u postgres psql -f $sql; done
 ```
+
+# Installation
+
