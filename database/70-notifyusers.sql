@@ -53,49 +53,6 @@ end;
 $$ language plpgsql;
 alter function notify_user(varchar,smallint,text,text,smallint) owner to dbaodin;
 
-
-
--- get_notifications
-create or replace function get_notifications()
-returns SETOF refcursor AS $$
-declare
-ref1 refcursor;
-begin
-open ref1 for
-    SELECT
-        su.usr_usrn,
-        su.usr_firstn,
-        su.usr_lastn,
-        su.usr_email,
-        n.nu_id,
-        n.nu_message,
-        n.nu_subject,
-        ru.usr_usrn,
-        ru.usr_firstn,
-        ru.usr_lastn,
-        ru.usr_email
-    FROM
-        users su 
-    LEFT OUTER JOIN
-        notifyusers n
-    ON
-        (su.usr_id = n.nu_sent_by_id)
-    FROM
-        users ru
-    LEFT OUTER JOIN
-        notifyusers n
-    ON
-        (ru.usr_id = n.nu_usr_id)
-    WHERE
-        (n.nu_notification_sent = false);
-
-return next ref1;
-end;
-$$ language plpgsql;
-alter function get_notifications() owner to dbaodin;
-
-
-
 -- notification_sent
 create or replace function notification_sent(
     notification_id integer)
